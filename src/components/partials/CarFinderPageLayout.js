@@ -15,8 +15,8 @@ import ImageLoader from '../ImageLoader'
 import FormGroup from '../FormGroup'
 import SocialButton from '../SocialButton'
 import StarRating from '../StarRating'
-import SignInModalDark from '../partials/SignInModalDark'
-import SignUpModalDark from '../partials/SignUpModalDark'
+import SignInModalDark from './SignInModalDark'
+import SignUpModalDark from './SignUpModalDark'
 
 const CarFinderPageLayout = (props) => {
 
@@ -372,11 +372,11 @@ const CarFinderPageLayout = (props) => {
             <Col lg={2} md={3} sm={6} xl={{offset: 1}} className='mb-2 mb-sm-4'>
               <h3 className='fs-base text-light'>Buying &amp; Selling</h3>
               <ul className='list-unstyled fs-sm'>
-                <li><Link href='#' className='nav-link-light'>Find a car</Link></li>
-                <li><Link href='#' className='nav-link-light'>Sell your car</Link></li>
-                <li><Link href='#' className='nav-link-light'>Car dealers</Link></li>
-                <li><Link href='#' className='nav-link-light'>Compare cars</Link></li>
-                <li><Link href='#' className='nav-link-light'>Online car appraisal</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Find a car</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Sell your car</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Car dealers</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Compare cars</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Online car appraisal</Link></li>
               </ul>
             </Col>
 
@@ -384,11 +384,11 @@ const CarFinderPageLayout = (props) => {
             <Col lg={2} md={3} sm={6} className='mb-2 mb-sm-4'>
               <h3 className='fs-base text-light'>About</h3>
               <ul className='list-unstyled fs-sm'>
-                <li><Link href='#' className='nav-link-light'>About Finder</Link></li>
-                <li><Link href='#' className='nav-link-light'>Contact us</Link></li>
-                <li><Link href='#' className='nav-link-light'>FAQs &amp; support</Link></li>
-                <li><Link href='#' className='nav-link-light'>Mobile app</Link></li>
-                <li><Link href='#' className='nav-link-light'>Blog</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>About Finder</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Contact us</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>FAQs &amp; support</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Mobile app</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Blog</Link></li>
               </ul>
             </Col>
 
@@ -396,10 +396,10 @@ const CarFinderPageLayout = (props) => {
             <Col lg={2} md={3} sm={6} className='mb-2 mb-sm-4'>
               <h3 className='fs-base text-light'>Profile</h3>
               <ul className='list-unstyled fs-sm'>
-                <li><Link href='#' className='nav-link-light'>My account</Link></li>
-                <li><Link href='#' className='nav-link-light'>Wishlist</Link></li>
-                <li><Link href='#' className='nav-link-light'>My listings</Link></li>
-                <li><Link href='#' className='nav-link-light'>Add listing</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>My account</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Wishlist</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>My listings</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Add listing</Link></li>
               </ul>
             </Col>
 

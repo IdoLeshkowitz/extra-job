@@ -1,18 +1,23 @@
-import './globals.css'
+import '../../styles/theme.scss'
+import ScrollTopButton from '../components/ScrollTopButton'
+import SSRProvider from 'react-bootstrap/esm/SSRProvider'
+
 
 export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
+                                       children,
+                                   }: {
+    children: React.ReactNode
 }) {
-  return (
-    <html lang="en">
-      {/*
+    return (
+        <html lang="en">
+                {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
-      <head />
-      <body>{children}</body>
-    </html>
-  )
+                <head/>
+                <body>
+                    {children}
+                </body>
+        </html>
+    )
 }

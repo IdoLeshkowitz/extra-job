@@ -15,8 +15,8 @@ import ImageLoader from '../ImageLoader'
 import FormGroup from '../FormGroup'
 import SocialButton from '../SocialButton'
 import StarRating from '../StarRating'
-import SignInModalLight from '../partials/SignInModalLight'
-import SignUpModalLight from '../partials/SignUpModalLight'
+import SignInModalLight from './SignInModalLight'
+import SignUpModalLight from './SignUpModalLight'
 
 const CityGuidePageLayout = (props) => {
 
@@ -326,10 +326,10 @@ const CityGuidePageLayout = (props) => {
             <Col lg={2} md={3} sm={4}>
               <h3 className='fs-base text-light'>Quick links</h3>
               <ul className='list-unstyled fs-sm'>
-                <li><Link href='#' className='nav-link-light'>Top cities</Link></li>
-                <li><Link href='#' className='nav-link-light'>Accommodation</Link></li>
-                <li><Link href='#' className='nav-link-light'>Cafes &amp; restaurants</Link></li>
-                <li><Link href='#' className='nav-link-light'>Events</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Top cities</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Accommodation</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Cafes &amp; restaurants</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Events</Link></li>
               </ul>
             </Col>
 
@@ -337,10 +337,10 @@ const CityGuidePageLayout = (props) => {
             <Col lg={2} md={3} sm={4}>
               <h3 className='fs-base text-light'>Profile</h3>
               <ul className='list-unstyled fs-sm'>
-                <li><Link href='#' className='nav-link-light'>My account</Link></li>
-                <li><Link href='#' className='nav-link-light'>Favorites</Link></li>
-                <li><Link href='#' className='nav-link-light'>My listings</Link></li>
-                <li><Link href='#' className='nav-link-light'>Add listing</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>My account</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Favorites</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>My listings</Link></li>
+                <li><Link href='src/components/partials#' className='nav-link-light'>Add listing</Link></li>
               </ul>
             </Col>
 
@@ -373,10 +373,10 @@ const CityGuidePageLayout = (props) => {
 
               {/* Links */}
               <div className='d-flex flex-wrap fs-sm mb-lg-0 mb-4 pe-lg-4'>
-                <Link href='#' className='nav-link-light px-2 mx-1'>About</Link>
-                <Link href='#' className='nav-link-light px-2 mx-1'>Blog</Link>
-                <Link href='#' className='nav-link-light px-2 mx-1'>Support</Link>
-                <Link href='#' className='nav-link-light px-2 mx-1'>Contacts</Link>
+                <Link href='src/components/partials#' className='nav-link-light px-2 mx-1'>About</Link>
+                <Link href='src/components/partials#' className='nav-link-light px-2 mx-1'>Blog</Link>
+                <Link href='src/components/partials#' className='nav-link-light px-2 mx-1'>Support</Link>
+                <Link href='src/components/partials#' className='nav-link-light px-2 mx-1'>Contacts</Link>
               </div>
 
               <div className='d-flex align-items-center'>

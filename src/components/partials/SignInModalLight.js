@@ -1,6 +1,7 @@
+'use client';
 import { useState } from 'react'
 import Link from 'next/link'
-import Modal from 'react-bootstrap/Modal'
+import {Modal} from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import CloseButton from 'react-bootstrap/CloseButton'
@@ -39,7 +40,7 @@ const SignInModalLight = ({ onSwap, pillButtons, ...props }) => {
                 alt='Illusration'
               />
             </div>
-            <div className='mt-4 mt-sm-5'>Don&apos;t have an account? <a href='#' onClick={onSwap}>Sign up here</a></div>
+            <div className='mt-4 mt-sm-5'>Don&apos;t have an account? <a href='src/components/partials#' onClick={onSwap}>Sign up here</a></div>
           </div>
           <div className='col-md-6 px-4 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5'>
             <Button variant={`outline-info ${pillButtons ? 'rounded-pill' : ''} w-100 mb-3`}>
@@ -67,7 +68,7 @@ const SignInModalLight = ({ onSwap, pillButtons, ...props }) => {
               <Form.Group className='mb-4'>
                 <div className='d-flex align-items-center justify-content-between mb-2'>
                   <Form.Label htmlFor='si-password' className='mb-0'>Password</Form.Label>
-                  <Link href='#' className='fs-sm'>Forgot password?</Link>
+                  <Link href='src/components/partials#' className='fs-sm'>Forgot password?</Link>
                 </div>
                 <PasswordToggle id='si-password' placeholder='Enter password' required />
               </Form.Group>

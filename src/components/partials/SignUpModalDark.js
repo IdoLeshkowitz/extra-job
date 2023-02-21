@@ -54,7 +54,7 @@ const SignUpModalDark = ({ onSwap, pillButtons, ...props }) => {
                 alt='Illusration'
               />
             </div>
-            <div className='text-light mt-sm-4 pt-md-3'><span className='opacity-60'>Already have an account?</span> <a href='#' className='text-light' onClick={onSwap}>Sign in</a></div>
+            <div className='text-light mt-sm-4 pt-md-3'><span className='opacity-60'>Already have an account?</span> <a href='src/components/partials#' className='text-light' onClick={onSwap}>Sign in</a></div>
           </div>
           <div className='col-md-6 px-4 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5'>
             <Button variant={`outline-info ${pillButtons ? 'rounded-pill' : ''} w-100 mb-3`}>
@@ -101,7 +101,7 @@ const SignUpModalDark = ({ onSwap, pillButtons, ...props }) => {
               <Form.Check
                 type='checkbox'
                 id='terms-agree'
-                label={[<span key={1} className='opacity-70'>By joining, I agree to the </span>, <Link key={2} href='#' className='text-light'>Terms of use</Link>, <span key={3} className='opacity-70'> and </span>, <Link key={4} href='#' className='text-light'>Privacy policy</Link>]}
+                label={[<span key={1} className='opacity-70'>By joining, I agree to the </span>, <Link key={2} href='src/components/partials#' className='text-light'>Terms of use</Link>, <span key={3} className='opacity-70'> and </span>, <Link key={4} href='src/components/partials#' className='text-light'>Privacy policy</Link>]}
                 required
                 className='form-check-light mb-4'
               />

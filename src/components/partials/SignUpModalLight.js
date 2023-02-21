@@ -53,7 +53,7 @@ const SignUpModalLight = ({ onSwap, pillButtons, ...props }) => {
                 alt='Illusration'
               />
             </div>
-            <div className='mt-sm-4 pt-md-3'>Already have an account? <a href='#' onClick={onSwap}>Sign in</a></div>
+            <div className='mt-sm-4 pt-md-3'>Already have an account? <a href='src/components/partials#' onClick={onSwap}>Sign in</a></div>
           </div>
           <div className='col-md-6 px-4 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5'>
             <Button variant={`outline-info ${pillButtons ? 'rounded-pill' : ''} w-100 mb-3`}>
@@ -98,7 +98,7 @@ const SignUpModalLight = ({ onSwap, pillButtons, ...props }) => {
               <Form.Check
                 type='checkbox'
                 id='terms-agree'
-                label={[<span key={1}>By joining, I agree to the </span>, <Link key={2} href='#'>Terms of use</Link>, <span key={3}> and </span>, <Link key={4} href='#'>Privacy policy</Link>]}
+                label={[<span key={1}>By joining, I agree to the </span>, <Link key={2} href='src/components/partials#'>Terms of use</Link>, <span key={3}> and </span>, <Link key={4} href='src/components/partials#'>Privacy policy</Link>]}
                 required
                 className='mb-4'
               />

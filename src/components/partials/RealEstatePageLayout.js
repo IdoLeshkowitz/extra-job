@@ -13,8 +13,8 @@ import StickyNavbar from '../StickyNavbar'
 import StarRating from '../StarRating'
 import SocialButton from '../SocialButton'
 import MarketButton from '../MarketButton'
-import SignInModalLight from '../partials/SignInModalLight'
-import SignUpModalLight from '../partials/SignUpModalLight'
+import SignInModalLight from './SignInModalLight'
+import SignUpModalLight from './SignUpModalLight'
 
 const RealEstatePageLayout = (props) => {
 
@@ -415,11 +415,11 @@ const RealEstatePageLayout = (props) => {
                         <Link href={post.href} className='nav-link'>{post.title}</Link>
                       </h5>
                       <p className='mb-2 fs-sm'>{post.text}</p>
-                      <Link href='#' className='nav-link nav-link-muted d-inline-block me-3 p-0 fs-xs fw-normal'>
+                      <Link href='src/components/partials#' className='nav-link nav-link-muted d-inline-block me-3 p-0 fs-xs fw-normal'>
                         <i className='fi-calendar mt-n1 me-1 fs-sm align-middle opacity-70'></i>
                         {post.date}
 \                      </Link>
-                      <Link href='#' className='nav-link nav-link-muted d-inline-block p-0 fs-xs fw-normal'>
+                      <Link href='src/components/partials#' className='nav-link nav-link-muted d-inline-block p-0 fs-xs fw-normal'>
                         <i className='fi-chat-circle mt-n1 me-1 fs-sm align-middle opacity-70'></i>
                         {`${post.comments} comments`}
                       </Link>

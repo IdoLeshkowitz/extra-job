@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react'
 import { animateScroll as scroll } from 'react-scroll'
 

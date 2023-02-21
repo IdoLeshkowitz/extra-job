@@ -40,7 +40,7 @@ const SignInModalDark = ({ onSwap, pillButtons, ...props }) => {
                 alt='Illusration'
               />
             </div>
-            <div className='text-light mt-4 mt-sm-5'><span className='opacity-60'>Don&apos;t have an account?</span> <a href='#' className='text-light' onClick={onSwap}>Sign up here</a></div>
+            <div className='text-light mt-4 mt-sm-5'><span className='opacity-60'>Don&apos;t have an account?</span> <a href='src/components/partials#' className='text-light' onClick={onSwap}>Sign up here</a></div>
           </div>
           <div className='col-md-6 px-4 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5'>
             <Button variant={`outline-info ${pillButtons ? 'rounded-pill' : ''} w-100 mb-3`}>
@@ -69,7 +69,7 @@ const SignInModalDark = ({ onSwap, pillButtons, ...props }) => {
               <Form.Group className='mb-4'>
                 <div className='d-flex align-items-center justify-content-between mb-2'>
                   <Form.Label htmlFor='si-password' className='text-light mb-0'>Password</Form.Label>
-                  <Link href='#' className='text-light fs-sm'>Forgot password?</Link>
+                  <Link href='src/components/partials#' className='text-light fs-sm'>Forgot password?</Link>
                 </div>
                 <PasswordToggle light id='si-password' placeholder='Enter password' required />
               </Form.Group>

@@ -1,19 +1,12 @@
 'use client';
 import Image from 'next/image'
-import {Inter} from '@next/font/google'
-import styles from './page.module.css'
-import JobBoardPageLayout from '../components/partials/JobBoardPageLayout'
 import Container from 'react-bootstrap/esm/Container'
 import Row from 'react-bootstrap/esm/Row'
-import {Accordion, Badge, Button, Col, Form, InputGroup, OverlayTrigger} from "react-bootstrap";
-import {Navigation} from "swiper";
-import MarketButton from "../components/MarketButton";
-import ImageLoader from "../components/ImageLoader";
-import CursorParallax, {Layer} from '../components/CursorParallax'
-import Link from "next/link";
+import {Col, Form, InputGroup} from "react-bootstrap";
+import CursorParallax, {Layer} from '@/components/CursorParallax'
 
-import DropdownSelect from '../components/DropdownSelect'
-import FormGroup from '../components/FormGroup'
+import DropdownSelect from '@/components/DropdownSelect'
+import FormGroup from '@/components/FormGroup'
 
 export default function Home() {
     return (
