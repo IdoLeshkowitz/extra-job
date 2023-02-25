@@ -1,18 +1,14 @@
-import { PrismaClient } from "@prisma/client";
+import mongoose from 'mongoose'
+import * as process from "process";
 
-declare global {
-    // eslint-disable-next-line no-var
-    var cachedPrisma: PrismaClient;
-}
-
-let prisma: PrismaClient;
-if (process.env.NODE_ENV === "production") {
-    prisma = new PrismaClient();
-} else {
-    if (!global.cachedPrisma) {
-        global.cachedPrisma = new PrismaClient();
+export async function connect() {
+    try {
+        if (!process.env.DATABASE_URL) {
+            throw new Error('database url not found')
+        }
+        await mongoose.connect(process.env.DATABASE_URL)
+        mongoose.set('strictQuery', false)
+    } catch (err) {
+        console.error(err)
     }
-    prisma = global.cachedPrisma;
 }
-
-export const db = prisma;

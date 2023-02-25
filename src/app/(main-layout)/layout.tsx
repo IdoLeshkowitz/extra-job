@@ -6,8 +6,7 @@ export default function MainLayout({children}: { children: ReactNode }) {
     return (
         <html>
             <body>
-                    <JobBoardPageLayout
-                    >
+                    <JobBoardPageLayout>
                         {children}
                     </JobBoardPageLayout>
             </body>
