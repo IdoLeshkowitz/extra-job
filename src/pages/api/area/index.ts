@@ -6,7 +6,7 @@ import {connect} from "../../../../lib/db";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         await connect()
-        const areaToAdd : Area = req.body
+        const {data: areaToAdd}: { data: Area } = req.body
         const addedArea = await createArea(areaToAdd)
         res.status(200).json({data: addedArea})
     }

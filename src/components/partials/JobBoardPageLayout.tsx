@@ -7,6 +7,7 @@ import ImageLoader from "@/components/ImageLoader";
 import Link from "next/link";
 import MarketButton from '@/components/MarketButton'
 import SocialButton from '@/components/SocialButton'
+import AddAreaModal from "@/partials/AddAreaModal";
 const JobBoardPageLayout = (props: any) => {
 
     // Sign in modal
@@ -17,7 +18,7 @@ const JobBoardPageLayout = (props: any) => {
     // Sign up modal
     const [signupShow, setSignupShow] = useState(false)
     const handleSignupClose = () => setSignupShow(false)
-    const userLoggedIn = true
+    const userLoggedIn = false
 
     // Swap modals
     const handleSignInToUp = (e: any) => {
@@ -55,17 +56,15 @@ const JobBoardPageLayout = (props: any) => {
                     onSwap={handleSignUpToIn}
                 />}
                 navbar
-                <NavBar userLoggedIn={true}/>
                 {/* Page wrapper for sticky footer
                 Wraps everything except footer to push footer to the bottom of the page if there is little content */}
-                <main className='page-wrapper'>
 
                     {/* Navbar (main site header with branding and navigation) */}
 
 
                     {/* Page content */}
                     {props.children}
-                </main>
+                <NavBar userLoggedIn={true}/>
 
 
                 {/* Footer */}
