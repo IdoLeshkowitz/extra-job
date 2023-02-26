@@ -7,6 +7,7 @@ import ImageLoader from "@/components/ImageLoader";
 import Link from "next/link";
 import MarketButton from '@/components/MarketButton'
 import SocialButton from '@/components/SocialButton'
+import AddAreaModal from "@/partials/AddAreaModal";
 const JobBoardPageLayout = (props: any) => {
 
     // Sign in modal
@@ -17,7 +18,7 @@ const JobBoardPageLayout = (props: any) => {
     // Sign up modal
     const [signupShow, setSignupShow] = useState(false)
     const handleSignupClose = () => setSignupShow(false)
-    const userLoggedIn = true
+    const userLoggedIn = false
 
     // Swap modals
     const handleSignInToUp = (e: any) => {
@@ -55,17 +56,15 @@ const JobBoardPageLayout = (props: any) => {
                     onSwap={handleSignUpToIn}
                 />}
                 navbar
-                <NavBar userLoggedIn={true}/>
                 {/* Page wrapper for sticky footer
                 Wraps everything except footer to push footer to the bottom of the page if there is little content */}
-                <main className='page-wrapper'>
 
                     {/* Navbar (main site header with branding and navigation) */}
 
 
                     {/* Page content */}
                     {props.children}
-                </main>
+                <NavBar userLoggedIn={true}/>
 
 
                 {/* Footer */}
@@ -113,15 +112,12 @@ const JobBoardPageLayout = (props: any) => {
 
                                 {/* Socials */}
                                 <div className='text-nowrap border-top border-light mt-3 py-4'>
-                                    <SocialButton href='#' brand='facebook' variant='translucent' roundedCircle light
+                                    <SocialButton size="sm" href='#' brand='facebook' variant='translucent' roundedCircle light
                                                   className='me-2'/>
-                                    <SocialButton href='#' brand='twitter' variant='translucent' roundedCircle light
+                                    <SocialButton size="sm" href='#' brand='twitter' variant='translucent' roundedCircle light
                                                   className='me-2'/>
-                                    <SocialButton href='#' brand='messenger' variant='translucent' roundedCircle light
+                                    <SocialButton size="sm" href='#' brand='messenger' variant='translucent' roundedCircle light
                                                   className='me-2'/>
-                                    <SocialButton href='#' brand='telegram' variant='translucent' roundedCircle light
-                                                  className='me-2'/>
-                                    <SocialButton href='#' brand='whatsapp' variant='translucent' roundedCircle light/>
                                 </div>
                             </Col>
                             <Col md={6} xl={{offset: 1}}>
