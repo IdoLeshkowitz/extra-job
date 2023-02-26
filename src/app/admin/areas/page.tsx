@@ -12,7 +12,7 @@ const AreasPanel = () => {
     const [areas, setAreas] = useState<Area[] | null>(null)
     const [modalOpen, setModalOpen] = useState(false)
     useEffect(() => {
-        fetch('http://localhost:3001/api/area')
+        fetch('/api/area')
             .then(res => res.json())
             .then(json => setAreas(json.data))
 
@@ -25,7 +25,7 @@ const AreasPanel = () => {
             return areaId !== id
         })
         setAreas(filteredAreas || [])
-        const res = await fetch(`http://localhost:3001/api/area/${id}`, {
+        const res = await fetch(`/api/area/${id}`, {
             method: 'DELETE',
             headers: {'content-type': 'application/json'},
         })
