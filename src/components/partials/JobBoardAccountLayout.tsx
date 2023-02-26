@@ -6,13 +6,13 @@ import Nav from 'react-bootstrap/Nav'
 import Collapse from 'react-bootstrap/Collapse'
 import Button from 'react-bootstrap/Button'
 
-const JobBoardAccountLayout = ({accountPageTitle, activeAccountNav, children}) => {
+const JobBoardAccountLayout = ({accountPageTitle, activeAccountNav, children}: any) => {
 
     // Add class to body to enable gray background
     useEffect(() => {
         const body = document.querySelector('body')
         document.body.classList.add('bg-secondary')
-        return () => body.classList.remove('bg-secondary')
+        return () => body?.classList.remove('bg-secondary')
     })
 
     // State to control Collapse
