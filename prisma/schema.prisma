@@ -1,5 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+enum Role {
+  ADMIN
+  JOBSEEKER
+}
 
 generator client {
   provider = "prisma-client-js"
@@ -45,6 +49,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  role          Role      @default(JOBSEEKER)
 }
 
 model VerificationToken {
@@ -53,4 +58,9 @@ model VerificationToken {
   expires DateTime
 
   @@unique([id, token])
+}
+
+model Area {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
 }

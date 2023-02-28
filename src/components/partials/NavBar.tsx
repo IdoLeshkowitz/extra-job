@@ -106,7 +106,7 @@ export default function NavBar({session, openSignInModal}: NavbarProps) {
                                 </Dropdown.Menu>
                             </Nav.Item> :
 
-                            <Nav.Item className='d-lg-none'>
+                            <Nav.Item as={Nav.Link} href="/api/auth/logout" className='d-lg-none'>
                                 <Nav.Link>
                                     <i className='fi-user me-2'></i>
                                     יציאה
