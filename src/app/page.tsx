@@ -5,7 +5,7 @@ import SearchJobForm from "@/partials/SearchJobForm";
 export default function HomePage() {
     return (
         <section className='bg-dark pb-4 pt-5'>
-            {/*<div className='container py-5'>*/}
+            <div className='container py-5'>
             <div className='row align-items-center mt-2 mt-md-0 pt-md-4 pt-lg-5 pb-5'>
 
                 {/*CURSOR PARALLAX*/}
@@ -21,10 +21,10 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/*    חיפוש משרה*/}
+                חיפוש משרה
             {/*    /!*SEARCH FORM*!/*/}
             <SearchJobForm/>
-            {/*</div>*/}
+            </div>
         </section>
     )
 }
