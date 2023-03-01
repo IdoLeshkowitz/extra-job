@@ -29,7 +29,7 @@ const JobBoardPageLayout = ({children, session}: JobBoardPageLayoutProps) => {
 
     return (
         <SSRProvider>
-            <div>
+            <main className="page-wrapper">
                 {/* Sign in modal */}
                 {modalState ===  ModalState.SignIn && <SignInModalLight
                     centered
@@ -46,7 +46,7 @@ const JobBoardPageLayout = ({children, session}: JobBoardPageLayoutProps) => {
 
                 {/* Footer */}
                 <Footer/>
-            </div>
+            </main>
         </SSRProvider>
     )
 }
