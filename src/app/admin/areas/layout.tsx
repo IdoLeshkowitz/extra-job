@@ -40,7 +40,7 @@ export default function AreasLayout({
                     </div>
                 </Col>
 
-                    {/* List of areas */}
+                     List of areas
                     {children}
             </Row>
         </>

@@ -2,7 +2,7 @@
 
 import {Field, Form, Formik} from "formik";
 
-export default async function AreasPage() {
+export default function AreasPage() {
     return (
         <>
             {/*<Formik*/}
