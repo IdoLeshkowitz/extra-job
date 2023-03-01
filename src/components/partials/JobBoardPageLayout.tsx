@@ -1,7 +1,9 @@
 'use client';
 import {useState} from 'react'
 import {Session} from "next-auth";
-
+import NavBar from "@/partials/NavBar";
+import Footer from "@/components/Footer";
+import SignInModalLight from "@/partials//SignInModalLight";
 enum ModalState {
     SignIn,
     SignUp,
@@ -14,33 +16,33 @@ interface JobBoardPageLayoutProps {
 }
 
 const JobBoardPageLayout = ({children, session}: JobBoardPageLayoutProps) => {
-    // const [modalState, setModalState] = useState<ModalState>(ModalState.InActive)
-    // const handleSignInToUp = (e: any) => {
-    //     e.preventDefault()
-    // }
-    // const handleSignUpToIn = (e: any) => {
-    //     e.preventDefault()
-    // }
+    const [modalState, setModalState] = useState<ModalState>(ModalState.InActive)
+    const handleSignInToUp = (e: any) => {
+        e.preventDefault()
+    }
+    const handleSignUpToIn = (e: any) => {
+        e.preventDefault()
+    }
 
 
     return (
         <main className="page-wrapper">
-            {/*/!* Sign in modal *!/*/}
-            {/*{modalState ===  ModalState.SignIn && <SignInModalLight*/}
-            {/*    centered*/}
-            {/*    size='lg'*/}
-            {/*    pillButtons*/}
-            {/*    show={true}*/}
-            {/*    onHide={() => setModalState(ModalState.InActive)}*/}
-            {/*    onSwap={() => setModalState(ModalState.SignUp)}*/}
-            {/*/>}*/}
+            {/* Sign in modal */}
+            {modalState ===  ModalState.SignIn && <SignInModalLight
+                centered
+                size='lg'
+                pillButtons
+                show={true}
+                onHide={() => setModalState(ModalState.InActive)}
+                onSwap={() => setModalState(ModalState.SignUp)}
+            />}
 
-            {/*/!*PAGE CONTENT*!/*/}
-            {/*{children}*/}
-            {/*<NavBar session = {session} openSignInModal={()=>setModalState(ModalState.SignIn)}/>*/}
+            {/*PAGE CONTENT*/}
+            {children}
+            <NavBar session = {session} openSignInModal={()=>setModalState(ModalState.SignIn)}/>
 
-            {/*/!* Footer *!/*/}
-            {/*<Footer/>*/}
+            {/* Footer */}
+            <Footer/>
         </main>
     )
 }
