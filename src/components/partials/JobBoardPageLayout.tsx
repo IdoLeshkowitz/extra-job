@@ -28,26 +28,24 @@ const JobBoardPageLayout = ({children, session}: JobBoardPageLayoutProps) => {
 
 
     return (
-        <SSRProvider>
             <main className="page-wrapper">
-                {/* Sign in modal */}
-                {modalState ===  ModalState.SignIn && <SignInModalLight
-                    centered
-                    size='lg'
-                    pillButtons
-                    show={true}
-                    onHide={() => setModalState(ModalState.InActive)}
-                    onSwap={() => setModalState(ModalState.SignUp)}
-                />}
+                {/*/!* Sign in modal *!/*/}
+                {/*{modalState ===  ModalState.SignIn && <SignInModalLight*/}
+                {/*    centered*/}
+                {/*    size='lg'*/}
+                {/*    pillButtons*/}
+                {/*    show={true}*/}
+                {/*    onHide={() => setModalState(ModalState.InActive)}*/}
+                {/*    onSwap={() => setModalState(ModalState.SignUp)}*/}
+                {/*/>}*/}
 
-                {/*PAGE CONTENT*/}
-                {children}
-                <NavBar session = {session} openSignInModal={()=>setModalState(ModalState.SignIn)}/>
+                {/*/!*PAGE CONTENT*!/*/}
+                {/*{children}*/}
+                {/*<NavBar session = {session} openSignInModal={()=>setModalState(ModalState.SignIn)}/>*/}
 
-                {/* Footer */}
-                <Footer/>
+                {/*/!* Footer *!/*/}
+                {/*<Footer/>*/}
             </main>
-        </SSRProvider>
     )
 }
 
