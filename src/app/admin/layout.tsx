@@ -1,9 +1,8 @@
-'use client'
 import JobBoardAccountLayout from "@/partials/JobBoardAccountLayout";
 
 export default function AdminLayout({
-    children,
-}: {
+                                        children,
+                                    }: {
     children: React.ReactNode
 }) {
     return (
@@ -12,8 +11,8 @@ export default function AdminLayout({
                 accountPageTitle='אזורים'
                 activeAccountNav='/admin/all-areas'
             >
-            {children}
-        </JobBoardAccountLayout>
+                {children}
+            </JobBoardAccountLayout>
         </main>
     )
 }
