@@ -18,7 +18,7 @@ export default async function RootLayout({
             <body>
                 <Provider>
                     <JobBoardPageLayout session={await getServerSession(authOptions)}>
-                    {/*    {children}*/}
+                        {children}
                     </JobBoardPageLayout>
                 </Provider>
             </body>
