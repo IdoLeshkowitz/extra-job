@@ -24,17 +24,17 @@ const AddAreaModal = ({onHide, pillButtons, areas, onAdd,...props}) => {
         }
     })
     const handleSubmit =  async (values) => {
-        setLoading(true)
-        const res = await fetch('/api/area', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({data : values})
-        })
-        const {data : Area} = await res.json()
-        setLoading(false)
-        onAdd(Area)
+        // setLoading(true)
+        // const res = await fetch('/api/area', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({data : values})
+        // })
+        // const {data : Area} = await res.json()
+        // setLoading(false)
+        // onAdd(Area)
     }
 
     return (

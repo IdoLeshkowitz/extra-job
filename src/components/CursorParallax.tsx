@@ -1,6 +1,7 @@
-
+'use client'
 import {ReactNode, useEffect, useRef} from 'react'
 import Parallax from 'parallax-js'
+import Image from "next/image";
 
 // Layer
 interface LayerProps {
@@ -10,7 +11,7 @@ interface LayerProps {
 }
 
 interface CursorParallaxProps {
-    children: ReactNode;
+    children?: ReactNode;
     className?: string;
 
 }
@@ -44,7 +45,38 @@ const CursorParallax = ({children, className}: CursorParallaxProps) => {
             ref={el}
             className={`parallax${className ? ` ${className}` : ''}`}
         >
-            {children}
+            <Layer depth={0.1}>
+                <Image priority src='/images/job-board/hero-banner-1/layer01.svg' width={526}
+                       height={353} alt='Layer'/>
+            </Layer>
+            <Layer depth={0.16}>
+                <Image priority src='/images/job-board/hero-banner-1/layer02.svg' width={526}
+                       height={353} alt='Layer'/>
+            </Layer>
+            <Layer depth={0.38}>
+                <Image priority src='/images/job-board/hero-banner-1/layer03.svg' width={526}
+                       height={353} alt='Layer'/>
+            </Layer>
+            <Layer depth={0.16}>
+                <Image priority src='/images/job-board/hero-banner-1/layer04.svg' width={526}
+                       height={353} alt='Layer'/>
+            </Layer>
+            <Layer depth={0.16}>
+                <Image priority src='/images/job-board/hero-banner-1/layer05.svg' width={526}
+                       height={353} alt='Layer'/>
+            </Layer>
+            <Layer depth={0.45}>
+                <Image priority src='/images/job-board/hero-banner-1/layer06.svg' width={526}
+                       height={353} alt='Layer'/>
+            </Layer>
+            <Layer depth={0.3}>
+                <Image priority src='/images/job-board/hero-banner-1/layer07.svg' width={526}
+                       height={353} alt='Layer'/>
+            </Layer>
+            <Layer depth={0.2}>
+                <Image priority src='/images/job-board/hero-banner-1/layer08.svg' width={526}
+                       height={353} alt='Layer'/>
+            </Layer>
         </div>
     )
 }

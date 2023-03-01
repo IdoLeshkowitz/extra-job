@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button'
 import CloseButton from 'react-bootstrap/CloseButton'
 import ImageLoader from '../ImageLoader'
 import PasswordToggle from '../PasswordToggle'
+import {signIn} from "next-auth/react";
 
 const SignInModalLight = ({ onSwap, pillButtons, ...props }) => {
 
@@ -43,7 +44,7 @@ const SignInModalLight = ({ onSwap, pillButtons, ...props }) => {
             <div className='mt-4 mt-sm-5'>Don&apos;t have an account? <a href='src/components/partials#' onClick={onSwap}>Sign up here</a></div>
           </div>
           <div className='col-md-6 px-4 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5'>
-            <Button variant={`outline-info ${pillButtons ? 'rounded-pill' : ''} w-100 mb-3`}>
+            <Button variant={`outline-info ${pillButtons ? 'rounded-pill' : ''} w-100 mb-3`} onClick={()=>signIn('google')}>
               <i className='fi-google fs-lg me-1'></i>
               Sign in with Google
             </Button>
