@@ -9,7 +9,7 @@ export default function HomePage() {
             <div className='row align-items-center mt-2 mt-md-0 pt-md-4 pt-lg-5 pb-5'>
 
                 {/*CURSOR PARALLAX*/}
-                <div className='col-md-5 order-md-2 mb-5 mb-md-0'>
+                <div className='col-md-5 order-md-2 mb-5 mb-md-0 py-5'>
                     <CursorParallax className='mx-auto'/>
                 </div>
 
