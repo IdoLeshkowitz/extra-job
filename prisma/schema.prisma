@@ -50,6 +50,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   role          Role      @default(JOBSEEKER)
+  cv ?????
 }
 
 model VerificationToken {

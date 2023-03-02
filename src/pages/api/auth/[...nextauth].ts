@@ -10,11 +10,11 @@ export const authOptions: NextAuthOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID as any,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as any,
         }),
-        // Auth0Provider({
-        //     clientId: process.env.AUTH0_CLIENT_ID as any,
-        //     clientSecret: process.env.AUTH0_CLIENT_SECRET as any,
-        //     issuer: process.env.AUTH0_ISSUER as any,
-        // }),
+        Auth0Provider({
+            clientId: process.env.AUTH0_CLIENT_ID as any,
+            clientSecret: process.env.AUTH0_CLIENT_SECRET as any,
+            issuer: process.env.AUTH0_ISSUER as any,
+        }),
     ]
 }
 

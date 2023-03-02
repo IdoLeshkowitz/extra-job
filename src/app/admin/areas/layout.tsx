@@ -41,8 +41,12 @@ export default function AreasLayout({
                 </Col>
 
                      List of areas
+                <div className="col-md-9">
                     {children}
+                </div>
             </Row>
         </>
     )
 }
+
+
