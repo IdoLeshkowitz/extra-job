@@ -29,12 +29,12 @@ export default function Footer() {
                 </Row>
 
 
-                {/* Copyright */}
-                <p className='fs-sm text-center text-sm-start mb-4'>
-                    <span className='text-light opacity-50'>&copy; All rights reserved. Made by </span>
-                    <a href='https://createx.studio/' className='nav-link-light fw-bold' target='_blank'
-                       rel='noreferrer'>Ido Leshkowitz</a>
-                </p>
+                {/*/!* Copyright *!/*/}
+                {/*<p className='fs-sm text-center text-sm-start mb-4'>*/}
+                {/*    <span className='text-light opacity-50'>&copy; All rights reserved. Made by </span>*/}
+                {/*    <a href='https://createx.studio/' className='nav-link-light fw-bold' target='_blank'*/}
+                {/*       rel='noreferrer'>Ido Leshkowitz</a>*/}
+                {/*</p>*/}
             </Container>
         </footer>
     )

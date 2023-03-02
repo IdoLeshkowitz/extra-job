@@ -45,7 +45,7 @@ model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
   email         String?   @unique
-  emailVerified DateTime?
+  // emailVerified DateTime?   ???MAYBE NOT NEEDED???
   image         String?
   accounts      Account[]
   sessions      Session[]

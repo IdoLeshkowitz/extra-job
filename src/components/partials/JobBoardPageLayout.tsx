@@ -1,9 +1,9 @@
 'use client';
 import {useState} from 'react'
-import {Session} from "next-auth";
 import NavBar from "@/partials/NavBar";
 import Footer from "@/components/Footer";
 import SignInModalLight from "@/partials//SignInModalLight";
+
 enum ModalState {
     SignIn,
     SignUp,
@@ -12,10 +12,9 @@ enum ModalState {
 
 interface JobBoardPageLayoutProps {
     children: React.ReactNode
-    session: Session | null
 }
 
-const JobBoardPageLayout = ({children, session}: JobBoardPageLayoutProps) => {
+const JobBoardPageLayout = ({children}: JobBoardPageLayoutProps) => {
     const [modalState, setModalState] = useState<ModalState>(ModalState.InActive)
     const handleSignInToUp = (e: any) => {
         e.preventDefault()
@@ -28,7 +27,7 @@ const JobBoardPageLayout = ({children, session}: JobBoardPageLayoutProps) => {
     return (
         <main className="page-wrapper">
             {/* Sign in modal */}
-            {modalState ===  ModalState.SignIn && <SignInModalLight
+            {modalState === ModalState.SignIn && <SignInModalLight
                 centered
                 size='lg'
                 pillButtons
@@ -39,10 +38,10 @@ const JobBoardPageLayout = ({children, session}: JobBoardPageLayoutProps) => {
 
             {/*PAGE CONTENT*/}
             {children}
-            <NavBar session = {session} openSignInModal={()=>setModalState(ModalState.SignIn)}/>
+
 
             {/* Footer */}
-            <Footer/>
+
         </main>
     )
 }
