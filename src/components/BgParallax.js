@@ -7,8 +7,8 @@ const BgParallax = ({
   imgSrc,
   overlay,
   children,
-  contentWrapper,
   className,
+  contentWrapper ,
   ...props
 }) => {
 

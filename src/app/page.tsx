@@ -25,6 +25,7 @@ export default function HomePage() {
                 </div>
 
                 <BgParallax
+                    contentWrapper={null}
                     imgSrc='/images/job-board/blog/15.jpg'
                     type='scroll' // scale, opacity, scroll-opacity, scale-opacity
                     speed={0.5} // from -1.0 to 2.0
