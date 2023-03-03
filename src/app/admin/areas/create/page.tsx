@@ -36,7 +36,6 @@ const loading = false;
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
-                    isInvalid={formik.touched.name && formik.errors.name}
                 />
                 <Form.Control.Feedback type="invalid">
                     {formik.errors.name}
