@@ -1,8 +1,7 @@
-import {Card, Col, Container, Row} from "react-bootstrap";
-import Link from "next/link";
+'use client'
+import {Col, Container, Row} from "react-bootstrap";
 import SocialButton from "@/components/SocialButton";
-import MarketButton from "@/components/MarketButton";
-import ImageLoader from "@/components/ImageLoader";
+
 
 export default function Footer() {
     return (

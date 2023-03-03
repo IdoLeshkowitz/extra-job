@@ -10,8 +10,7 @@ import {useRouter} from "next/navigation";
 const validationSchema = object({
     name: string().required('שדה חובה').matches(/^[a-zA-Zא-ת ]+$/, 'שם אזור לא תקין'),
 })
-const AddAreaModal = ({onHide, pillButtons, areas, onAdd, ...props}) => {
-    const router = useRouter()
+const AddAreaModal = ({pillButtons, areas, onAdd, ...props}) => {
     const formik = useFormik({
         initialValues: {
             name: '',

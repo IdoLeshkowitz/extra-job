@@ -6,13 +6,12 @@ export default function AdminLayout({
     children: React.ReactNode
 }) {
     return (
-        <main className="page-wrapper">
             <JobBoardAccountLayout
                 accountPageTitle='אזורים'
                 activeAccountNav='/admin/all-areas'
             >
                 {children}
             </JobBoardAccountLayout>
-        </main>
+
     )
 }
