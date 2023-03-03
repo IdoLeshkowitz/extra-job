@@ -14,17 +14,17 @@ const loading = false;
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            try {
-                fetch('/api/areas', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(values),
-                })
-            } catch (e) {
-                console.log(e)
-            }
+            // try {
+            //     fetch('/api/areas', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify(values),
+            //     })
+            // } catch (e) {
+            //     console.log(e)
+            // }
         }
     })
     return <Form onSubmit={formik.handleSubmit}>

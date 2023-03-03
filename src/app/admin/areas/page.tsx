@@ -1,8 +1,6 @@
 import {useRouter} from "next/navigation";
 
 export default async function AreasPage() {
-    const res = await fetch('http://localhost:3000/api/areas/1')
-    console.log(res.json())
     return (
         <>
             <div>xscxsx</div>
