@@ -21,6 +21,7 @@ export default function SearchJobForm() {
             <hr className='d-md-none my-2'/>
             <div className='d-sm-flex'>
                 <DropdownSelect
+                    darkMenu={true}
                     defaultValue='All categories'
                     icon='fi-list'
                     options={[
@@ -38,6 +39,7 @@ export default function SearchJobForm() {
                 />
                 <hr className='d-md-none my-2'/>
                 <DropdownSelect
+                    darkMenu={true}
                     defaultValue='All categories'
                     icon='fi-list'
                     options={[
