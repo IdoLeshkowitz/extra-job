@@ -3,27 +3,37 @@ import '../../styles/theme.scss'
 import Provider from './provider';
 import NavBar from "@/partials/NavBar";
 import Footer from "@/components/Footer";
-
-export default function RootLayout({
-                                       children,
-                                   }: {
-    children: React.ReactNode
-}) {
+import {ReactNode, useState} from 'react';
+import SignInModalLight from "@/partials/SignInModalLight";
+enum ModalState {
+    SignIn,
+    SignUp,
+    InActive
+}
+function RootLayout({children}: { children: ReactNode }) {
+    const [modalState, setModalState] = useState<ModalState>(ModalState.InActive)
     return (
         <html>
-            {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
             <body>
                 <Provider>
                     <main className="page-wrapper">
-                        <NavBar openSignInModal={()=>{}}/>
+                        {/* Sign in modal */}
+                        {modalState === ModalState.SignIn && <SignInModalLight
+                            centered
+                            size='lg'
+                            pillButtons
+                            show={true}
+                            onHide={() => setModalState(ModalState.InActive)}
+                            onSwap={() => setModalState(ModalState.SignUp)}
+                        />}
+                        <NavBar/>
                         {children}
-                        <Footer/>
                     </main>
+                    <Footer/>
                 </Provider>
             </body>
         </html>
     )
 }
+
+export default RootLayout

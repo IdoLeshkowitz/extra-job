@@ -12,10 +12,9 @@ import Image from 'next/image'
 import {signIn, signOut, useSession} from "next-auth/react";
 
 interface NavbarProps extends HTMLAttributes<HTMLDivElement> {
-    openSignInModal: () => void
 }
 
-export default function NavBar({openSignInModal}: NavbarProps) {
+export default function NavBar() {
     const session = useSession()
     const activeNav: string = 'Home'
     return (
