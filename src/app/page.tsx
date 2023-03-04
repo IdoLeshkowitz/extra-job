@@ -23,15 +23,6 @@ export default function HomePage() {
                         </h1>
                     </div>
                 </div>
-
-                <BgParallax
-                    contentWrapper={null}
-                    imgSrc='/images/job-board/blog/15.jpg'
-                    type='scroll' // scale, opacity, scroll-opacity, scale-opacity
-                    speed={0.5} // from -1.0 to 2.0
-                    overlay='gradient' // or overlay={50} from 0 to 100
-                    className=' bg-dark zindex-1 '
-                >
                     <Container className='content-overlay py-md-5 mt-n2 mb-lg-3'>
                         <div className='mt-5 mb-md-5 py-5'>
                             <Col xl={6} lg={8} md={10} className='mx-auto mb-sm-5 mb-4  text-center'>
@@ -48,7 +39,6 @@ export default function HomePage() {
                             </Col>
                         </div>
                     </Container>
-                </BgParallax>
             </div>
         </section>
     )

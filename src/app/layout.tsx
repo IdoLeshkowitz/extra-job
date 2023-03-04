@@ -26,7 +26,7 @@ function RootLayout({children}: { children: ReactNode }) {
                             onHide={() => setModalState(ModalState.InActive)}
                             onSwap={() => setModalState(ModalState.SignUp)}
                         />}
-                        <NavBar/>
+                        {/*<NavBar/>*/}
                         {children}
                     </main>
                     <Footer/>
