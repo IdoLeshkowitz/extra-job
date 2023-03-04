@@ -9,18 +9,16 @@ export default function HomePage() {
     return (
         <section className='bg-dark pb-4 pt-5'>
             <div className='container-fluid'>
-                <div className='row align-items-center mt-2 mt-md-0 pt-md-4 pt-lg-5 pb-5 p-5'>
-
-                    {/*CURSOR PARALLAX*/}
-                    <div className='col-md-5 order-md-2 mb-5 mb-md-0 py-5'>
-                        <CursorParallax className='mx-auto'/>
-                    </div>
-
+                <div className='row align-items-end mt-2 mt-md-0 pt-md-4 pt-lg-5 pb-5 p-5 '>
                     {/*HEADLINE*/}
-                    <div className="col-md-7 order-md-1">
+                    <div className="col-md-7 order-md-2 ps-5 pt-5">
                         <h1 className='display-4 text-light pb-2 mb-4 mb-lg-5' style={{maxWidth: '29.5rem'}}>
                             הקריירה שלך זאת העבודה<span className='text-primary'> שלנו</span>
                         </h1>
+                    </div>
+                    {/*CURSOR PARALLAX*/}
+                    <div className='col-md-5 order-md-1 mb-5 mb-md-0 py-5'>
+                        <CursorParallax className='mx-auto'/>
                     </div>
                 </div>
                     <Container className='content-overlay py-md-5 mt-n2 mb-lg-3'>
