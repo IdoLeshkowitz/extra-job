@@ -1,41 +1,35 @@
-'use client';
+'use client'
 import {Modal} from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import CloseButton from 'react-bootstrap/CloseButton'
 import {useFormik} from "formik"
 import {object, string} from 'yup'
-import {useState} from "react";
 import Button from "react-bootstrap/Button";
 import {useRouter} from "next/navigation";
 
 const validationSchema = object({
     name: string().required('שדה חובה').matches(/^[a-zA-Zא-ת ]+$/, 'שם אזור לא תקין'),
 })
-const AddAreaModal = ({onHide, pillButtons, areas, onAdd,...props}) => {
-    const [loading, setLoading] = useState(false)
-    const router = useRouter()
+const AddAreaModal = ({pillButtons, areas, onAdd, ...props}) => {
     const formik = useFormik({
         initialValues: {
             name: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            handleSubmit(values)
+        onSubmit: async (values) => {
+            try {
+                fetch('/api/areas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(values),
+                })
+            } catch (e) {
+                console.log(e)
+            }
         }
     })
-    const handleSubmit =  async (values) => {
-        // setLoading(true)
-        // const res = await fetch('/api/area', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({data : values})
-        // })
-        // const {data : Area} = await res.json()
-        // setLoading(false)
-        // onAdd(Area)
-    }
 
     return (
         <Modal centered size='lg'{...props} className='signin-modal'>

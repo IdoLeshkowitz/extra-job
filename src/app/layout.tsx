@@ -1,27 +1,39 @@
+'use client'
 import '../../styles/theme.scss'
-import JobBoardPageLayout from "@/partials/JobBoardPageLayout";
 import Provider from './provider';
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-
-export default async function RootLayout({
-                                             children,
-                                         }: {
-    children: React.ReactNode
-}) {
+import NavBar from "@/partials/NavBar";
+import Footer from "@/components/Footer";
+import {ReactNode, useState} from 'react';
+import SignInModalLight from "@/partials/SignInModalLight";
+enum ModalState {
+    SignIn,
+    SignUp,
+    InActive
+}
+function RootLayout({children}: { children: ReactNode }) {
+    const [modalState, setModalState] = useState<ModalState>(ModalState.InActive)
     return (
         <html>
-            {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
             <body>
                 <Provider>
-                    <JobBoardPageLayout session={await getServerSession(authOptions)}>
+                    <main className="page-wrapper">
+                        {/* Sign in modal */}
+                        {modalState === ModalState.SignIn && <SignInModalLight
+                            centered
+                            size='lg'
+                            pillButtons
+                            show={true}
+                            onHide={() => setModalState(ModalState.InActive)}
+                            onSwap={() => setModalState(ModalState.SignUp)}
+                        />}
+                        {/*<NavBar/>*/}
                         {children}
-                    </JobBoardPageLayout>
+                    </main>
+                    <Footer/>
                 </Provider>
             </body>
         </html>
     )
 }
+
+export default RootLayout
