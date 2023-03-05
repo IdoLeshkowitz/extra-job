@@ -1,6 +1,6 @@
 'use client';
 import CursorParallax from '@/components/CursorParallax'
-import SearchJobForm from "@/partials/SearchJobForm";
+import SearchJobBar from "@/partials/SearchJobBar";
 import BgParallax from "@/components/BgParallax";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
@@ -33,7 +33,7 @@ export default function HomePage() {
                             <Col xl={8} lg={9} md={10} className='mx-auto px-0'>
 
                                 {/* Search form */}
-                                <SearchJobForm/>
+                                <SearchJobBar/>
                             </Col>
                         </div>
                     </Container>

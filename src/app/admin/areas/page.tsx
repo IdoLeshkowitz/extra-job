@@ -1,9 +1,12 @@
 import {useRouter} from "next/navigation";
-
+import AddAreaCard from "@/app/admin/areas/components/AddAreaCard";
+async function getAreas(){
+    return await prisma?.area.findMany()
+}
 export default async function AreasPage() {
     return (
         <>
-            <div>xscxsx</div>
+            <AddAreaCard/>
         </>
     )
 }

@@ -18,7 +18,6 @@ export default function AreasLayout({
             <div className='d-flex align-items-center justify-content-between py-4 mt-3 mb-2'>
                 <h1 className='h3 mb-0'>אזורים</h1>
             </div>
-
             <Row>
                 {/* Sidebar */}
                 <Col as='aside' xs={12} md={3} className='mb-4 pb-3 pb-md-0'>
