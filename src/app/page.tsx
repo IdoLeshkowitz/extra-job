@@ -11,7 +11,7 @@ export default function HomePage() {
             <div className='container-fluid'>
                 <div className='row align-items-end mt-2 mt-md-0 pt-md-4 pt-lg-5 pb-5 p-5 '>
                     {/*HEADLINE*/}
-                    <div className="col-md-7 order-md-2 ps-5 pt-5">
+                    <div className="col-md-7 order-md-2 pe-5 pt-5 d-flex justify-content-center">
                         <h1 className='display-4 text-light pb-2 mb-4 mb-lg-5' style={{maxWidth: '29.5rem'}}>
                             הקריירה שלך זאת העבודה<span className='text-primary'> שלנו</span>
                         </h1>
