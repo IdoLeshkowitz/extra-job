@@ -4,12 +4,18 @@ import prisma from '../../../../lib/prisma'
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const createArea = (name: string) => {
-            return Prisma.validator<Prisma.AreaCreateInput>()({
-                name
-            })
+        try {
+            res.json({data: await prisma.area.create({data: {name: req.body.data.name}})})
+        } catch (e) {
+            res.status(400).json({error: {message: 'unable to create area'}})
         }
-        const createdArea = await prisma?.area.create({data: createArea(req.body.data.name)});
-        res.json({data: createdArea})
+    }
+    if (req.method === "GET") {
+        try {
+            res.json({data:'ssjsoijos'})
+            // res.json({data: await prisma.area.findMany({})})
+        } catch (e) {
+            res.status(400).json({error: {message: 'unable to get areas'}})
+        }
     }
 }
