@@ -1,13 +1,12 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Prisma} from "@prisma/client";
-import prisma from '../../../../../lib/client'
+import prisma from '../../../../../lib/prisma'
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "DELETE") {
         const areaId = req.query.areaId as unknown as string
-        if (!areaId){
+        if (!areaId) {
             res.status(404)
         }
-        res.json(await prisma.area.delete({where: {id : areaId}}))
+        res.json(await prisma.area.delete({where: {id: areaId}}))
     }
 }

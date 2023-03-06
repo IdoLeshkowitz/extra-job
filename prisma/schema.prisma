@@ -65,6 +65,7 @@ model Area {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String   @unique
   createdAt DateTime @default(now())
+  active    Boolean  @default(true)
 
   @@index([name, createdAt(sort: Asc)])
 }

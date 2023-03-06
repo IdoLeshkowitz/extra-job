@@ -1,5 +1,6 @@
 import AddAreaRow from "@/app/admin/areas/components/AddAreaRow";
 import {Area} from "@prisma/client";
+import prisma from "lib/prisma";
 import DeleteAreaButton from "./components/DeleteAreaButton";
 
 async function getAreas() {

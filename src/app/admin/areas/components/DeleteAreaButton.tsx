@@ -12,7 +12,7 @@ const DeleteAreaButton: FC<DeleteAreaButtonParams> = (props) => {
     const router = useRouter()
     const handleDelete = async () => {
         try {
-            await fetch(`http://localhost:3000/api/areas/${areaId}`, {
+            await fetch(`/api/areas/${areaId}`, {
                 method: 'DELETE',
                 headers: {'content-type': 'application/json'},
             })

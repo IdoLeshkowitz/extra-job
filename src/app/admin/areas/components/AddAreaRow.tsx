@@ -10,7 +10,7 @@ export default function AddAreaRow() {
     async function handleAdd() {
         try {
             setLoading(true)
-            await fetch('http://localhost:3000/api/areas', {
+            await fetch('/api/areas', {
                 method: "POST",
                 body: JSON.stringify({data: {name: nameRef.current?.value}}),
                 headers: {

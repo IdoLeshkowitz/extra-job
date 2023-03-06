@@ -1,6 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {Prisma} from "@prisma/client";
-import prisma from '../../../../lib/client'
+import prisma from '../../../../lib/prisma'
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
