@@ -5,8 +5,7 @@ import DeleteAreaButton from "./components/DeleteAreaButton";
 import {notFound, useRouter} from "next/navigation";
 
 export default async function AreasPage() {
-    const res = await fetch('http://localhost:3000/api/areas', {cache: 'no-store'})
-    const {data: areas}: { data: Area[] } = await res.json()
+    const areas = await prisma.area.findMany({})
     return (
         <>
             <div className="table-responsive">
@@ -35,3 +34,5 @@ function AreaRow({area}: { area: Area }) {
         </tr>
     )
 }
+
+export const dynamic = 'force-dynamic'
