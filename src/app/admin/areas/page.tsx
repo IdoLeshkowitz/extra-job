@@ -6,7 +6,6 @@ import {notFound, useRouter} from "next/navigation";
 
 export default async function AreasPage() {
     const areas = await prisma.area.findMany({})
-    console.log(areas)
     return (
         <>
             <div className="table-responsive">
@@ -35,3 +34,5 @@ function AreaRow({area}: { area: Area }) {
         </tr>
     )
 }
+
+export const dynamic = 'force-dynamic'
