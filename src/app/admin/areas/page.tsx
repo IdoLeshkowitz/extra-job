@@ -5,8 +5,8 @@ import DeleteAreaButton from "./components/DeleteAreaButton";
 import {notFound, useRouter} from "next/navigation";
 
 export default async function AreasPage() {
-    const areas = await prisma.area.findMany({})
-    console.log(areas)
+    const res = await fetch('http://localhost:3000/api/areas', {cache: 'no-store'})
+    const {data: areas}: { data: Area[] } = await res.json()
     return (
         <>
             <div className="table-responsive">
