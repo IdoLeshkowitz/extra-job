@@ -1,14 +1,12 @@
 import AddAreaRow from "@/app/admin/areas/components/AddAreaRow";
-import {Area} from "@prisma/client";
+import {Area, Prisma} from "@prisma/client";
 import prisma from "lib/prisma";
 import DeleteAreaButton from "./components/DeleteAreaButton";
-
-async function getAreas() {
-    return await prisma?.area.findMany()
-}
+import {notFound, useRouter} from "next/navigation";
 
 export default async function AreasPage() {
-    const areas = await getAreas()
+    const areas = await prisma.area.findMany({})
+    console.log(areas)
     return (
         <>
             <div className="table-responsive">
