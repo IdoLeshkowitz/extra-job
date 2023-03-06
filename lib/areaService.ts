@@ -1,7 +1,7 @@
 import {Prisma} from "@prisma/client";
 import prisma from "./prisma";
 
-const AreaSelect = {id: true, name: true, createdAt: true}satisfies Prisma.AreaSelect
+const AreaSelect = {id: true, name: true, createdAt: true}
 export async function getAllAreas() {
     try {
         return await prisma?.area.findMany({select: AreaSelect})
