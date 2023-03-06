@@ -1,18 +1,7 @@
 import {Prisma} from "@prisma/client";
-import {date, InferType, object, ObjectSchema, string} from "yup";
-import prisma from './client'
-import AreaSelect = Prisma.AreaSelect;
+import prisma from "./prisma";
 
 const AreaSelect = {id: true, name: true, createdAt: true}satisfies Prisma.AreaSelect
-const schema = object({
-    name: string().required(),
-    id: string(),
-    createdAt: date()
-})satisfies ObjectSchema<Prisma.AreaCreateInput>
-
-export type AreaCreationSchema = InferType<typeof schema>
-export type AreaPayload = Prisma.AreaGetPayload<{ select: AreaSelect }>
-
 export async function getAllAreas() {
     try {
         return await prisma?.area.findMany({select: AreaSelect})
@@ -21,9 +10,10 @@ export async function getAllAreas() {
     }
 }
 
-export async function createArea(areaToCreate: AreaCreationSchema) {
+export async function createArea(areaToCreate: Prisma.AreaCreateInput) {
     try {
-        return await prisma?.area.create({data: areaToCreate, select: AreaSelect})
+        const area = await prisma.area.create({data: areaToCreate})
+        return area
     } catch (e) {
         throw new Error('failed to create area')
     }
