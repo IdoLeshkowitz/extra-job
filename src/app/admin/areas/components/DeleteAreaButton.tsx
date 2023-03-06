@@ -1,6 +1,8 @@
 'use client'
 import {FC} from "react";
 import {useRouter} from "next/navigation";
+import {log} from "next/dist/server/typescript/utils";
+
 interface DeleteAreaButtonParams {
     areaId: string
 }
@@ -9,14 +11,15 @@ const DeleteAreaButton: FC<DeleteAreaButtonParams> = (props) => {
     const {areaId} = props
     const router = useRouter()
     const handleDelete = async () => {
-        const res = await fetch(`http://localhost:3001/api/area/${areaId}`, {
-            method: 'DELETE',
-            headers: {'content-type': 'application/json'},
-        })
-        if (!res.ok) {
-            throw new Error('failed to delete area')
+        try {
+            await fetch(`http://localhost:3000/api/areas/${areaId}`, {
+                method: 'DELETE',
+                headers: {'content-type': 'application/json'},
+            })
+            router.refresh()
+        }catch (e){
+            console.log(e)
         }
-        return router.refresh()
     }
     return (
         <button onClick={handleDelete}
