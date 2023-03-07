@@ -2,7 +2,7 @@
 import '../../styles/theme.scss'
 import Provider from './provider';
 import NavBar from "@/partials/NavBar";
-import Footer from "@/components/Footer";
+import Footer from "@/app/components/Footer";
 import {ReactNode, useState} from 'react';
 import SignInModalLight from "@/partials/SignInModalLight";
 import {SSRProvider} from "react-bootstrap";

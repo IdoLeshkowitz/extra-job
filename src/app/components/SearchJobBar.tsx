@@ -45,7 +45,7 @@ export default function SearchJobBar() {
             {/*AREA SELECT*/}
             <div className='d-sm-flex'>
                 <DropdownSelect
-                    name
+                    name="name"
                     darkMenu={true}
                     defaultValue='All categories'
                     icon='fi-list'

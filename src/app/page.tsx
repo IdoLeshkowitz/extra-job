@@ -1,7 +1,6 @@
 'use client';
-import CursorParallax from '@/components/CursorParallax'
-import SearchJobBar from "@/partials/SearchJobBar";
-import BgParallax from "@/components/BgParallax";
+import CursorParallax from '@/app/components/CursorParallax'
+import SearchJobBar from "@/app/components/SearchJobBar";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 
@@ -21,22 +20,22 @@ export default function HomePage() {
                         <CursorParallax className='mx-auto'/>
                     </div>
                 </div>
-                    <Container className='content-overlay py-md-5 mt-n2 mb-lg-3'>
-                        <div className='mt-5 mb-md-5 py-5'>
-                            <Col xl={6} lg={8} md={10} className='mx-auto mb-sm-5 mb-4  text-center'>
-                                <h1 className='display-5 text-light d-flex flex-wrap align-items-center justify-content-center mt-sm-5 mt-4 my-3'>
-                                    <span className='me-2 text-primary'>משרות</span>
-                                    <span>חיפוש</span>
-                                </h1>
-                                <p className='fs-lg text-white'>חפש עבודה לפי איזור ומקצוע</p>
-                            </Col>
-                            <Col xl={8} lg={9} md={10} className='mx-auto px-0'>
+                <Container className='content-overlay py-md-5 mt-n2 mb-lg-3'>
+                    <div className='mt-5 mb-md-5 py-5'>
+                        <Col xl={6} lg={8} md={10} className='mx-auto mb-sm-5 mb-4  text-center'>
+                            <h1 className='display-5 text-light d-flex flex-wrap align-items-center justify-content-center mt-sm-5 mt-4 my-3'>
+                                <span className='me-2 text-primary'>משרות</span>
+                                <span>חיפוש</span>
+                            </h1>
+                            <p className='fs-lg text-white'>חפש עבודה לפי איזור ומקצוע</p>
+                        </Col>
+                        <Col xl={8} lg={9} md={10} className='mx-auto px-0'>
 
-                                {/* Search form */}
-                                <SearchJobBar/>
-                            </Col>
-                        </div>
-                    </Container>
+                            {/* Search form */}
+                            <SearchJobBar/>
+                        </Col>
+                    </div>
+                </Container>
             </div>
         </section>
     )
