@@ -34,7 +34,8 @@ const PaginationItem: FC<PaginationItemProps> = ({page, currentPage, numberOfPag
     } else {
         return (
             <li className={`page-item d-none d-sm-block ${active && 'active'} `}>
-                <Link href={`${pathName}?take=${take}&skip=${skip + ((page - currentPage) * take)}`} className="page-link ">{page}</Link>
+                <Link href={`${pathName}?take=${take}&skip=${skip + ((page - currentPage) * take)}`}
+                      className="page-link ">{page}</Link>
             </li>
         )
     }
@@ -49,8 +50,15 @@ const CustomPagination: FC<CustomPaginationProps> = ({skip, take, count}) => {
     }
     return (
         <Pagination className='pagination-light'>
-            {pages.map(page => <PaginationItem page={page} currentPage={currentPage} numberOfPages={numberOfPages}
-                                               take={take} skip={skip}/>)}
+            {pages.map(page =>
+                <PaginationItem
+                    page={page}
+                    currentPage={currentPage}
+                    numberOfPages={numberOfPages}
+                    take={take} skip={skip}
+                    key={page}
+                />
+            )}
         </Pagination>
     )
 }

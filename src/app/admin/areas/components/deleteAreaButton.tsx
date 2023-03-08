@@ -1,29 +1,42 @@
 'use client'
 import {FC} from "react";
 import {useRouter} from "next/navigation";
-import {log} from "next/dist/server/typescript/utils";
+import {Area, Prisma} from "@prisma/client";
 
 interface DeleteAreaButtonParams {
-    areaId: string
+    area: Area
 }
 
-const DeleteAreaButton: FC<DeleteAreaButtonParams> = (props) => {
-    const {areaId} = props
+const DeleteAreaButton: FC<DeleteAreaButtonParams> = ({area}) => {
+    const {id} = area
     const router = useRouter()
-    const handleDelete = async () => {
-        try {
-            await fetch(`/api/areas/${areaId}`, {
-                method: 'DELETE',
-                headers: {'content-type': 'application/json'},
-            })
-            router.refresh()
-        }catch (e){
-            console.log(e)
+    const handleDeactivation = async () => {
+        const areaUpdateInput = Prisma.validator<Prisma.AreaUpdateInput>()({
+            active: false,
+            createdAt: area.createdAt,
+            name: area.name,
+        })
+        const res = await fetch(`/api/areas/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    data: {
+                        ...areaUpdateInput,
+                    }
+                }
+            )
+        })
+        if (res.status === 200) {
+            return router.refresh()
         }
+        router.push('/404')
     }
     return (
-        <button onClick={handleDelete}
-           className="icon-box card card-light flex-row align-items-center card-hover rounded-pill py-2 ps-2 pe-4">
+        <button onClick={handleDeactivation}
+                className="icon-box card card-light flex-row align-items-center card-hover rounded-pill py-2 ps-2 pe-4">
             <div className="icon-box-media bg-faded-light text-light rounded-circle me-2">
                 <i className="fi-trash text-end"/>
             </div>

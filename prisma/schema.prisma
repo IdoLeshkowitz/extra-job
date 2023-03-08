@@ -64,7 +64,7 @@ model VerificationToken {
 model Area {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String   @unique
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @db.Date
   active    Boolean  @default(true)
 
   @@index([name, createdAt(sort: Asc)])

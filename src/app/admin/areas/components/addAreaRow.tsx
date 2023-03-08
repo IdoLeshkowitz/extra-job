@@ -3,6 +3,8 @@
 import {useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 import {FormControl, InputGroup} from "react-bootstrap";
+import {Prisma} from ".prisma/client";
+import AreaCreateInput = Prisma.AreaCreateInput;
 
 export default function AddAreaRow() {
     const nameRef = useRef<HTMLInputElement>(null)
@@ -10,20 +12,25 @@ export default function AddAreaRow() {
     const router = useRouter()
 
     async function handleAdd() {
+        if (!nameRef.current?.value) {
+            return
+        }
+        const areaCreateInput: AreaCreateInput = {
+            name: nameRef.current?.value
+        }
+        nameRef.current.value = ''
         try {
             setLoading(true)
-            await fetch('/api/areas', {
+            const res = await fetch('/api/areas', {
                 method: "POST",
-                body: JSON.stringify({data: {name: nameRef.current?.value}}),
+                body: JSON.stringify({data: areaCreateInput}),
                 headers: {
                     "Content-Type": "application/json"
                 }
             })
             setLoading(false)
-            if (nameRef.current) {
-                nameRef.current.value = ''
-            }
             router.refresh()
+            console.log(res)
         } catch (e) {
             console.log(e)
         }
@@ -54,14 +61,6 @@ export default function AddAreaRow() {
                 </div>
                 <h3 className="icon-box-title fs-sm text-light ps-1 mb-0">הוסף</h3>
             </button>
-            {/*<button
-                disabled={loading}
-                onClick={handleAdd}
-                className="icon-box d-flex card flex-row align-items-center card-hover border-0 shadow-sm rounded-pill py-2  ">
-                <div className="icon-box-media bg-faded-primary text-primary rounded-circle ">
-                    <i className="fi-plus-circle"/>
-                </div>
-            </button>*/}
         </li>
     )
 }

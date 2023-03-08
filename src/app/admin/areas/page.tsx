@@ -11,6 +11,7 @@ async function getAreasAndCount({skip, take}: { skip: number, take: number }) {
     const getAreas = () => prisma.area.findMany({
         skip,
         take,
+        where:{active: true}
     })
     const getCount = () => prisma.area.count()
     try {
@@ -44,7 +45,7 @@ export default async function AreasPage({searchParams}: { searchParams: any }) {
                         <ul className="list-group list-group-flush">
                             <AddAreaRow/>
                             {areas.map((area) => (
-                                <AreaRow key={area.id} area={area}/>
+                                <AreaRow key={area.id} area={{...area, createdAt : area.createdAt.toISOString()}}/>
                             ))}
                         </ul>
                     </div>
