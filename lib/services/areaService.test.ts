@@ -1,6 +1,6 @@
 import prisma from "../prisma";
-import {beforeEach, describe, expect, test,afterAll} from 'vitest'
-import {createArea, updateArea,} from "./areaService";
+import {afterAll, beforeEach, describe, expect, test} from 'vitest'
+import {createArea, getAreasAndCount, updateArea,} from "./areaService";
 
 
 beforeEach(async () => {
@@ -45,6 +45,31 @@ describe('update area', () => {
             active: false,
             createdAt: expect.any(Date),
             id: expect.any(String),
+        })
+    })
+})
+
+describe('getAreasAndCount', () => {
+    test('get areas and count', async () => {
+        const addedArea = await createArea({name: 'test'});
+        const addedArea3 = await createArea({name: 'test3'});
+        const {data} = await getAreasAndCount({skip: 0, take: 10});
+        expect(data).toMatchObject({
+            areas: expect.arrayContaining([
+                expect.objectContaining({
+                    name: 'test',
+                    active: true,
+                    createdAt: expect.any(Date),
+                    id: expect.any(String),
+                }),
+                expect.objectContaining({
+                    name: 'test3',
+                    active: true,
+                    createdAt: expect.any(Date),
+                    id: expect.any(String),
+                })
+            ]),
+            count: 2
         })
     })
 })

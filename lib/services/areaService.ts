@@ -35,10 +35,23 @@ export async function updateArea(id: string, data: AreaUpdateInput) {
     return updatedArea;
 }
 
-export async function getAreas(take: number, skip: number) {
-    const areas = await prisma.area.findMany({
-        take,
+export async function getAreasAndCount({skip, take}: { skip: number, take: number }) {
+    /*
+    * return {data : {areas: Area[], count: number}}
+    * */
+    const getAreas = () => prisma.area.findMany({
         skip,
-    });
-    return areas;
+        take,
+        where: {active: true}
+    })
+    const getCount = () => prisma.area.count()
+    const [areas, count] = await Promise.allSettled([getAreas(), getCount()])
+    //check if all promises are fulfilled
+    if (areas.status !== 'fulfilled') {
+        throw new Error('unable to get areas')
+    }
+    if (count.status !== 'fulfilled') {
+        throw new Error('unable to get areas count')
+    }
+    return {data: {areas: areas.value, count: count.value}}
 }
