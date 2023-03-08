@@ -12,7 +12,7 @@ export default async function index(req: NextApiRequest, res: NextApiResponse) {
     }
     if (req.method === "GET") {
         try {
-            res.json({data: await prisma.area.findMany({})})
+            res.json({data: await prisma.area.findMany({}), count: await prisma.area.count()})
         } catch (e) {
             res.status(400).json({error: {message: 'unable to get areas'}})
         }

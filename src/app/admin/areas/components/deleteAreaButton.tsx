@@ -23,10 +23,11 @@ const DeleteAreaButton: FC<DeleteAreaButtonParams> = (props) => {
     }
     return (
         <button onClick={handleDelete}
-                className="icon-box d-flex card flex-row align-items-center card-hover border-0 shadow-sm rounded-pill py-2  ">
-            <div className="icon-box-media bg-faded-primary text-primary rounded-circle ">
-                <i className="fi-trash"/>
+           className="icon-box card card-light flex-row align-items-center card-hover rounded-pill py-2 ps-2 pe-4">
+            <div className="icon-box-media bg-faded-light text-light rounded-circle me-2">
+                <i className="fi-trash text-end"/>
             </div>
+            <h3 className="icon-box-title fs-sm text-light ps-1 mb-0">מחק</h3>
         </button>
     )
 }

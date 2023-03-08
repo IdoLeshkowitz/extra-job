@@ -1,35 +1,17 @@
-'use client'
 import '../../styles/theme.scss'
 import Provider from './provider';
 import NavBar from "@/partials/NavBar";
 import Footer from "@/app/components/Footer";
-import {ReactNode, useState} from 'react';
-import SignInModalLight from "@/partials/SignInModalLight";
+import {ReactNode} from 'react';
 import {SSRProvider} from "react-bootstrap";
 
-enum ModalState {
-    SignIn,
-    SignUp,
-    InActive
-}
 
 function RootLayout({children}: { children: ReactNode }) {
-    const [modalState, setModalState] = useState<ModalState>(ModalState.InActive)
     return (
-        <SSRProvider>
             <html>
-                <body>
+                <body className="bg-dark">
                     <Provider>
                         <main className="page-wrapper">
-                            {/* Sign in modal */}
-                            {modalState === ModalState.SignIn && <SignInModalLight
-                                centered
-                                size='lg'
-                                pillButtons
-                                show={true}
-                                onHide={() => setModalState(ModalState.InActive)}
-                                onSwap={() => setModalState(ModalState.SignUp)}
-                            />}
                             <NavBar/>
                             {children}
                         </main>
@@ -37,7 +19,6 @@ function RootLayout({children}: { children: ReactNode }) {
                     </Provider>
                 </body>
             </html>
-        </SSRProvider>
     )
 }
 

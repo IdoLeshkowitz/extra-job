@@ -26,7 +26,7 @@ export default function NavBar() {
 
                 {/*HOME BUTTON*/}
                 <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
-                    <Image src='/images/logo/extra-job.png' alt='extra job' width={100} height={100}></Image>
+                    <ImageLoader src='/images/logo/extra-job.png' alt='extra job' width={100} height={32}></ImageLoader>
                 </Navbar.Brand>
 
                 {/*NAVBAR TOGGLE BUTTON*/}
