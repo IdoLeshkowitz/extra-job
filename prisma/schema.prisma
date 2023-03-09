@@ -51,7 +51,7 @@ model User {
   role     Role      @default(JOBSEEKER)
   phone    Int?
 
-  appliances JobApplication[]
+  appliedFor JobApplication[]
 }
 
 model JobApplication {
