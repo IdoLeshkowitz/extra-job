@@ -16,7 +16,7 @@ datasource db {
 
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String
+  userId            String  @db.ObjectId
   type              String
   provider          String
   providerAccountId String
@@ -36,21 +36,48 @@ model Account {
 model Session {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique
-  userId       String
+  userId       String   @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String?
-  email    String?   @unique
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String?          @unique
   // emailVerified DateTime?   ???MAYBE NOT NEEDED???
-  image    String?
-  accounts Account[]
-  sessions Session[]
-  role     Role      @default(JOBSEEKER)
-  // cv ?????
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  role            Role             @default(JOBSEEKER)
+  cv              String?
+  phone           Int
+  jobApplications JobApplication[]
+}
+
+model JobApplication {
+  userId       String   @db.ObjectId
+  jobListingId String   @db.ObjectId
+  date         DateTime
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  user           User       @relation(fields: [userId], references: [id]) //, onDelete: Cascade
+  job_listing_id JobListing @relation(fields: [jobListingId], references: [id]) //, onDelete: Cascade
+}
+
+model JobListing {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  proffetion_id String @db.ObjectId
+
+  proffetionId   Proffesion       @relation(fields: [proffetion_id], references: [id])
+  JobApplications JobApplication[]
+}
+
+model Proffesion {
+  name       String
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  JobListings JobListing[]
 }
 
 model VerificationToken {
