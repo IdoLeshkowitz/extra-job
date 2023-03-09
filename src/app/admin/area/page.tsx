@@ -16,7 +16,7 @@ export default async function AreaPage({searchParams}: { searchParams: any }) {
                         <ul className="list-group list-group-flush">
                             <AddAreaRow/>
                             {areas.map((area) => (
-                                <AreaRow key={area.id} area={{...area, createdAt: area.createdAt.toISOString()}}/>
+                                <AreaRow key={area.id} area={{...area}} />
                             ))}
                         </ul>
                     </div>
