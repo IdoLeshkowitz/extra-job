@@ -19,6 +19,11 @@ const navItems: NavItem[] = [
         name: 'איזורים',
         href: '/admin/area',
         icon: 'fi-map'
+    },
+    {
+        name: 'מקצועות',
+        href: '/admin/profession',
+        icon: 'fi-briefcase'
     }
 ]
 export default function SideBar() {
@@ -49,7 +54,6 @@ export default function SideBar() {
                     </Collapse>
                 </div>
             </Col>
-
         </>
     )
 }

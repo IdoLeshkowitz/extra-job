@@ -1,9 +1,10 @@
-import CustomPagination from "@/app/admin/area/components/customPagination";
-import AddAreaRow from "@/app/admin/area/components/addAreaRow";
-import {getAreasAndCount} from "lib/services/areaService";
-import AreaRow from "@/app/admin/area/components/areaRow";
+import CustomPagination from "@/app/admin/area/_components/customPagination";
+import AddAreaRow from "@/app/admin/area/_components/addAreaRow";
+import {getAreasAndCount} from "@/services/areaService";
+import AreaRow from "@/app/admin/area/_components/areaRow";
+import prisma from "../../../../lib/prisma";
 
-export default async function AreasPage({searchParams}: { searchParams: any }) {
+export default async function AreaPage({searchParams}: { searchParams: any }) {
     const [skip, take]: number[] = [searchParams.skip ?? 0, searchParams.take ?? 5].map((param) => parseInt(param))
     const {data : {areas,count}} = await getAreasAndCount({skip, take})
     return (
