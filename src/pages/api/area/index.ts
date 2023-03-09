@@ -6,7 +6,6 @@ export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         try {
             const areaCreateInput: Prisma.AreaCreateInput = req.body.data
-            console.log(areaCreateInput +' ,ksplksl')
             const addedArea = await createArea(areaCreateInput)
             res.json({data: addedArea})
         } catch (e) {
