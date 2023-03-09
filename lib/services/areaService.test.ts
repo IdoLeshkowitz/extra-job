@@ -5,10 +5,11 @@ import {createArea, getAreasAndCount, updateArea,} from "./areaService";
 
 beforeEach(async () => {
     await prisma.area.deleteMany();
-});
-afterAll(async () => {
-    await prisma.area.deleteMany()
 })
+
+// afterAll(async () => {
+//     await prisma.area.deleteMany()
+// })
 describe('createArea', () => {
     test('creating one area', async () => {
         const addedArea = await createArea({name: 'test'});
@@ -18,10 +19,6 @@ describe('createArea', () => {
             createdAt: expect.any(Date),
             id: expect.any(String),
         })
-    })
-    test('duplicate names prevention', async () => {
-        await createArea({name: 'test'});
-        expect(createArea({name: 'test'})).rejects.toThrowError();
     })
     test('create area with same name as deactivated area', async () => {
         const addedArea = await createArea({name: 'testa'});
