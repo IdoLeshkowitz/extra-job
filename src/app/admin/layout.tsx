@@ -1,7 +1,7 @@
 'use client'
 import {Breadcrumb, Col, Container, Row, SSRProvider} from "react-bootstrap";
 import Link from "next/link";
-import SideBar from "@/app/admin/components/SideBar";
+import SideBar from "@/app/admin/_components/SideBar";
 
 export default function AdminLayout({children}: { children: React.ReactNode }) {
     return (

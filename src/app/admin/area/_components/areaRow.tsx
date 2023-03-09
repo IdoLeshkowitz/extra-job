@@ -1,5 +1,5 @@
 import {Area} from "@prisma/client";
-import DeleteAreaButton from "@/app/admin/area/components/deleteAreaButton";
+import DeleteAreaButton from "@/app/admin/area/_components/deleteAreaButton";
 
 export default function AreaRow({area}: { area: any }) {
     return (

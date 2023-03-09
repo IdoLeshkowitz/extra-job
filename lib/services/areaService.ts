@@ -3,6 +3,7 @@ import {Prisma} from "@prisma/client";
 import AreaUpdateInput = Prisma.AreaUpdateInput;
 
 
+
 export async function createArea(data: Prisma.AreaCreateInput) {
     //check if area already exists
     const areaExists = await prisma.area.findFirst({

@@ -1,6 +1,6 @@
 'use client'
 
-import {useRef, useState} from "react";
+import {useRef} from "react";
 import {useRouter} from "next/navigation";
 import {FormControl, InputGroup} from "react-bootstrap";
 import {Prisma} from ".prisma/client";
@@ -8,7 +8,6 @@ import AreaCreateInput = Prisma.AreaCreateInput;
 
 export default function AddAreaRow() {
     const nameRef = useRef<HTMLInputElement>(null)
-    const [loading, setLoading] = useState(false)
     const router = useRouter()
 
     async function handleAdd() {
@@ -19,21 +18,17 @@ export default function AddAreaRow() {
             name: nameRef.current?.value
         }
         nameRef.current.value = ''
-        try {
-            setLoading(true)
-            const res = await fetch('/api/areas', {
-                method: "POST",
-                body: JSON.stringify({data: areaCreateInput}),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            setLoading(false)
-            router.refresh()
-            console.log(res)
-        } catch (e) {
-            console.log(e)
+        const res = await fetch('/api/areas', {
+            method: "POST",
+            body: JSON.stringify({data: areaCreateInput}),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        if (!res.ok) {
+            return router.push('/404')
         }
+        router.refresh()
     }
 
     return (
@@ -49,13 +44,13 @@ export default function AddAreaRow() {
                             e.stopPropagation()
                             handleAdd()
                         }
-                    }
-                    }
+                    }}
                 />
             </InputGroup>
             <button
                 onClick={handleAdd}
-                className="icon-box card card-light flex-row align-items-center card-hover rounded-pill py-2 ps-2 pe-4">
+                className="icon-box card card-light flex-row align-items-center card-hover rounded-pill py-2 ps-2 pe-4"
+            >
                 <div className="icon-box-media bg-faded-light text-light rounded-circle me-2">
                     <i className="fi-plus-circle text-end"/>
                 </div>

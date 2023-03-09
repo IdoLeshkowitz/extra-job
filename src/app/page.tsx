@@ -1,6 +1,6 @@
 'use client';
-import CursorParallax from '@/app/components/CursorParallax'
-import SearchJobBar from "@/app/components/SearchJobBar";
+import CursorParallax from '@/app/_components/CursorParallax'
+import SearchJobBar from "@/app/_components/SearchJobBar";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import {SSRProvider} from "react-bootstrap";

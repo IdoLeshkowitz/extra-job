@@ -1,7 +1,7 @@
 import '../../styles/theme.scss'
 import Provider from './provider';
 import NavBar from "@/partials/NavBar";
-import Footer from "@/app/components/Footer";
+import Footer from "@/app/_components/Footer";
 import {ReactNode} from 'react';
 import {SSRProvider} from "react-bootstrap";
 

@@ -45,12 +45,10 @@ model User {
   id              String           @id @default(auto()) @map("_id") @db.ObjectId
   name            String?
   email           String?          @unique
-  // emailVerified DateTime?   ???MAYBE NOT NEEDED???
   image           String?
   accounts        Account[]
   sessions        Session[]
   role            Role             @default(JOBSEEKER)
-  cv              String?
   phone           Int
   jobApplications JobApplication[]
 }
@@ -89,6 +87,15 @@ model VerificationToken {
 }
 
 model Area {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createdAt DateTime @default(now()) @db.Date
+  active    Boolean  @default(true)
+
+  @@index([name, createdAt(sort: Asc)])
+}
+
+model Profession {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String   @unique
   createdAt DateTime @default(now()) @db.Date
