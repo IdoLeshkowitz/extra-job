@@ -18,7 +18,7 @@ export default function AddAreaRow() {
             name: nameRef.current?.value
         }
         nameRef.current.value = ''
-        const res = await fetch('/api/areas', {
+        const res = await fetch('/api/area', {
             method: "POST",
             body: JSON.stringify({data: areaCreateInput}),
             headers: {
@@ -26,7 +26,8 @@ export default function AddAreaRow() {
             }
         })
         if (!res.ok) {
-            return router.push('/404')
+            console.log(res.json())
+            // return router.push('/404')
         }
         router.refresh()
     }
