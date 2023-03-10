@@ -56,7 +56,7 @@ model User {
 
 model JobApplication {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
-  appliedByIds String @db.ObjectId
+  appliedById  String @db.ObjectId
   jobListingId String @db.ObjectId
 
   createdAt DateTime @default(now()) @db.Date
