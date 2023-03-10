@@ -18,25 +18,6 @@ export async function updateArea(id: string, data: AreaUpdateInput): Promise<{ d
     return {data: {areas: updatedArea}};
 }
 
-export async function getActiveAreasByRange({
-                                                skip,
-                                                take
-                                            }: { skip: number, take: number }): Promise<{ data: { areas: Area[] } }> {
-    const areas = await prisma.area.findMany({
-        skip,
-        take,
-        where: {active: true}
-    })
-    return {data: {areas}}
-}
-
-export async function getAllActiveAreas(): Promise<{ data: { areas: Area[] } }> {
-    const areas = await prisma.area.findMany({
-        where: {active: true}
-    })
-    return {data: {areas}}
-}
-
 export async function getAreaByName(name: string): Promise<{ data: { area: Area | null } }> {
     const area = await prisma.area.findUnique({
         where: {name}
