@@ -56,12 +56,12 @@ model User {
 
 model JobApplication {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
-  applicantId  String @db.ObjectId
+  appliedById  String @db.ObjectId
   jobListingId String @db.ObjectId
 
   createdAt DateTime @default(now()) @db.Date
 
-  applicant  User       @relation(fields: [applicantId], references: [id])
+  appliedBy  User       @relation(fields: [appliedById], references: [id])
   joblisting JobListing @relation(fields: [jobListingId], references: [id])
 }
 

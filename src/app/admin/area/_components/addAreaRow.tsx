@@ -1,62 +1,32 @@
 'use client'
 
-import {useRef} from "react";
+import {FormEventHandler, useRef} from "react";
 import {useRouter} from "next/navigation";
-import {FormControl, InputGroup} from "react-bootstrap";
-import {Prisma} from ".prisma/client";
-import AreaCreateInput = Prisma.AreaCreateInput;
+import {FormControl, FormGroup} from "react-bootstrap";
+import PillButton from "@/components/buttons/PillButtons";
+import ListItemForm from "@/components/forms/ListItemForm";
+
 
 export default function AddAreaRow() {
     const nameRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
 
-    async function handleAdd() {
-        if (!nameRef.current?.value) {
-            return
-        }
-        const areaCreateInput: AreaCreateInput = {
-            name: nameRef.current?.value
-        }
-        nameRef.current.value = ''
-        const res = await fetch('/api/area', {
-            method: "POST",
-            body: JSON.stringify({data: areaCreateInput}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        if (!res.ok) {
-            console.log(res.json())
-            // return router.push('/404')
-        }
-        router.refresh()
+    const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+
     }
 
     return (
-        <li className="list-group-item bg-dark border-bottom border-light text-white d-flex flex-row-reverse justify-content-between h-25 align-items-center">
-            <InputGroup size="sm" className="w-50">
+        <ListItemForm onSubmit={onSubmit}>
+            <FormGroup className="w-50" controlId={'aaa'}>
                 <FormControl
+                    required={true}
                     ref={nameRef}
                     placeholder="שם האזור"
                     aria-label="שם האזור"
                     dir="rtl"
-                    onKeyUp={(e) => {
-                        if (e.key === 'Enter') {
-                            e.stopPropagation()
-                            handleAdd()
-                        }
-                    }}
                 />
-            </InputGroup>
-            <button
-                onClick={handleAdd}
-                className="icon-box card card-light flex-row align-items-center card-hover rounded-pill py-2 ps-2 pe-4"
-            >
-                <div className="icon-box-media bg-faded-light text-light rounded-circle me-2">
-                    <i className="fi-plus-circle text-end"/>
-                </div>
-                <h3 className="icon-box-title fs-sm text-light ps-1 mb-0">הוסף</h3>
-            </button>
-        </li>
+            </FormGroup>
+            <PillButton icon={'fi-plus-circle'} text={'הוסף'} type="submit"/>
+        </ListItemForm>
     )
 }

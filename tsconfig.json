@@ -25,6 +25,7 @@
       "@/components/*": ["./src/components/*"],
       "@/partials/*": ["./src/components/partials/*"],
       "@/services/*": ["./lib/services/*"],
+      "@/lib/*": ["./lib/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
