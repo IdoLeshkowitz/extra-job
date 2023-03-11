@@ -72,14 +72,8 @@ model JobListing {
   areaId       String @db.ObjectId
 
   area            Area             @relation(fields: [areaId], references: [id])
-  proffesion      Proffesion       @relation(fields: [proffesionId], references: [id])
+  proffesion      Proffession      @relation(fields: [proffesionId], references: [id])
   JobApplications JobApplication[]
-}
-
-model Proffesion {
-  name        String
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  JobListings JobListing[]
 }
 
 model VerificationToken {
@@ -91,20 +85,21 @@ model VerificationToken {
 }
 
 model Area {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  name       String       @unique
-  createdAt  DateTime     @default(now())
-  active     Boolean      @default(true)
-  JobListing JobListing[]
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  active      Boolean      @default(true)
+  jobListings JobListing[]
 
   @@index([name, createdAt(sort: Asc)])
 }
 
-model Profession {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @unique
-  createdAt DateTime @default(now()) @db.Date
-  active    Boolean  @default(true)
+model Proffession {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String       @unique
+  createdAt   DateTime     @default(now()) @db.Date
+  active      Boolean      @default(true)
+  jobListings JobListing[]
 
   @@index([name, createdAt(sort: Asc)])
 }
