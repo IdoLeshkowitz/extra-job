@@ -93,7 +93,7 @@ model VerificationToken {
 model Area {
   id         String       @id @default(auto()) @map("_id") @db.ObjectId
   name       String       @unique
-  createdAt  DateTime     @default(now()) @db.Date
+  createdAt  DateTime     @default(now())
   active     Boolean      @default(true)
   JobListing JobListing[]
 

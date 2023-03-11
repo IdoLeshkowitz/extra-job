@@ -34,8 +34,12 @@ const PaginationItem: FC<PaginationItemProps> = ({page, currentPage, numberOfPag
     } else {
         return (
             <li className={`page-item d-none d-sm-block ${active && 'active'} `}>
-                <Link href={`${pathName}?take=${take}&skip=${skip + ((page - currentPage) * take)}`}
-                      className="page-link ">{page}</Link>
+                <Link
+                    href={`${pathName}?take=${take}&skip=${skip + ((page - currentPage) * take)}`}
+                    className="page-link "
+                >
+                    {page}
+                </Link>
             </li>
         )
     }

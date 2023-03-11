@@ -1,9 +1,9 @@
 'use client'
 
-import {FC} from "react";
+import {FC, MouseEventHandler} from "react";
 
 interface PillButtonProps {
-    onClick?: () => void
+    onClick?: MouseEventHandler<HTMLButtonElement>
     type?: 'submit' | 'button'
     text?: string
     icon?: string

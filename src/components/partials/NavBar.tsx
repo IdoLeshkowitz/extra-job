@@ -10,111 +10,130 @@ import Nav from "react-bootstrap/Nav";
 import {HTMLAttributes} from "react";
 import Image from 'next/image'
 import {signIn, signOut, useSession} from "next-auth/react";
+import {Session} from "next-auth";
+import Avatar from "@/components/avatar/Avatar";
 
-interface NavbarProps extends HTMLAttributes<HTMLDivElement> {
-}
-
+const SIGNIN_URL = '/api/auth/signin'
+const SIGNOUT_URL = '/api/auth/signout'
+const ME_URL = '/api/me'
+const DEFAULT_AVATAR_URL = '/images/avatars/38.png'
 export default function NavBar() {
-    const session = useSession()
-    const activeNav: string = 'Home'
+    const {data} = useSession()
+    const {user} = data ?? {}
+    const avatarUrl = user?.image ?? DEFAULT_AVATAR_URL
     return (
         <Navbar as={StickyNavbar}
                 expand='lg'
                 className='fixed-top navbar-dark bg-dark'
         >
             <Container>
-
                 {/*HOME BUTTON*/}
                 <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
-                    <ImageLoader src='/images/logo/extra-job.png' alt='extra job' width={100} height={32}></ImageLoader>
+                    <ImageLoader src='/images/logo/extra-job.png' alt='extra job' width={100} height={32}/>
                 </Navbar.Brand>
 
-                {/*NAVBAR TOGGLE BUTTON*/}
-                <Navbar.Toggle aria-controls='navbarNav' className='ms-auto'/>
 
-                <Desktop/>
+                {/* AVATAR */}
+                {/*DESKTOP AVATAR*/}
+                <DesktopAvatar avatarUrl={avatarUrl}/>
 
-                {/*SIGN IN BUTTON*/}
-                {session.status === "unauthenticated" &&
-                    <Button size='sm' variant='link btn-light d-none d-lg-block order-lg-3' onClick={() => signIn()}>
-                        <i className='fi-user me-2'></i>
-                        הכנס
-                    </Button>}
 
                 <Navbar.Collapse id='navbarNav' className='order-md-2'>
                     <Nav navbarScroll style={{maxHeight: '35rem'}}>
                         <Nav.Item as={Nav.Link} href="/all-jobs">
                             <Nav.Link active={false}>כל המשרות</Nav.Link>
                         </Nav.Item>
-                        <MobileDropDown/>
+                        <MobileAvatar avatarUrl={avatarUrl}/>
                     </Nav>
                 </Navbar.Collapse>
+
+                {/*NAVBAR TOGGLE BUTTON FOR MOBILE*/}
+                <Navbar.Toggle aria-controls='navbarNav' className='ms-auto'/>
             </Container>
         </Navbar>
     )
 }
 
-function MobileDropDown() {
-    const session = useSession()
-    const user = session?.data?.user ?? null
+function MobileAvatar({avatarUrl}: { avatarUrl: string }) {
+    const {status, data} = useSession()
+    const {user} = data ?? {}
     return (
         <>
-            {session.status === 'authenticated' ? <Nav.Item as={Dropdown} className='d-lg-none'>
+            {status === 'authenticated'
+                ?
+                <Nav.Item as={Dropdown} className='d-lg-none'>
+                    {/*DROPDOWN TOGGLE BUTTON*/}
                     <Dropdown.Toggle as={Nav.Link} className='d-flex align-items-center'>
-                        <ImageLoader src='/images/avatars/35.png' width={30} height={30} placeholder={false}
-                                     className='rounded-circle' alt={user?.name}/>
+                        <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={30} height={30}/>
                         <span className='ms-2'>{user?.name}</span>
                     </Dropdown.Toggle>
+                    {/*USER CARD*/}
                     <Dropdown.Menu variant='dark'>
                         <div className='fs-xs ps-3 py-2'>
                             {user?.email}
                         </div>
-                        <Dropdown.Item as={Link} href='/job-board/account-profile'>
-                            <i className='fi-settings me-2'></i>
+                        {/*PROFILE LINK*/}
+                        <Dropdown.Item as={Link} href={ME_URL}>
+                            <i className='fi-settings me-2'/>
                             החשבון שלי
                         </Dropdown.Item>
                         <Dropdown.Divider as='div'/>
-                        <Dropdown.Item onClick={(e)=> {
-                            e.stopPropagation()
-                            signOut()
-                        }}>
-                            <i className='fi-logout me-2'>
-                            </i>
-                                התנתק
+                        {/*SIGN OUT LINK*/}
+                        <Dropdown.Item href={SIGNOUT_URL}>
+                            <i className='fi-logout me-2'/>
+                            התנתק
                         </Dropdown.Item>
                     </Dropdown.Menu>
-                </Nav.Item> :
-
-                <Nav.Item  className='d-lg-none' onClick={() => signIn()}>
-                    <Nav.Link>
-                        <i className='fi-user me-2' > התחבר</i>
+                </Nav.Item>
+                :
+                <Nav.Item className='d-lg-none' >
+                    <Nav.Link href={SIGNIN_URL}>
+                        <i className='fi-user me-2'> התחבר</i>
                     </Nav.Link>
                 </Nav.Item>}
         </>
     )
+
 }
 
 
-function Desktop() {
-    const session = useSession()
-    const user = session?.data?.user ?? null
+function DesktopAvatar({avatarUrl}: { avatarUrl: string }) {
+    const {status, data} = useSession()
+    const {user} = data ?? {}
     return (
         <>
-            {session.status === 'authenticated' &&
+            {status === "unauthenticated" ?
+                /* SIGN IN LINK */
+                <Link className='btn btn-link btn-light d-none d-lg-block order-lg-3 btn-sm' href={SIGNIN_URL}>
+                    <i className='fi-user me-2'></i>
+                    הכנס
+                </Link>
+                :
                 <Dropdown className='d-none d-lg-block order-lg-3 my-n2 me-3'>
-                    <Dropdown.Toggle as={Link} href='/job-board/account-profile'
-                                     className='nav-link dropdown-toggle-flush d-flex py-1 px-0'
-                                     style={{width: '40px'}}>
-                        <ImageLoader src='/images/avatars/35.png' width={80} height={80} placeholder={false}
-                                     className='rounded-circle' alt={user?.name}/>
+                    {/*PROFILE LINK*/}
+                    <Dropdown.Toggle
+                        as={Link}
+                        href={ME_URL}
+                        className='nav-link dropdown-toggle-flush d-flex py-1 px-0'
+                        style={{width: '40px'}}
+                    >
+                        {/*AVATAR IMAGE*/}
+                        <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={80} height={80}/>
                     </Dropdown.Toggle>
-                    <Dropdown.Menu variant='dark' renderOnMount align='end'>
-                        <div className='d-flex align-items-start border-bottom border-light px-3 py-1 mb-2'
-                             style={{width: '16rem'}}>
-                            <ImageLoader src='/images/avatars/25.png' width={48} height={48} placeholder={false}
-                                         className='rounded-circle' alt='Annette Black'/>
+
+                    {/*USER CARD*/}
+                    <Dropdown.Menu
+                        variant='dark'
+                        renderOnMount align='end'
+                    >
+                        <div
+                            className='d-flex align-items-start border-bottom border-light px-3 py-1 mb-2'
+                            style={{width: '16rem'}}>
+                            <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={80} height={80}/>
                             <div className='ps-2'>
-                                <h6 className='fs-base mb-0 text-light'>{user?.name}</h6>
+                                <h6 className='fs-base mb-0 text-light'>
+                                    {user?.name}
+                                </h6>
                                 <div className='fs-xs py-2'>
                                     {user?.email}
                                 </div>
@@ -130,3 +149,5 @@ function Desktop() {
         </>
     )
 }
+
+

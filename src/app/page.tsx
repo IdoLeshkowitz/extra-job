@@ -7,7 +7,6 @@ import {SSRProvider} from "react-bootstrap";
 
 export default function HomePage() {
     return (
-        <SSRProvider>
             <section className='bg-dark pb-4 pt-5'>
                 <div className='container-fluid'>
                     <div className='row align-items-end mt-2 mt-md-0 pt-md-4 pt-lg-5 pb-5 p-5 '>
@@ -40,7 +39,6 @@ export default function HomePage() {
                     </Container>
                 </div>
             </section>
-        </SSRProvider>
     )
 }
 

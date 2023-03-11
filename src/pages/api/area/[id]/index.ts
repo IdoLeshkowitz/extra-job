@@ -6,7 +6,7 @@ import AreaUpdateInput = Prisma.AreaUpdateInput;
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "PUT") {
         const id = req.query.id as unknown as string
-        const areaUpdateInput: AreaUpdateInput = req.body.data
+        const areaUpdateInput: AreaUpdateInput = req.body
         try {
             const updatedArea = await updateArea(id, areaUpdateInput)
             res.json({data : updatedArea})
