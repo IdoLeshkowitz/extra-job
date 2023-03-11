@@ -8,9 +8,6 @@ import {Role} from "@prisma/client";
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        /*
-        securing the route only admins can access
-         */
         const session = await getServerSession(req, res, authOptions)
         if (!session || session.user.role !== Role.ADMIN) {
             return res.status(403).json({error: {message: "unauthorized"}})

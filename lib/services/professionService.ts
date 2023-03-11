@@ -9,7 +9,7 @@ export async function createProfession(professionToCreate: Prisma.ProfessionCrea
     });
     return {data: {profession}};
 }
-export async function updateArea(id: string, data: ProfessionUpdateInput): Promise<{ data: { professions: Profession } }> {
+export async function updateProfession(id: string, data: ProfessionUpdateInput): Promise<{ data: { professions: Profession } }> {
     const updatedProfession = await prisma.profession.update({
         where: {id},
         data,
