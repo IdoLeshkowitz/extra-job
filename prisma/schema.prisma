@@ -37,44 +37,48 @@ model Session {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique
   userId       String   @db.ObjectId
-  expires      DateTime
+  expires      DateTime @db.Date
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id              String           @id @default(auto()) @map("_id") @db.ObjectId
-  name            String?
-  email           String?          @unique
-  image           String?
-  accounts        Account[]
-  sessions        Session[]
-  role            Role             @default(JOBSEEKER)
-  phone           Int
-  jobApplications JobApplication[]
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String?
+  email    String?   @unique
+  image    String?
+  accounts Account[]
+  sessions Session[]
+  role     Role      @default(JOBSEEKER)
+  phone    Int?
+
+  appliedFor JobApplication[]
 }
 
 model JobApplication {
-  userId       String   @db.ObjectId
-  jobListingId String   @db.ObjectId
-  date         DateTime
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  appliedById  String @db.ObjectId
+  jobListingId String @db.ObjectId
 
-  user           User       @relation(fields: [userId], references: [id]) //, onDelete: Cascade
-  job_listing_id JobListing @relation(fields: [jobListingId], references: [id]) //, onDelete: Cascade
+  createdAt DateTime @default(now()) @db.Date
+
+  appliedBy  User       @relation(fields: [appliedById], references: [id])
+  joblisting JobListing @relation(fields: [jobListingId], references: [id])
 }
 
 model JobListing {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  proffetion_id String @db.ObjectId
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  proffesionId String @db.ObjectId
+  areaId       String @db.ObjectId
 
-  proffetionId   Proffesion       @relation(fields: [proffetion_id], references: [id])
+  area            Area             @relation(fields: [areaId], references: [id])
+  proffesion      Proffesion       @relation(fields: [proffesionId], references: [id])
   JobApplications JobApplication[]
 }
 
 model Proffesion {
-  name       String
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
   JobListings JobListing[]
 }
 
@@ -87,10 +91,11 @@ model VerificationToken {
 }
 
 model Area {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @unique
-  createdAt DateTime @default(now()) @db.Date
-  active    Boolean  @default(true)
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name       String       @unique
+  createdAt  DateTime     @default(now())
+  active     Boolean      @default(true)
+  JobListing JobListing[]
 
   @@index([name, createdAt(sort: Asc)])
 }

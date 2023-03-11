@@ -1,58 +1,42 @@
 import prisma from "../prisma";
-import {Prisma} from "@prisma/client";
+import {Area, Prisma} from "@prisma/client";
 import AreaUpdateInput = Prisma.AreaUpdateInput;
 
 
-
-export async function createArea(data: Prisma.AreaCreateInput) {
-    //check if area already exists
-    const areaExists = await prisma.area.findFirst({
-        where: {
-            name: data.name
-        }
-    })
-    //if area exists activate it
-    if (areaExists) {
-        const areaUpdateInput: AreaUpdateInput = {
-            createdAt: areaExists.createdAt,
-            name: areaExists.name,
-            active: true
-        }
-        const updatedArea = await updateArea(areaExists.id, areaUpdateInput);
-        return updatedArea;
-    }
-    //if area does not exist create it
-    const addedArea = await prisma.area.create({
-        data,
+export async function createArea(areaToCreate: Prisma.AreaCreateInput): Promise<{ data: { area: Area } }> {
+    const area = await prisma.area.create({
+        data: areaToCreate,
     });
-    return addedArea;
+    return {data: {area}};
 }
 
-export async function updateArea(id: string, data: AreaUpdateInput) {
+export async function updateArea(id: string, data: AreaUpdateInput): Promise<{ data: { areas: Area } }> {
     const updatedArea = await prisma.area.update({
         where: {id},
         data,
     });
-    return updatedArea;
+    return {data: {areas: updatedArea}};
 }
 
-export async function getAreasAndCount({skip, take}: { skip: number, take: number }) {
-    /*
-    * return {data : {areas: Area[], count: number}}
-    * */
-    const getAreas = () => prisma.area.findMany({
+export async function getAreaByName(name: string): Promise<{ data: { area: Area | null } }> {
+    const area = await prisma.area.findUnique({
+        where: {name}
+    });
+    return {data: {area}}
+}
+
+export async function countAreas({active}: { active: boolean | undefined }): Promise<{ data: { count: number } }> {
+    const count = await prisma.area.count({
+        where: {active: active ? active : undefined}
+    });
+    return {data: {count}}
+}
+
+export async function getAreas({skip, take, active}: { skip: number | undefined, take: number | undefined, active: boolean | undefined }): Promise<{ data: { areas: Area[] } }> {
+    const areas = await prisma.area.findMany({
         skip,
         take,
-        where: {active: true}
-    })
-    const getCount = () => prisma.area.count()
-    const [areas, count] = await Promise.allSettled([getAreas(), getCount()])
-    //check if all promises are fulfilled
-    if (areas.status !== 'fulfilled') {
-        throw new Error('unable to get areas')
-    }
-    if (count.status !== 'fulfilled') {
-        throw new Error('unable to get areas count')
-    }
-    return {data: {areas: areas.value, count: count.value}}
+        where: {active: active ? active : undefined}
+    });
+    return {data: {areas}}
 }

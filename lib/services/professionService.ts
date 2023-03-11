@@ -1,32 +1,29 @@
 import prisma from "../prisma";
-import {Prisma} from "@prisma/client";
+import {Prisma, Profession} from "@prisma/client";
 import ProfessionUpdateInput = Prisma.ProfessionUpdateInput;
 
-export async function createProfession(data: Prisma.ProfessionCreateInput) {
+export async function createProfession(data: Prisma.ProfessionCreateInput): Promise<{ data: { profession: Profession } }> {
     //check if profession already exists
-    const professionExists = await prisma.profession.findFirst({
-        where: {
-            name: data.name
-        }
-    })
+    const response = await getProfessionByName(data.name);
+    const {profession} = response.data;
     //if profession exists activate it
-    if (professionExists) {
+    if (profession) {
         const professionUpdateInput: ProfessionUpdateInput = {
-            createdAt: professionExists.createdAt,
-            name: professionExists.name,
+            createdAt: profession.createdAt,
+            name: profession.name,
             active: true
         }
-        const updatedProfession = await updateProfession(professionExists.id, professionUpdateInput);
-        return updatedProfession;
+        const updatedProfession = await updateProfession(profession.id, professionUpdateInput);
+        return {data: {profession: updatedProfession}};
     }
     //if profession does not exist create it
     const addedProfession = await prisma.profession.create({
         data,
     });
-    return addedProfession;
+    return {data: {profession: addedProfession}}
 }
 
-export async function updateProfession(id: string, data: ProfessionUpdateInput) {
+export async function updateProfession(id: string, data: ProfessionUpdateInput): Promise<Profession> {
     const updatedProfession = await prisma.profession.update({
         where: {id},
         data,
@@ -34,23 +31,30 @@ export async function updateProfession(id: string, data: ProfessionUpdateInput) 
     return updatedProfession;
 }
 
-export async function getProfessionsAndCount({skip, take}: { skip: number, take: number }) {
+export async function getSomeActiveProfessionsAndCount({skip, take}: { skip: number, take: number }) {
     /*
     * return {data : {professions: Profession[], count: number}}
     * */
-    const getProfessions = () => prisma.profession.findMany({
+    const getSomeActiveProfessions = () => prisma.profession.findMany({
         skip,
         take,
         where: {active: true}
     })
-    const getCount = () => prisma.profession.count()
-    const [professions, count] = await Promise.allSettled([getProfessions(), getCount()])
+    const countAllActiveProfessions = () => prisma.profession.count({where: {active: true}})
+    const [professions, count] = await Promise.allSettled([getSomeActiveProfessions(), countAllActiveProfessions()])
     //check if all promises are fulfilled
     if (professions.status !== 'fulfilled') {
-        throw new Error('unable to get professions')
+        return Promise.reject({error: {message: 'unable to get professions'}})
     }
     if (count.status !== 'fulfilled') {
-        throw new Error('unable to get professions count')
+        return Promise.reject({error: {message: 'unable to get count'}})
     }
     return {data: {professions: professions.value, count: count.value}}
+}
+
+export async function getProfessionByName(name: string): Promise<{ data: { profession: Profession | null } }> {
+    const profession = await prisma.profession.findUnique({
+        where: {name}
+    });
+    return {data: {profession}}
 }
