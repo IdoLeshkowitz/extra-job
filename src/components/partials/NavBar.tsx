@@ -12,6 +12,7 @@ import Image from 'next/image'
 import {signIn, signOut, useSession} from "next-auth/react";
 import {Session} from "next-auth";
 import Avatar from "@/components/avatar/Avatar";
+import {SSRProvider} from "react-bootstrap";
 
 const SIGNIN_URL = '/api/auth/signin'
 const SIGNOUT_URL = '/api/auth/signout'
@@ -22,35 +23,37 @@ export default function NavBar() {
     const {user} = data ?? {}
     const avatarUrl = user?.image ?? DEFAULT_AVATAR_URL
     return (
-        <Navbar as={StickyNavbar}
-                expand='lg'
-                className='fixed-top navbar-dark bg-dark'
-        >
-            <Container>
-                {/*HOME BUTTON*/}
-                <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
-                    <ImageLoader src='/images/logo/extra-job.png' alt='extra job' width={100} height={32}/>
-                </Navbar.Brand>
+        <SSRProvider>
+            <Navbar as={StickyNavbar}
+                    expand='lg'
+                    className='fixed-top navbar-dark bg-dark'
+            >
+                <Container>
+                    {/*HOME BUTTON*/}
+                    <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
+                        <ImageLoader src='/images/logo/extra-job.png' alt='extra job' width={100} height={32}/>
+                    </Navbar.Brand>
 
 
-                {/* AVATAR */}
-                {/*DESKTOP AVATAR*/}
-                <DesktopAvatar avatarUrl={avatarUrl}/>
+                    {/* AVATAR */}
+                    {/*DESKTOP AVATAR*/}
+                    <DesktopAvatar avatarUrl={avatarUrl}/>
 
 
-                <Navbar.Collapse id='navbarNav' className='order-md-2'>
-                    <Nav navbarScroll style={{maxHeight: '35rem'}}>
-                        <Nav.Item as={Nav.Link} href="/all-jobs">
-                            <Nav.Link active={false}>כל המשרות</Nav.Link>
-                        </Nav.Item>
-                        <MobileAvatar avatarUrl={avatarUrl}/>
-                    </Nav>
-                </Navbar.Collapse>
+                    <Navbar.Collapse id='navbarNav' className='order-md-2'>
+                        <Nav navbarScroll style={{maxHeight: '35rem'}}>
+                            <Nav.Item as={Nav.Link} href="/all-jobs">
+                                <Nav.Link active={false}>כל המשרות</Nav.Link>
+                            </Nav.Item>
+                            <MobileAvatar avatarUrl={avatarUrl}/>
+                        </Nav>
+                    </Navbar.Collapse>
 
-                {/*NAVBAR TOGGLE BUTTON FOR MOBILE*/}
-                <Navbar.Toggle aria-controls='navbarNav' className='ms-auto'/>
-            </Container>
-        </Navbar>
+                    {/*NAVBAR TOGGLE BUTTON FOR MOBILE*/}
+                    <Navbar.Toggle aria-controls='navbarNav' className='ms-auto'/>
+                </Container>
+            </Navbar>
+        </SSRProvider>
     )
 }
 
@@ -86,7 +89,7 @@ function MobileAvatar({avatarUrl}: { avatarUrl: string }) {
                     </Dropdown.Menu>
                 </Nav.Item>
                 :
-                <Nav.Item className='d-lg-none' >
+                <Nav.Item className='d-lg-none'>
                     <Nav.Link href={SIGNIN_URL}>
                         <i className='fi-user me-2'> התחבר</i>
                     </Nav.Link>

@@ -1,4 +1,4 @@
-'use client'
+import '../../styles/theme.scss'
 import '../../styles/theme.scss'
 import Authprovider from './Authprovider';
 import NavBar from "@/partials/NavBar";
@@ -9,7 +9,6 @@ import {SSRProvider} from "react-bootstrap";
 
 function RootLayout({children}: { children: ReactNode }) {
     return (
-        <SSRProvider>
             <html>
                 <body className="bg-dark">
                     <Authprovider>
@@ -21,7 +20,6 @@ function RootLayout({children}: { children: ReactNode }) {
                     </Authprovider>
                 </body>
             </html>
-         </SSRProvider>
     )
 }
 
