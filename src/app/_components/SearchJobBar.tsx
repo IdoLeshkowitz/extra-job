@@ -22,6 +22,37 @@ export default function SearchJobBar() {
             console.log(values)
         }
     })
+
+    function mockArea() {
+        return [
+            {id: 1, name: 'השרון', createdAt: '2021-01-01', active: true},
+            {id: 2, name: 'השפלה', createdAt: '2021-01-01', active: true},
+            {id: 3, name: 'הצפון', createdAt: '2021-01-01', active: true},
+            {id: 4, name: 'המרכז', createdAt: '2021-01-01', active: true},
+            {id: 5, name: 'הדרום', createdAt: '2021-01-01', active: true},
+            {id: 6, name: 'ירושלים', createdAt: '2021-01-01', active: false}, 
+
+        ]
+    }
+
+    function mockProffesion() {
+        return [
+            {id: 1, name: 'ניקיון', createdAt: '2021-01-01', active: true},
+            {id: 2, name: 'תחזוקה', createdAt: '2021-01-01', active: true},
+            {id: 3, name: 'אבטחה', createdAt: '2021-01-01', active: true},
+            {id: 4, name: 'לוגיסטיקה', createdAt: '2021-01-01', active: true},
+            {id: 5, name: 'מזון', createdAt: '2021-01-01', active: false},
+        ]
+    }
+
+    const proffesions = mockProffesion().filter(proffesion => proffesion.active).map(proffesion => {
+        return ['fi-work', proffesion.name]
+    })
+
+    const areas = mockArea().filter(area => area.active).map(area => {
+        return ['fi-house', area.name]
+    })
+
     return (
         <Form className='form-group d-block d-md-flex rounded-md-pill mb-2 mb-sm-4'>
 
@@ -47,18 +78,9 @@ export default function SearchJobBar() {
                 <DropdownSelect
                     name="name"
                     darkMenu={true}
-                    defaultValue='All categories'
+                    defaultValue='בחר איזור'
                     icon='fi-list'
-                    options={[
-                        ['fi-bed', 'Accomodation'],
-                        ['fi-cafe', 'Food & Drink'],
-                        ['fi-shopping-bag', 'Shopping'],
-                        ['fi-museum', 'Art & Hisory'],
-                        ['fi-entertainment', 'Entertainment'],
-                        ['fi-meds', 'Medicine'],
-                        ['fi-makeup', 'Beauty'],
-                        ['fi-car', 'Car Rental']
-                    ]}
+                    options={areas}
                     variant='link btn-lg ps-2 ps-sm-3'
                     className='w-100 mb-sm-0 mb-3'
                 />
@@ -67,18 +89,9 @@ export default function SearchJobBar() {
                 {/*CATEGORY SELECT*/}
                 <DropdownSelect
                     darkMenu={true}
-                    defaultValue='All categories'
+                    defaultValue='בחר מקצוע'
                     icon='fi-list'
-                    options={[
-                        ['fi-bed', 'Accomodation'],
-                        ['fi-cafe', 'Food & Drink'],
-                        ['fi-shopping-bag', 'Shopping'],
-                        ['fi-museum', 'Art & Hisory'],
-                        ['fi-entertainment', 'Entertainment'],
-                        ['fi-meds', 'Medicine'],
-                        ['fi-makeup', 'Beauty'],
-                        ['fi-car', 'Car Rental']
-                    ]}
+                    options={proffesions}
                     variant='link btn-lg ps-2 ps-sm-3'
                     className='w-100 mb-sm-0 mb-3'
                 />
