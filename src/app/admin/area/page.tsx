@@ -1,9 +1,9 @@
 import CustomPagination from "@/components/pagination /customPagination";
-import AddAreaRow from "@/app/admin/area/_components/addAreaRow";
+import AddAreaRow from "@/app/admin/area/components/addAreaRow";
 import {countAreas, getAreas} from "@/services/areaService";
 import {Area} from "@prisma/client";
 import {FC} from "react";
-import DeactivateAreaButton from "@/app/admin/area/_components/deactivateAreaButton";
+import DeactivateAreaButton from "@/app/admin/area/components/deactivateAreaButton";
 
 const getActiveAreasByRange = ({skip, take}: { skip: number, take: number }): Promise<{ data: { areas: Area[] } }> => {
     return getAreas({active: true, skip: skip, take: take})

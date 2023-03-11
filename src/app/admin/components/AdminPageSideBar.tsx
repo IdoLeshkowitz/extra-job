@@ -1,7 +1,7 @@
 'use client'
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
-import CardNav from '@/components/CardNav';
+import CardNav from '@/components/navbar/CardNav';
 import {useState} from "react";
 import {Col} from "react-bootstrap";
 import Link from "next/link";
@@ -26,7 +26,7 @@ const navItems: NavItem[] = [
         icon: 'fi-briefcase'
     }
 ]
-export default function SideBar() {
+export default function AdminPageSideBar() {
     const [open, setOpen] = useState(false)
     const accountPageTitle = 'title'
     return (

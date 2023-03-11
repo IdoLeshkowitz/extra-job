@@ -1,8 +1,4 @@
-import CursorParallax from '@/app/_components/CursorParallax'
-import SearchJobBar from "@/app/_components/SearchJobBar";
-import Container from "react-bootstrap/Container";
-import Col from "react-bootstrap/Col";
-import {SSRProvider} from "react-bootstrap";
+import CursorParallax from '@/components/cursorParallax/CursorParallax'
 
 export default function HomePage() {
     return (

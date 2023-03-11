@@ -2,7 +2,7 @@
 
 
 import InputGroup from "react-bootstrap/InputGroup";
-import DropdownSelect from "@/components/DropdownSelect";
+import DropdownSelect from "@/components/dropdown/DropdownSelect";
 import Button from "react-bootstrap/Button";
 import {object, string} from "yup";
 import {Form} from "react-bootstrap";

@@ -1,9 +1,9 @@
 'use client'
-import StickyNavbar from "@/components/StickyNavbar";
+import StickyNavbar from "@/components/navbar/StickyNavbar";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Link from "next/link";
-import ImageLoader from "@/components/ImageLoader";
+import ImageLoader from "@/components/Image/ImageLoader";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
@@ -18,7 +18,7 @@ const SIGNIN_URL = '/api/auth/signin'
 const SIGNOUT_URL = '/api/auth/signout'
 const ME_URL = '/api/me'
 const DEFAULT_AVATAR_URL = '/images/avatars/38.png'
-export default function NavBar() {
+export default function MainLayoutNavBar() {
     const {data} = useSession()
     const {user} = data ?? {}
     const avatarUrl = user?.image ?? DEFAULT_AVATAR_URL

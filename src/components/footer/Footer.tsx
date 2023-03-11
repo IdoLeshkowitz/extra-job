@@ -1,6 +1,6 @@
 'use client'
 import {Col, Container, Row} from "react-bootstrap";
-import SocialButton from "@/components/SocialButton";
+import SocialButton from "@/components/socialButton/SocialButton";
 
 
 export default function Footer() {
