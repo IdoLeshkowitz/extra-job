@@ -51,7 +51,7 @@
     "simplebar-react": "^2.4.3",
     "swiper": "^8.4.5",
     "typescript": "4.9.5",
-    "yup": "^1.0.1"
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@types/parallax-js": "^3.1.0",

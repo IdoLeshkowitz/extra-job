@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import {Prisma} from ".prisma/client";
-import ProfessionUpdateInput = Prisma.ProfessionUpdateInput;
 import {Profession} from "@prisma/client";
+import ProfessionUpdateInput = Prisma.ProfessionUpdateInput;
 
 export async function createProfession(professionToCreate: Prisma.ProfessionCreateInput): Promise<{ data: { profession: Profession } }> {
     const profession = await prisma.profession.create({
@@ -9,6 +9,7 @@ export async function createProfession(professionToCreate: Prisma.ProfessionCrea
     });
     return {data: {profession}};
 }
+
 export async function updateProfession(id: string, data: ProfessionUpdateInput): Promise<{ data: { professions: Profession } }> {
     const updatedProfession = await prisma.profession.update({
         where: {id},
@@ -16,6 +17,7 @@ export async function updateProfession(id: string, data: ProfessionUpdateInput):
     });
     return {data: {professions: updatedProfession}};
 }
+
 export async function getProfessionByName(name: string): Promise<{ data: { profession: Profession | null } }> {
     const profession = await prisma.profession.findUnique({
         where: {name}

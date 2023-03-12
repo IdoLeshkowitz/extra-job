@@ -24,6 +24,11 @@ const navItems: NavItem[] = [
         name: 'מקצועות',
         href: '/admin/profession',
         icon: 'fi-briefcase'
+    },
+    {
+        name : 'היקף משרות',
+        href : '/admin/positionscope',
+        icon : 'fi-briefcase'
     }
 ]
 export default function AdminPageSideBar() {

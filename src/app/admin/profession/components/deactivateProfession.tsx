@@ -1,35 +1,35 @@
-'use client'
+'use client';
 import {FC, MouseEventHandler} from "react";
-import {useRouter} from "next/navigation";
-import {Area, Prisma} from "@prisma/client";
-import PillButton from "@/components/buttons/PillButtons";
 import {fetcher} from "@/lib/api/fetcher";
-import AreaUpdateInput = Prisma.AreaUpdateInput;
+import {Prisma} from ".prisma/client";
+import {Profession} from "@prisma/client";
+import {useRouter} from "next/navigation";
+import PillButton from "@/components/buttons/PillButtons";
+import ProfessionUpdateInput = Prisma.ProfessionUpdateInput;
 
-interface DeleteAreaButtonProps {
+interface DeactivateProfessionButtonProps {
     id: string
 }
 
-const DeactivateAreaButton: FC<DeleteAreaButtonProps> = ({id}) => {
+const DeactivateProfession: FC<DeactivateProfessionButtonProps> = ({id}) => {
     const router = useRouter()
     const onDeactivation: MouseEventHandler<HTMLButtonElement> = async (e) => {
         e.preventDefault()
 
-        const areaUpdateInput: AreaUpdateInput = {active: false}
+        const professionUpdateInput: ProfessionUpdateInput = {active: false}
 
         /*            send the request        */
-        const {data: {area}} = await fetcher(
+        const {data: {profession}} = await fetcher(
             {
-                url   : `/api/area/${id}`,
+                url   : `/api/profession/${id}`,
                 method: 'PUT',
-                body  : {...areaUpdateInput},
+                body  : {...professionUpdateInput},
                 json  : true,
-            }) as { data: { area: Area } }
+            }) as { data: { profession: Profession } }
 
         /*            update the UI        */
         router.refresh()
     }
-
     return (
         <PillButton
             onClick={onDeactivation}
@@ -38,4 +38,5 @@ const DeactivateAreaButton: FC<DeleteAreaButtonProps> = ({id}) => {
         />
     )
 }
-export default DeactivateAreaButton
+
+export default DeactivateProfession

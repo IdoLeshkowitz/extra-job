@@ -9,7 +9,7 @@ import {Area, Prisma} from "@prisma/client";
 import {fetcher} from "@/lib/api/fetcher";
 
 
-export default function AddAreaRow() {
+export default function CreateArea() {
     const nameRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
 
@@ -40,7 +40,7 @@ export default function AddAreaRow() {
 
     return (
         <ListItemForm onSubmit={onSubmit}>
-            <FormGroup className="w-50" controlId={'aaa'}>
+            <FormGroup className="w-50">
                 <FormControl
                     required={true}
                     ref={nameRef}

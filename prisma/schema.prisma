@@ -65,15 +65,33 @@ model JobApplication {
   joblisting JobListing @relation(fields: [jobListingId], references: [id])
 }
 
+model PositionScope {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String       @unique
+  createdAt   DateTime     @default(now()) @db.Date
+  active      Boolean      @default(true)
+  jobListings JobListing[]
+
+  @@index([name, createdAt(sort: Asc)])
+}
+
 model JobListing {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  proffesionId String @db.ObjectId
-  areaId       String @db.ObjectId
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  description     String
+  serialNumber    String   @unique
+  professionId    String   @db.ObjectId
+  areaId          String   @db.ObjectId
+  positionScopeId String   @db.ObjectId
+  createdAt       DateTime @default(now()) @db.Date
+  active          Boolean  @default(true)
 
   area            Area             @relation(fields: [areaId], references: [id])
-  proffesion      Proffession      @relation(fields: [proffesionId], references: [id])
+  profession      Profession       @relation(fields: [professionId], references: [id])
+  positionScope   PositionScope    @relation(fields: [positionScopeId], references: [id])
   JobApplications JobApplication[]
+
+  @@index([name, serialNumber, createdAt(sort: Asc)])
 }
 
 model VerificationToken {
@@ -94,7 +112,7 @@ model Area {
   @@index([name, createdAt(sort: Asc)])
 }
 
-model Proffession {
+model Profession {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String       @unique
   createdAt   DateTime     @default(now()) @db.Date

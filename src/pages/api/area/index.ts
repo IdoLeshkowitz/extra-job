@@ -57,7 +57,6 @@ export default async function index(req: NextApiRequest, res: NextApiResponse) {
         const take = req.query.take ? Number(req.query.take) : undefined;
         const active = req.query.active ? Boolean(req.query.active) : undefined;
         try {
-
             const areas = await getAreas({skip, take, active})
             res.json(areas)
         } catch (e) {

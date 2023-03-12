@@ -7,7 +7,7 @@ import PillButton from "@/components/buttons/PillButtons";
 import {FormControl, FormGroup} from "react-bootstrap";
 import ListItemForm from "@/components/forms/ListItemForm";
 
-export default function AddProfessionRow(){
+export default function CreateProfession(){
     const nameRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
     const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
