@@ -1,3 +1,22 @@
+# System Description
+
+The recruitment company website is a platform designed to help job seekers find and apply for open positions. The website allows users to browse job listings and submit their resumes for consideration.
+
+In addition to the job search and application functionality, there is also a back-office management application for managing job listings, users, and their applications. This application provides an administrative interface for reviewing resumes, managing job postings, and tracking applicant status.
+
+# Technical Details
+
+The website is built using a Next.js mono repo architecture with Prisma and MongoDB as the primary database systems. Authentication is handled using OAuth providers, allowing users to sign in with their existing social media accounts. The platform also includes user management functionality, allowing administrators to manage user accounts and permissions within the system.
+
+# Key Features
+
+- Job search and application functionality for job seekers
+- Administrative back-office application for managing job listings and user applications
+- Authentication using OAuth providers
+- User management functionality for system administrators
+- Built with a Next.js mono repo architecture using Prisma and MongoDB
+
+
 # Product Requirements Document (PRD)
 
 ## System Stories
@@ -85,16 +104,42 @@ As a system, I want to redirect a job seeker that clicked ‘apply for a job’ 
 
 ## Admin Story
 
-### Sign In and View Dashboard
+## Story 1
 
-As an admin, I want to:
+**Title:** Updating user information
 
-- sign in with my email and password
-- go to my admin page.
+**User Story:** As an administrator, I want to be able to update user information, such as name, email, and password, so that I can keep user data up to date and accurate.
 
-### Profession
+**Acceptance Criteria:**
+- I can access the user profile page from the admin dashboard.
+- I can edit the user's name, email, and password.
+- When I save the changes, the user's information is updated in the database.
 
-As an admin, I want to:
+## Story 2
+
+**Title:** Creating a new user account
+
+**User Story:** As an administrator, I want to be able to create a new user account, so that new users can start using our system.
+
+**Acceptance Criteria:**
+- I can access the "Create User" page from the admin dashboard.
+- I can enter the new user's name, email, and password.
+- When I save the new user account, the user's information is saved to the database.
+- The new user receives an email with their account information and instructions for logging in.
+
+## Story 3
+
+**Title:** Deleting a user account
+
+**User Story:** As an administrator, I want to be able to delete a user account, so that we can remove inactive or unwanted users from our system.
+
+**Acceptance Criteria:**
+- I can access the user profile page from the admin dashboard.
+- I can click on the "Delete User" button.
+- When I confirm the deletion, the user's account is deleted from the database.
+- Any data associated with the user is also deleted.
+
+
 
 - view all professions
 - permanently delete any (as long as they are unrelated to any job listing)
