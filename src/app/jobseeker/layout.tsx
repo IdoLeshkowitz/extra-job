@@ -1,7 +1,7 @@
 'use client'
 import {Breadcrumb, Col, Container, Row, SSRProvider} from "react-bootstrap";
 import Link from "next/link";
-import SideBar from "@/app/admin/_components/SideBar";
+import AdminPageSideBar from "@/app/admin/components/AdminPageSideBar";
 
 export default function JobSeekerLayout({children}: { children: React.ReactNode }) {
     return (
@@ -17,7 +17,7 @@ export default function JobSeekerLayout({children}: { children: React.ReactNode 
 
                 <Row>
                     {/*SIDE BAR*/}
-                    <SideBar/>
+                    <AdminPageSideBar/>
 
                     {/* Page content */}
                     <Col md={7} lg={8} className='mb-5 '>

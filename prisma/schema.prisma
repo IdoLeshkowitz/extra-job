@@ -65,21 +65,33 @@ model JobApplication {
   joblisting JobListing @relation(fields: [jobListingId], references: [id])
 }
 
-model JobListing {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  proffesionId String @db.ObjectId
-  areaId       String @db.ObjectId
+model PositionScope {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String       @unique
+  createdAt   DateTime     @default(now()) @db.Date
+  active      Boolean      @default(true)
+  jobListings JobListing[]
 
-  area            Area             @relation(fields: [areaId], references: [id])
-  proffesion      Proffesion       @relation(fields: [proffesionId], references: [id])
-  JobApplications JobApplication[]
+  @@index([name, createdAt(sort: Asc)])
 }
 
-model Proffesion {
-  name        String
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  JobListings JobListing[]
+model JobListing {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  description     String
+  serialNumber    String   @unique
+  professionId    String   @db.ObjectId
+  areaId          String   @db.ObjectId
+  positionScopeId String   @db.ObjectId
+  createdAt       DateTime @default(now()) @db.Date
+  active          Boolean  @default(true)
+
+  area            Area             @relation(fields: [areaId], references: [id])
+  profession      Profession       @relation(fields: [professionId], references: [id])
+  positionScope   PositionScope    @relation(fields: [positionScopeId], references: [id])
+  JobApplications JobApplication[]
+
+  @@index([name, serialNumber, createdAt(sort: Asc)])
 }
 
 model VerificationToken {
@@ -91,20 +103,21 @@ model VerificationToken {
 }
 
 model Area {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  name       String       @unique
-  createdAt  DateTime     @default(now())
-  active     Boolean      @default(true)
-  JobListing JobListing[]
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  active      Boolean      @default(true)
+  jobListings JobListing[]
 
   @@index([name, createdAt(sort: Asc)])
 }
 
 model Profession {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @unique
-  createdAt DateTime @default(now()) @db.Date
-  active    Boolean  @default(true)
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String       @unique
+  createdAt   DateTime     @default(now()) @db.Date
+  active      Boolean      @default(true)
+  jobListings JobListing[]
 
   @@index([name, createdAt(sort: Asc)])
 }

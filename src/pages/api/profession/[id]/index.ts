@@ -1,12 +1,13 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {Prisma} from ".prisma/client";
 import {updateProfession} from "@/services/professionService";
-import AreaUpdateInput = Prisma.AreaUpdateInput;
+import ProfessionUpdateInput = Prisma.ProfessionUpdateInput;
+
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "PUT") {
         const id = req.query.id as unknown as string
-        const professionUpdateInput: AreaUpdateInput = req.body.data
+        const professionUpdateInput: ProfessionUpdateInput = req.body
         try {
             const updatedProfession = await updateProfession(id, professionUpdateInput)
             res.json({data: updatedProfession})

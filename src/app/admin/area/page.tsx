@@ -1,9 +1,9 @@
 import CustomPagination from "@/components/pagination /customPagination";
-import AddAreaRow from "@/app/admin/area/_components/addAreaRow";
+import CreateArea from "@/app/admin/area/components/createArea";
 import {countAreas, getAreas} from "@/services/areaService";
 import {Area} from "@prisma/client";
 import {FC} from "react";
-import DeactivateAreaButton from "@/app/admin/area/_components/deactivateAreaButton";
+import DeactivateArea from "@/app/admin/area/components/deactivateArea";
 
 const getActiveAreasByRange = ({skip, take}: { skip: number, take: number }): Promise<{ data: { areas: Area[] } }> => {
     return getAreas({active: true, skip: skip, take: take})
@@ -23,7 +23,7 @@ export default async function AreaPage({searchParams}: { searchParams: { skip?: 
                 <div className="col-sm-12 col-md-12 col-lg-11 bg-dark">
                     <div className="card bg-dark">
                         <ul className="list-group list-group-flush">
-                            <AddAreaRow/>
+                            <CreateArea/>
                             {areas.map((area) => (
                                 <AreaRow key={area.id} name={area.name} id={area.id}/>
                             ))}
@@ -45,7 +45,7 @@ const AreaRow: FC<AreaRowProps> = ({name, id}) => {
     return (
         <li className="list-group-item bg-dark border-bottom border-light text-white d-flex flex-row-reverse justify-content-between h-25 align-items-center">
             {name}
-            <DeactivateAreaButton id={id}/>
+            <DeactivateArea id={id}/>
         </li>
     )
 }

@@ -15,7 +15,7 @@ export const fetcher = async ({url, method, json, body}: FetcherParams) : Promis
         }
     })
     if (!res.ok) {
-        throw new Error(res.statusText)
+        return Promise.reject(await res.json())
     }
     if (!json) {
         return res

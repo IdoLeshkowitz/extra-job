@@ -1,4 +1,4 @@
-import ImageLoader from "@/components/ImageLoader";
+import ImageLoader from "@/components/Image/ImageLoader";
 import {FC} from "react";
 
 interface AvatarProps {
