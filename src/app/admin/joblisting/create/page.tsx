@@ -76,7 +76,6 @@ export default function CreateJobListingPage() {
             }
         }
     })
-    console.log(formik.errors)
     return (
         <Container className='mb-md-4 '>
             <Row>
