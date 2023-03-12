@@ -8,15 +8,22 @@ import {number, object, string} from 'yup';
 import {useFormik} from "formik";
 import {fetcher} from "@/lib/api/fetcher";
 
-const getAreas = async () => {
+const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
     const res = await fetch('/api/area')
     if (!res.ok) {
         return Promise.reject(await res.json())
     }
     return await res.json()
 }
-const getProfessions = async () => {
+const getProfessions = async (): Promise<{ data: { professions: Profession[] } }> => {
     const res = await fetch('/api/profession')
+    if (!res.ok) {
+        return Promise.reject(await res.json())
+    }
+    return await res.json()
+}
+const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionScope[] } }> => {
+    const res = await fetch('/api/positionscope')
     if (!res.ok) {
         return Promise.reject(await res.json())
     }
@@ -34,12 +41,13 @@ export default function CreateJobListingPage() {
     const router = useRouter()
     const [areas, setAreas] = useState<Area[]>([])
     const [professions, setProfessions] = useState<Profession[]>([])
-    const [employmentScopes, setEmploymentScopes] = useState<PositionScope[]>([])
+    const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
     useEffect(() => {
-        Promise.all([getAreas(), getProfessions()])
-            .then(([areas, professions]) => {
+        Promise.all([getAreas(), getProfessions(), getPositionScopes()])
+            .then(([{data: {areas}}, {data: {professions}}, {data: {positionScopes}}]) => {
                 setAreas(areas)
                 setProfessions(professions)
+                setPositionScopes(positionScopes)
             })
             .catch((err) => {
                 console.error(err)
@@ -63,13 +71,12 @@ export default function CreateJobListingPage() {
                     body  : {...values},
                     json  : true,
                 }) as { data: { jobListing: JobListing } }
-                router.push('/admin/joblisting/[id]')
             } catch (e) {
-                console.error(e)
+                console.log(e)
             }
         }
     })
-
+    console.log(formik.errors)
     return (
         <Container className='mb-md-4 '>
             <Row>
@@ -95,7 +102,6 @@ export default function CreateJobListingPage() {
                                 <Form.Control
                                     className='form-control-light'
                                     placeholder='הכנס שם'
-                                    id="name"
                                     name="name"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
@@ -117,7 +123,6 @@ export default function CreateJobListingPage() {
                                     as='textarea'
                                     rows={5}
                                     placeholder='הכנס תיאור'
-                                    id="description"
                                     name="description"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
@@ -137,7 +142,6 @@ export default function CreateJobListingPage() {
                                 <Form.Control
                                     className='form-control-light'
                                     placeholder='הכנס מספר סידורי'
-                                    id="serialNumber"
                                     name="serialNumber"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
@@ -163,11 +167,26 @@ export default function CreateJobListingPage() {
                                 <Row className='pb-2'>
                                     <Col xs={12} md={6}>
                                         <Form.Group controlId='sc-body' className='mb-3'>
-                                            <Form.Select className='form-select-light' defaultValue='Convertible'
-                                                         required>
-                                                <option value='' disabled>Select body type</option>
-                                                <option value='Compact'>Compact</option>
+                                            <Form.Select
+                                                className='form-select-light'
+                                                placeholder='בחר איזור'
+                                                name="areaId"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.areaId}
+                                            >
+                                                <option value='' disabled>בחר איזור</option>
+                                                {
+                                                    areas.map((area, index) =>
+                                                        <option key={index} value={area.id}>{area.name}</option>)
+                                                }
                                             </Form.Select>
+                                            {
+                                                formik.touched.areaId && formik.errors.areaId &&
+                                                <span className='form-text text-light opacity-50'>
+                                                    {formik.errors.areaId}
+                                                </span>
+                                            }
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -184,11 +203,29 @@ export default function CreateJobListingPage() {
                                 <Row className='pb-2'>
                                     <Col xs={12} md={6}>
                                         <Form.Group controlId='sc-body' className='mb-3'>
-                                            <Form.Select className='form-select-light' defaultValue='Convertible'
-                                                         required>
-                                                <option value='' disabled>Select body type</option>
-                                                <option value='Compact'>Compact</option>
+                                            <Form.Select
+                                                className='form-select-light'
+                                                name="professionId"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.professionId}
+                                                placeholder='בחר מקצוע'
+                                            >
+                                                <option value='' disabled>בחר מקצוע</option>
+                                                {
+                                                    professions.map((profession, index) =>
+                                                        <option key={index} value={profession.id}>
+                                                            {profession.name}
+                                                        </option>
+                                                    )
+                                                }
                                             </Form.Select>
+                                            {
+                                                formik.touched.professionId && formik.errors.professionId &&
+                                                <span className='form-text text-light opacity-50'>
+                                                        {formik.errors.professionId}
+                                                        </span>
+                                            }
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -205,28 +242,41 @@ export default function CreateJobListingPage() {
                                 <Row className='pb-2'>
                                     <Col xs={12} md={6}>
                                         <Form.Group controlId='sc-body' className='mb-3'>
-                                            <Form.Select className='form-select-light' defaultValue='Convertible'
-                                                         required>
-                                                <option value='' disabled>Select body type</option>
-                                                <option value='Compact'>Compact</option>
+                                            <Form.Select
+                                                className='form-select-light'
+                                                name="positionScopeId"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.positionScopeId}
+                                                placeholder='בחר היקף משרה'
+                                            >
+                                                <option value='' disabled>בחר היקף משרה</option>
+                                                {
+                                                    positionScopes.map((positionScope, index) =>
+                                                        <option key={index} value={positionScope.id}>
+                                                            {positionScope.name}
+                                                        </option>
+                                                    )
+                                                }
+                                                {
+                                                    formik.touched.positionScopeId && formik.errors.positionScopeId &&
+                                                    <span className='form-text text-light opacity-50'>
+                                                        {formik.errors.positionScopeId}
+                                                        </span>
+                                                }
                                             </Form.Select>
                                         </Form.Group>
                                     </Col>
                                 </Row>
                             </div>
                         </Card>
-
                         {/* Footer (Action buttons) */}
                         <div className='d-sm-flex justify-content-between pt-2'>
                             <Button size='lg' variant='outline-light' className='d-block ps-3 mb-3 mb-sm-2'
-                            >
-                                <i className='fi-eye-on me-2'></i>
-                                Preview
+                                    type="submit">
+                                <i className='fi-plus-circle me-2'></i>
+                                הוסף משרה
                             </Button>
-                            {/*<Button as={Link} href='/car-finder/promotion' size='lg' variant='primary'*/}
-                            {/*        className='d-block mb-2'>*/}
-                            {/*    Save and continue*/}
-                            {/*</Button>*/}
                         </div>
                     </Col>
                 </form>
