@@ -1,39 +1,101 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Product Requirements Document (PRD)
 
-## Getting Started
+## System Stories
 
-First, run the development server:
+### Job Listings
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-npm dev
-```
+As a system, I want each job listing to have the following details:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- name `<Text>`
+- profession `<Profession>` (e.g., sales, logistics, cooking)
+- area `<Area>` (e.g., Tel Aviv, Southern District)
+- employer `<Employer>`
+- pay range `<Text>`
+- is active `<Boolean>`
+- id `<Text>` @unique @id
+- description `<Text>`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+As a system, I want to automatically deactivate job applications on expiration date.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+As a system, I want to prevent inactive job listings from showing up in job seekers' search.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+As a system, I want to prevent the admin from adding job listings with an area, job type, or employer that does not exist.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Profession
 
-## Learn More
+As a system, I want to prevent the admin from deleting professions that are related to job listings.
 
-To learn more about Next.js, take a look at the following resources:
+As a system, I want each profession to have the following details:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- name `<Text>`
+- id `<Text>` @unique @id
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Area
 
-## Deploy on Vercel
+As a system, I want to prevent the admin from deleting areas that are related to job listings.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+As a system, I want each area to have the following details:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# extra-job
+- name `<Text>`
+- id `<Text>` @unique @id
+
+### Employers
+
+As a system, I want each employer to have the following details:
+
+- id `<Text>` @unique @id
+- name `<Text>`
+- is vip `<Boolean>`
+- het-pey `<Text>` @unique
+- contact name `<Text>`
+- contact phone `<Text>`
+- contact email `<Text>`
+- points
+
+As a system, I want to prevent the admin from adding employers with duplicate het-pey.
+
+### Job Application
+
+As a system, I want each job application to have the following details:
+
+- id `<Text>` @id @unique
+- appliedFor `<JobListing>`
+- appliedAt `<DateTime>`
+- appliedBy `<JobSeeker>`
+
+As a system, I want to prevent unregistered job seekers from applying to a job.
+
+As a system, I want to direct unregistered job seekers to the sign-in page.
+
+As a system, I want to prevent job seekers without a CV from applying to a job.
+
+### Job Seekers
+
+As a system, I want each job seeker to have the following details:
+
+- name `<Text>` (taken from Google) (uneditable)
+- email `<Text>` @unique (taken from Google) (uneditable)
+- phone `<Text>`
+- cv `<PDF>`
+- id `<Text>` @unique @id
+
+As a system, I want to prevent job seekers without a CV and phone from applying.
+
+As a system, I want to redirect a job seeker that clicked ‘apply for a job’ but have no phone and cv to the relevant page.
+
+## Admin Story
+
+### Sign In and View Dashboard
+
+As an admin, I want to:
+
+- sign in with my email and password
+- go to my admin page.
+
+### Profession
+
+As an admin, I want to:
+
+- view all professions
+- permanently delete any (as long as they are unrelated to any job listing)
+- be
