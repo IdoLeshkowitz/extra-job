@@ -28,14 +28,7 @@ export default async function JobListingPage({searchParams}: { searchParams: { s
         <div>
             <h1 className="h2 text-light">משרות</h1>
             <div className="row pt-2 bg-dark">
-                {
-                     jobListings.map((jobListing, index) => (
-                         <JobListingCard
-                             key={index}
-                             href='#'
-                    />
-                     ))
-                }
+            
             </div>
         </div>
     )
