@@ -46,7 +46,6 @@ const JobListingCard: FC<JobListingCardProps> = ({
     const light = true;
     return (
         <div
-            {...props}
             style={{maxWidth: '42rem'}}
             className={`card card-light card-hover${extraClass}`}
         >
@@ -96,33 +95,33 @@ const JobListingCard: FC<JobListingCardProps> = ({
                         </div>
                     </div>
                     <div className='d-flex flex-column align-items-end justify-content-between'>
-                        {dropdown ?
-                            <Dropdown className='position-relative zindex-10'>
-                                <Dropdown.Toggle
-                                    variant={`${light ? 'translucent-light' : 'light shadow-sm'} btn-icon btn-xs rounded-circle`}>
-                                    <i className='fi-dots-vertical'></i>
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu variant={light ? 'dark' : ''} className='my-1'>
-                                    {/*{dropdown.map((item, indx) => {*/}
-                                    {/*    if (item.href) {*/}
-                                    {/*        return <Dropdown.Item key={indx} as={Link} href={item.href} {...item.props}>*/}
-                                    {/*            <i className={`${item.icon} opacity-60 me-2`}></i>*/}
-                                    {/*            {item.label}*/}
-                                    {/*        </Dropdown.Item>*/}
-                                    {/*    } else {*/}
-                                    {/*        return <Dropdown.Item key={indx} as='button' {...item.props}>*/}
-                                    {/*            <i className={`${item.icon} opacity-60 me-2`}></i>*/}
-                                    {/*            {item.label}*/}
-                                    {/*        </Dropdown.Item>*/}
-                                    {/*    }*/}
-                                    {/*})}*/}
-                                </Dropdown.Menu>
-                            </Dropdown> : badges && <div>
-                            {badges.map((badge, indx) => {
-                                return <span key={indx}
-                                             className={`badge bg-faded-${badge[0]} rounded-pill fs-sm ms-2`}>{badge[1]}</span>
-                            })}
-                        </div>}
+                        {/*{dropdown ?*/}
+                        {/*    <Dropdown className='position-relative zindex-10'>*/}
+                        {/*        <Dropdown.Toggle*/}
+                        {/*            variant={`${light ? 'translucent-light' : 'light shadow-sm'} btn-icon btn-xs rounded-circle`}>*/}
+                        {/*            <i className='fi-dots-vertical'></i>*/}
+                        {/*        </Dropdown.Toggle>*/}
+                        {/*        <Dropdown.Menu variant={light ? 'dark' : ''} className='my-1'>*/}
+                        {/*            /!*{dropdown.map((item, indx) => {*!/*/}
+                        {/*            /!*    if (item.href) {*!/*/}
+                        {/*            /!*        return <Dropdown.Item key={indx} as={Link} href={item.href} {...item.props}>*!/*/}
+                        {/*            /!*            <i className={`${item.icon} opacity-60 me-2`}></i>*!/*/}
+                        {/*            /!*            {item.label}*!/*/}
+                        {/*            /!*        </Dropdown.Item>*!/*/}
+                        {/*            /!*    } else {*!/*/}
+                        {/*            /!*        return <Dropdown.Item key={indx} as='button' {...item.props}>*!/*/}
+                        {/*            /!*            <i className={`${item.icon} opacity-60 me-2`}></i>*!/*/}
+                        {/*            /!*            {item.label}*!/*/}
+                        {/*            /!*        </Dropdown.Item>*!/*/}
+                        {/*            /!*    }*!/*/}
+                        {/*            /!*})}*!/*/}
+                        {/*        </Dropdown.Menu>*/}
+                        {/*    /!*</Dropdown> : badges && <div>*!/*/}
+                        {/*    /!*{badges.map((badge, indx) => {*!/*/}
+                        {/*    /!*    return <span key={indx}*!/*/}
+                        {/*    /!*                 className={`badge bg-faded-${badge[0]} rounded-pill fs-sm ms-2`}>{badge[1]}</span>*!/*/}
+                        {/*    /!*})}*!/*/}
+                        {/*</div>}*/}
                         <strong className={light ? 'text-light opacity-70' : 'fs-sm'}>{views}</strong>
                     </div>
                 </div>
