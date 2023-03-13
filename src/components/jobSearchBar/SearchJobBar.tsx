@@ -11,13 +11,17 @@ import { getPositionScopes } from "@/services/positionScopeService";
 import { getProfessions } from "@/services/professionService";
 import { Area, Profession, PositionScope } from "@prisma/client";
 import { useState, useEffect } from "react";
+import { Col } from "react-bootstrap";
 
-const validationSchema = object({
-    text : string(),
-    areaId : string(),
-    professionId : string()
-})
+
 export default function SearchJobBar() {
+
+    const validationSchema = object({
+        text : string(),
+        areaId: string(),
+        professionId : string()
+    })
+
     const formik = useFormik({
         initialValues: {
             text: '',
@@ -59,19 +63,13 @@ export default function SearchJobBar() {
             })
     }, [])
 
-    //pin, geo
-
-    function handleSubmit(event : any) {
-        event.preventDefault();
-        console.log(formik.values)
-    }
-
 
     return (
-        <Form className='form-group d-block d-md-flex rounded-md-pill mb-2 mb-sm-4'>
+        <Form className='form-group d-block d-md-flex rounded-md-pill mb-2 mb-sm-4'
+        onSubmit={formik.handleSubmit}>
 
             {/*TEXT INPUT*/}
-            <InputGroup size='lg' className='border-end-md' >
+            <InputGroup size='lg' className='border-end-md'>
                 <InputGroup.Text className='text-muted ps-3'>
                     <i className='fi-search'/>
                 </InputGroup.Text>
@@ -81,55 +79,68 @@ export default function SearchJobBar() {
                     name="text"
                     placeholder='חיפוש חופשי במאגר'
                     value={formik.values.text}
-                    onBlur = {formik.handleBlur}
-                    onChange = {formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                 />
             </InputGroup>
             <hr className='d-md-none my-2'/>
 
-            {/*AREA SELECT*/}
-            <div className='d-sm-flex'>
-            <Form.Group controlId='sc-body' className='mb-3'>
-                <Form.Label className='text-light'>
-                                    מספר סידורי
-                </Form.Label>
-                <Form.Select
-                    
-                    className='form-select-light'
-                    placeholder='בחר איזור'
-                    name="areaId"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.areaId}
-                    >
-                    <option value='' disabled>בחר איזור</option>
-                    {
-                        areas.map((area, index) =>
-                            <option key={index} value={area.id}>{area.name}</option>)
-                    }
-                </Form.Select>
-            </Form.Group>
+                <div className='d-sm-flex'>
+                    <Col xs={12} md={6}>
+                        <Form.Group controlId='sc-body' className='w-100 mb-sm-0 mb-3'>
+                            <Form.Select
+                                className='w-100 mb-sm-0 mb-3'
+                                placeholder='בחר איזור'
+                                name="areaId"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.areaId}
+                            >
+                                <option value='' disabled className="text-dark">בחר איזור</option>
+                                {
+                                    areas.map((area, index) =>
+                                        <option key={index} value={area.id} className="text-dark">{area.name}</option>)
+                                }
+                            </Form.Select>
+                            
+                            {
+                                formik.touched.areaId && formik.errors.areaId &&
+                                <span className='form-text text-light opacity-50'>
+                                    {formik.errors.areaId}
+                                </span>
+                            }
+                        </Form.Group>
+                    </Col>
+
+                {/*AREA SELECT*/}
                 <hr className='d-md-none my-2'/>
 
                 {/*CATEGORY SELECT*/}
-                <DropdownSelect
-                    darkMenu={true}
-                    defaultValue='All categories'
-                    icon='fi-list'
-                    options={[
-                        ['fi-bed', 'Accomodation'],
-                        ['fi-cafe', 'Food & Drink'],
-                        ['fi-shopping-bag', 'Shopping'],
-                        ['fi-museum', 'Art & Hisory'],
-                        ['fi-entertainment', 'Entertainment'],
-                        ['fi-meds', 'Medicine'],
-                        ['fi-makeup', 'Beauty'],
-                        ['fi-car', 'Car Rental']
-                    ]}
-                    variant='link btn-lg ps-2 ps-sm-3'
-                    className='w-100 mb-sm-0 mb-3'
-                />
-                <Button size='lg' className='rounded-pill w-100 w-md-auto ms-sm-3' onClick={handleSubmit}>Search</Button>
+                <Col xs={12} md={6}>
+                        <Form.Group controlId='sc-body' className='w-100 mb-sm-0 mb-3'>
+                            <Form.Select
+                                className='w-100 mb-sm-0 mb-3'
+                                placeholder='בחר מקצוע'
+                                name="professionId"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.professionId}
+                            >
+                                <option value='' disabled className="text-dark">בחר מקצוע</option>
+                                {
+                                    professions.map((profession, index) =>
+                                        <option key={index} value={profession.id} className="text-dark">{profession.name}</option>)
+                                }
+                            </Form.Select>
+                            {
+                                formik.touched.professionId && formik.errors.professionId &&
+                                <span className='form-text text-light opacity-50'>
+                                    {formik.errors.professionId}
+                                </span>
+                            }
+                        </Form.Group>
+                    </Col>
+                <Button size='lg' className='rounded-pill w-100 w-md-auto ms-sm-3' type="submit">Search</Button>
             </div>
         </Form>
     )
