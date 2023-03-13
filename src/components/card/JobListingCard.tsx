@@ -4,50 +4,42 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import ImageLoader from '@/components/Image/ImageLoader'
 import {FC} from "react";
 import {Area, JobListing, PositionScope, Prisma, Profession} from "@prisma/client";
-
-interface Dropdown {
-    href?: string
-    label: string
-    icon?: string
-}
+import {fetcher} from "@/lib/api/fetcher";
+import {useRouter} from "next/navigation";
 
 interface JobListingCardProps extends React.HTMLAttributes<HTMLDivElement> {
     href: string
-    jobListing: (JobListing & { area: Area, profession: Profession, positionScope: PositionScope })[]
-    img?: {
-        src: string
-        alt: string
-    }
-    title?: string
-    location?: string
-    salary?: string
-    badges?: [string, string][]
-    dropdown?: Dropdown[]
-    views?: number
+    jobListing: string
     light?: boolean
-    className?: string
     key?: number
-    active: boolean
 }
 
-const JobListingCard: FC<JobListingCardProps> = ({
-                                                     jobListing,
-                                                     active,
-                                                     href,
-                                                     img,
-                                                     title,
-                                                     location,
-                                                     salary,
-                                                     views,
-                                                     className,
-                                                 }) => {
-
-    const extraClass = className ? ` ${className}` : ''
+const JobListingCard: FC<JobListingCardProps> = ({jobListing, href, className}) => {
+    const router = useRouter()
     const light = true;
+    const {name, area, profession, positionScope, active, createdAt,id} = JSON.parse(jobListing) as unknown as (JobListing & { area: Area, profession: Profession, positionScope: PositionScope })
+    const img = {
+        src: '/images/car-finder/icons/buyers.svg',
+        alt: name
+    }
+
+    async function onDeactivate() {
+        const positionScopeUpdateInput: Prisma.PositionScopeUpdateInput = {active: !active}
+        /* send the request */
+        const {data: {area}} = await fetcher(
+            {
+                url   : `/api/joblisting/${id}`,
+                method: "PUT",
+                body  : {...positionScopeUpdateInput},
+                json  : true,
+            }) as { data: { area: Area } }
+        router.refresh()
+    }
+
     return (
         <div
             style={{maxWidth: '42rem'}}
-            className={`card card-light card-hover${extraClass}`}
+            className="card card-light card-hover"
         >
             <div className='card-body'>
                 <div className='d-flex justify-content-between'>
@@ -72,7 +64,7 @@ const JobListingCard: FC<JobListingCardProps> = ({
                             <h3 className='h6 card-title pb-1 mb-2'>
                                 <Link href={href}
                                       className={`${light ? 'text-light opacity-80' : 'text-nav'} stretched-link text-decoration-none`}>
-                                    {title}
+                                    {name}
                                 </Link>
                                 {/*ACTIVE INDICATOR*/}
                                 <span
@@ -85,44 +77,34 @@ const JobListingCard: FC<JobListingCardProps> = ({
                                 {/*AREA*/}
                                 <div className='text-nowrap mb-2'>
                                     <i className={`fi-map-pin ${light ? 'text-light opacity-50' : 'text-muted'} me-1`}></i>
-                                    <span className={light ? 'text-light opacity-60' : ''}></span>
+                                    <span className={light ? 'text-light opacity-60' : ''}>{area.name}</span>
                                 </div>
-                                {salary && <div className='text-nowrap'>
-                                    <i className={`fi-cash fs-base ${light ? 'text-light opacity-50' : 'text-muted'} me-1`}></i>
-                                    <span className={light ? 'text-light opacity-60' : ''}>{salary}</span>
-                                </div>}
+                                {/*PROFESSION*/}
+                                <div className='text-nowrap mb-2'>
+                                    <i className={`fi-map-pin ${light ? 'text-light opacity-50' : 'text-muted'} me-1`}></i>
+                                    <span className={light ? 'text-light opacity-60' : ''}>{profession.name}</span>
+                                </div>
+                                {/*POSITION SCOPE*/}
+                                <div className='text-nowrap mb-2'>
+                                    <i className={`fi-map-pin ${light ? 'text-light opacity-50' : 'text-muted'} me-1`}></i>
+                                    <span className={light ? 'text-light opacity-60' : ''}>{positionScope.name}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div className='d-flex flex-column align-items-end justify-content-between'>
-                        {/*{dropdown ?*/}
-                        {/*    <Dropdown className='position-relative zindex-10'>*/}
-                        {/*        <Dropdown.Toggle*/}
-                        {/*            variant={`${light ? 'translucent-light' : 'light shadow-sm'} btn-icon btn-xs rounded-circle`}>*/}
-                        {/*            <i className='fi-dots-vertical'></i>*/}
-                        {/*        </Dropdown.Toggle>*/}
-                        {/*        <Dropdown.Menu variant={light ? 'dark' : ''} className='my-1'>*/}
-                        {/*            /!*{dropdown.map((item, indx) => {*!/*/}
-                        {/*            /!*    if (item.href) {*!/*/}
-                        {/*            /!*        return <Dropdown.Item key={indx} as={Link} href={item.href} {...item.props}>*!/*/}
-                        {/*            /!*            <i className={`${item.icon} opacity-60 me-2`}></i>*!/*/}
-                        {/*            /!*            {item.label}*!/*/}
-                        {/*            /!*        </Dropdown.Item>*!/*/}
-                        {/*            /!*    } else {*!/*/}
-                        {/*            /!*        return <Dropdown.Item key={indx} as='button' {...item.props}>*!/*/}
-                        {/*            /!*            <i className={`${item.icon} opacity-60 me-2`}></i>*!/*/}
-                        {/*            /!*            {item.label}*!/*/}
-                        {/*            /!*        </Dropdown.Item>*!/*/}
-                        {/*            /!*    }*!/*/}
-                        {/*            /!*})}*!/*/}
-                        {/*        </Dropdown.Menu>*/}
-                        {/*    /!*</Dropdown> : badges && <div>*!/*/}
-                        {/*    /!*{badges.map((badge, indx) => {*!/*/}
-                        {/*    /!*    return <span key={indx}*!/*/}
-                        {/*    /!*                 className={`badge bg-faded-${badge[0]} rounded-pill fs-sm ms-2`}>{badge[1]}</span>*!/*/}
-                        {/*    /!*})}*!/*/}
-                        {/*</div>}*/}
-                        <strong className={light ? 'text-light opacity-70' : 'fs-sm'}>{views}</strong>
+                        <Dropdown className='position-relative zindex-10'>
+                            <Dropdown.Toggle
+                                variant={`${light ? 'translucent-light' : 'light shadow-sm'} btn-icon btn-xs rounded-circle`}>
+                                <i className='fi-dots-vertical'></i>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu variant={light ? 'dark' : ''} className='my-1'>
+                                <Dropdown.Item onClick={onDeactivate}>
+                                    <i className="opacity-60 me-2 fi-minus-circle"></i>
+                                    {active ? 'הפסק פרסום' : 'הפעל פרסום'}
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </div>
                 </div>
             </div>

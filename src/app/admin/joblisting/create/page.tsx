@@ -9,7 +9,7 @@ import {useFormik} from "formik";
 import {fetcher} from "@/lib/api/fetcher";
 
 const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
-    const res = await fetch('/api/area')
+    const res = await fetch('/api/area?active=true')
     if (!res.ok) {
         return Promise.reject(await res.json())
     }
