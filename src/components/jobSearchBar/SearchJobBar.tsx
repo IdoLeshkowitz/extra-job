@@ -7,21 +7,66 @@ import Button from "react-bootstrap/Button";
 import {object, string} from "yup";
 import {Form} from "react-bootstrap";
 import {useFormik} from "formik";
+import { getPositionScopes } from "@/services/positionScopeService";
+import { getProfessions } from "@/services/professionService";
+import { Area, Profession, PositionScope } from "@prisma/client";
+import { useState, useEffect } from "react";
 
 const validationSchema = object({
-    text : string()
-
+    text : string(),
+    areaId : string(),
+    professionId : string()
 })
 export default function SearchJobBar() {
     const formik = useFormik({
         initialValues: {
             text: '',
+            areaId: '',
+            professionId: ''
         },
         validationSchema,
         onSubmit: (values) => {
             console.log(values)
         }
     })
+
+    const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
+        const res = await fetch('/api/area?active=true')
+        if (!res.ok) {
+            return Promise.reject(await res.json())
+        }
+        return await res.json()
+    }
+
+    const getProfessions = async (): Promise<{ data: { professions: Profession[] } }> => {
+        const res = await fetch('/api/profession')
+        if (!res.ok) {
+            return Promise.reject(await res.json())
+        }
+        return await res.json()
+    }
+
+    const [areas, setAreas] = useState<Area[]>([])
+    const [professions, setProfessions] = useState<Profession[]>([])
+    useEffect(() => {
+        Promise.all([getAreas(), getProfessions()])
+            .then(([{data: {areas}}, {data: {professions}}]) => {
+                setAreas(areas)
+                setProfessions(professions)
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+    }, [])
+
+    //pin, geo
+
+    function handleSubmit(event : any) {
+        event.preventDefault();
+        console.log(formik.values)
+    }
+
+
     return (
         <Form className='form-group d-block d-md-flex rounded-md-pill mb-2 mb-sm-4'>
 
@@ -44,24 +89,26 @@ export default function SearchJobBar() {
 
             {/*AREA SELECT*/}
             <div className='d-sm-flex'>
-                <DropdownSelect
-                    name="name"
-                    darkMenu={true}
-                    defaultValue='All categories'
-                    icon='fi-list'
-                    options={[
-                        ['fi-bed', 'Accomodation'],
-                        ['fi-cafe', 'Food & Drink'],
-                        ['fi-shopping-bag', 'Shopping'],
-                        ['fi-museum', 'Art & Hisory'],
-                        ['fi-entertainment', 'Entertainment'],
-                        ['fi-meds', 'Medicine'],
-                        ['fi-makeup', 'Beauty'],
-                        ['fi-car', 'Car Rental']
-                    ]}
-                    variant='link btn-lg ps-2 ps-sm-3'
-                    className='w-100 mb-sm-0 mb-3'
-                />
+            <Form.Group controlId='sc-body' className='mb-3'>
+                <Form.Label className='text-light'>
+                                    מספר סידורי
+                </Form.Label>
+                <Form.Select
+                    
+                    className='form-select-light'
+                    placeholder='בחר איזור'
+                    name="areaId"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.areaId}
+                    >
+                    <option value='' disabled>בחר איזור</option>
+                    {
+                        areas.map((area, index) =>
+                            <option key={index} value={area.id}>{area.name}</option>)
+                    }
+                </Form.Select>
+            </Form.Group>
                 <hr className='d-md-none my-2'/>
 
                 {/*CATEGORY SELECT*/}
@@ -82,7 +129,7 @@ export default function SearchJobBar() {
                     variant='link btn-lg ps-2 ps-sm-3'
                     className='w-100 mb-sm-0 mb-3'
                 />
-                <Button size='lg' className='rounded-pill w-100 w-md-auto ms-sm-3'>Search</Button>
+                <Button size='lg' className='rounded-pill w-100 w-md-auto ms-sm-3' onClick={handleSubmit}>Search</Button>
             </div>
         </Form>
     )
