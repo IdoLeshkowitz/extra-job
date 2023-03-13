@@ -29,7 +29,12 @@ const navItems: NavItem[] = [
         name : 'היקף משרות',
         href : '/admin/positionscope',
         icon : 'fi-briefcase'
-    }
+    },
+    {
+        name: 'משרות',
+        href: '/admin/joblisting',
+        icon: 'fi-briefcase'
+    },
 ]
 export default function AdminPageSideBar() {
     const [open, setOpen] = useState(false)

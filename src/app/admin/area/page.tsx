@@ -1,4 +1,4 @@
-import CustomPagination from "@/components/pagination /customPagination";
+import CustomPagination from "@/components/pagination/customPagination";
 import CreateArea from "@/app/admin/area/components/createArea";
 import {countAreas, getAreas} from "@/services/areaService";
 import {Area} from "@prisma/client";
