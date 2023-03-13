@@ -1,5 +1,5 @@
 import {Profession} from "@prisma/client";
-import CustomPagination from "@/components/pagination /customPagination";
+import CustomPagination from "@/components/pagination/customPagination";
 import {countProfessions, getProfessions} from "@/services/professionService";
 import {FC} from "react";
 import DeactivateProfession from "@/app/admin/profession/components/deactivateProfession";
