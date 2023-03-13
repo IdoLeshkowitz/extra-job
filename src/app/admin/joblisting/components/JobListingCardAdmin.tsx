@@ -14,7 +14,7 @@ interface JobListingCardProps extends React.HTMLAttributes<HTMLDivElement> {
     key?: number
 }
 
-const JobListingCard: FC<JobListingCardProps> = ({jobListing, href, className}) => {
+const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing, href, className}) => {
     const router = useRouter()
     const light = true;
     const {name, area, profession, positionScope, active, createdAt,id} = JSON.parse(jobListing) as unknown as (JobListing & { area: Area, profession: Profession, positionScope: PositionScope })
@@ -112,4 +112,4 @@ const JobListingCard: FC<JobListingCardProps> = ({jobListing, href, className}) 
     )
 }
 
-export default JobListingCard
+export default JobListingCardAdmin

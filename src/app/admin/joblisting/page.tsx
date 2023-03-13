@@ -1,7 +1,8 @@
 import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
 import {countJobListings} from "@/services/jobListingService";
 import prisma from "@/lib/prisma";
-import JobListingCard from "@/components/card/JobListingCard";
+import JobListingCardAdmin from "@/app/admin/joblisting/components/JobListingCardAdmin";
+
 
 const countAllJobListings = (): Promise<{ data: { count: number } }> => {
     return countJobListings()
@@ -27,7 +28,7 @@ export default async function JobListingPage({searchParams}: { searchParams: { s
             <div className="row pt-2 bg-dark">
                 {
                     jobListings.map((jobListing, index) => (
-                        <JobListingCard key={index} jobListing={JSON.stringify(jobListing)} href='#'/>
+                        <JobListingCardAdmin key={index} jobListing={JSON.stringify(jobListing)} href='#'/>
                     ))
                 }
             </div>
