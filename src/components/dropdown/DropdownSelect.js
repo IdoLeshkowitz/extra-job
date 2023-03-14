@@ -7,6 +7,7 @@ const DropdownSelect = ({
   options,
   icon,
   variant,
+  state,
   darkMenu,
   ...props
 }) => {
@@ -15,7 +16,8 @@ const DropdownSelect = ({
 
   const iconEl = icon ? <i className={`${icon} me-2`}></i> : ''
 
-  const handleSelect = (eventKey, e) => {
+  const handleSelect = (eventKey, id, e) => {
+    state.current = id.target.id
     setSelected(eventKey)
   }
 
@@ -27,7 +29,7 @@ const DropdownSelect = ({
       </Dropdown.Toggle>
       <Dropdown.Menu variant={darkMenu ? 'dark' : ''}>
         {options ? options.map((option, indx) => 
-        <Dropdown.Item key={indx} eventKey={option[1]}>
+        <Dropdown.Item key={indx} eventKey={option[1]} id={option[2]}>
           {option[0] && <i className={`${option[0]} fs-lg opacity-60 me-2`}></i>}
           {option[1]}
         </Dropdown.Item>) : ''}

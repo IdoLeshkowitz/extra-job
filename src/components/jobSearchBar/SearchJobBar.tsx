@@ -8,26 +8,14 @@ import {object, string} from "yup";
 import {Form} from "react-bootstrap";
 import {useFormik} from "formik";
 import { Area, Profession } from "@prisma/client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, SetStateAction } from "react";
 
-const validationSchema = object({
-    text : string(),
-    areaId: string(),
-    professionId: string()
 
-})
 export default function SearchJobBar() {
-    const formik = useFormik({
-        initialValues: {
-            text: '',
-            areaId: '',
-            professionId: ''
-        },
-        validationSchema,
-        onSubmit: (values) => {
-            console.log(values)
-        }
-    })
+
+    const areaRef = useRef<any>(null)
+    const proffRef = useRef<any>(null)
+    const jobRef = useRef<any>(null)
 
     const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
         const res = await fetch('/api/area?active=true')
@@ -58,42 +46,28 @@ export default function SearchJobBar() {
             })
     }, [])
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(areaRef.current);
+        console.log(proffRef.current);
+        console.log(jobRef.current);
+
+      };
+
 
     return (
-        <Form className='form-group d-block d-md-flex rounded-md-pill mb-2 mb-sm-4'
-        onSubmit={formik.handleSubmit}>
-
-            {/*TEXT INPUT*/}
-            <InputGroup size='lg' className='border-end-md' >
-                <InputGroup.Text className='text-muted ps-3'>
-                    <i className='fi-search'/>
-                </InputGroup.Text>
-                <Form.Control
-                    aria-label='Search field'
-                    type='text'
-                    name="text"
-                    placeholder='חיפוש חופשי במאגר'
-                    value={formik.values.text}
-                    onBlur = {formik.handleBlur}
-                    onChange = {formik.handleChange}
-                />
-            </InputGroup>
-            <hr className='d-md-none my-2'/>
+        <Form className='form-group d-block d-md-flex rounded-md-pill mb-2 mb-sm-4 w-75'
+        onSubmit={handleSubmit}>
 
             {/*AREA SELECT*/}
             <div className='d-sm-flex'>
-                <DropdownSelect
-                    name="areaId"
-                    value={formik.values.areaId}
+                <DropdownSelect 
                     darkMenu={true}
-                    defaultValue='בחר איזור'
-                    icon='fi-list'
-                    options={areas.map((area) => ['fi-map-pin', area.name])}
-                    onBlur = {formik.handleBlur}
-                    onChange = {(selected: any) => {
-                        formik.setFieldValue('areaId', selected)
-                    }}
-                    selected={formik.values.areaId}
+                    defaultValue='בחר אזור'
+                    icon='fi-geo'
+                    name="areaId"
+                    state={areaRef}
+                    options={areas.map((area) => ['fi-geo', area.name, area.id])}
                     variant='link btn-lg ps-2 ps-sm-3'
                     className='w-100 mb-sm-0 mb-3'
                 />
@@ -105,13 +79,28 @@ export default function SearchJobBar() {
                     defaultValue='בחר מקצוע'
                     icon='fi-list'
                     name="professionId"
-                    value={formik.values.professionId}
-                    onBlur = {formik.handleBlur}
-                    onChange = {formik.handleChange}
-                    options={professions.map((profession) => ['fi-geo', profession.name])}
+                    state={proffRef}
+                    options={professions.map((profession) => ['fi-geo', profession.name, profession.id])}
                     variant='link btn-lg ps-2 ps-sm-3'
                     className='w-100 mb-sm-0 mb-3'
                 />
+                <hr className='d-md-none my-2'/>
+
+                {/*JOB SELECT*/}
+                <DropdownSelect
+                    darkMenu={true}
+                    defaultValue='בחר היקף משרה'
+                    icon='fi-list'
+                    name="jobId"
+                    state={jobRef}
+                    options={[
+                        ['fi-geo', 'משרה מלאה', '123'],
+                        ['fi-geo', 'משרה חלקית', '124']
+                    ]}
+                    variant='link btn-lg ps-2 ps-sm-3'
+                    className='w-100 mb-sm-0 mb-3'
+                />
+
                 <Button size='lg' className='rounded-pill w-100 w-md-auto ms-sm-3' type="submit" >Search</Button>
             </div>
         </Form>
