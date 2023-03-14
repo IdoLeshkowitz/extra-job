@@ -1,7 +1,5 @@
 import CursorParallax from '@/components/cursorParallax/CursorParallax'
-import SearchJobBar from "@/components/jobSearchBar/SearchJobBar";
 import {Col, Form, FormGroup, Row} from "react-bootstrap";
-import DropdownSelect from "@/components/dropdown/DropdownSelect";
 import InputGroup from "react-bootstrap/InputGroup";
 
 export default function HomePage() {
