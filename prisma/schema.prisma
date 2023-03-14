@@ -6,12 +6,19 @@ enum Role {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex"]
 }
 
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+enum JobApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 model Account {
@@ -27,8 +34,7 @@ model Account {
   scope             String?
   id_token          String? @db.String
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -42,27 +48,31 @@ model Session {
 }
 
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String?
-  email    String?   @unique
-  image    String?
-  accounts Account[]
-  sessions Session[]
-  role     Role      @default(JOBSEEKER)
-  phone    Int?
+  id                  String           @id @default(auto()) @map("_id") @db.ObjectId
+  name                String?
+  email               String?          @unique
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+  role                Role             @default(JOBSEEKER)
+  phone               Int?
+  likedJobListingsIds String[]         @default([]) @db.ObjectId
+  appliedFor          JobApplication[]
 
-  appliedFor JobApplication[]
+  likedJobListings JobListing[] @relation(fields: [likedJobListingsIds], references: [id])
 }
 
 model JobApplication {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  appliedById  String @db.ObjectId
-  jobListingId String @db.ObjectId
-
-  createdAt DateTime @default(now()) @db.Date
+  id           String               @id @default(auto()) @map("_id") @db.ObjectId
+  appliedById  String               @db.ObjectId
+  jobListingId String               @db.ObjectId
+  createdAt    DateTime             @default(now()) @db.Date
+  status       JobApplicationStatus @default(PENDING)
 
   appliedBy  User       @relation(fields: [appliedById], references: [id])
   joblisting JobListing @relation(fields: [jobListingId], references: [id])
+
+  @@fulltext([appliedById, jobListingId, createdAt(sort: Asc)])
 }
 
 model PositionScope {
@@ -72,7 +82,7 @@ model PositionScope {
   active      Boolean      @default(true)
   jobListings JobListing[]
 
-  @@index([name, createdAt(sort: Asc)])
+  @@fulltext([name, createdAt(sort: Asc)])
 }
 
 model JobListing {
@@ -84,14 +94,16 @@ model JobListing {
   areaId          String   @db.ObjectId
   positionScopeId String   @db.ObjectId
   createdAt       DateTime @default(now()) @db.Date
-  active          Boolean  @default(true)
+  likedByIds      String[] @default([]) @db.ObjectId
 
+  likedBy         User[]           @relation(fields: [likedByIds], references: [id])
+  active          Boolean          @default(true)
   area            Area             @relation(fields: [areaId], references: [id])
   profession      Profession       @relation(fields: [professionId], references: [id])
   positionScope   PositionScope    @relation(fields: [positionScopeId], references: [id])
   JobApplications JobApplication[]
 
-  @@index([name, serialNumber, createdAt(sort: Asc)])
+  @@fulltext([name, serialNumber, createdAt(sort: Asc)])
 }
 
 model VerificationToken {
@@ -109,7 +121,7 @@ model Area {
   active      Boolean      @default(true)
   jobListings JobListing[]
 
-  @@index([name, createdAt(sort: Asc)])
+  @@fulltext([name, createdAt(sort: Asc)])
 }
 
 model Profession {
@@ -119,5 +131,5 @@ model Profession {
   active      Boolean      @default(true)
   jobListings JobListing[]
 
-  @@index([name, createdAt(sort: Asc)])
+  @@fulltext([name, createdAt(sort: Asc)])
 }
