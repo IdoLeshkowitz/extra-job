@@ -5,7 +5,7 @@ import {PositionScope, Prisma} from "@prisma/client";
 import {useRouter} from "next/navigation";
 import ListItemForm from "@/components/forms/ListItemForm";
 import {FormControl, FormGroup} from "react-bootstrap";
-import PillButton from "@/components/buttons/PillButtons";
+import PillButton from "@/components/buttons/pillButtons";
 
 export default function CreatePositionScope() {
     const nameRef = useRef<HTMLInputElement>(null)

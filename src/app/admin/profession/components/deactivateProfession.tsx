@@ -4,7 +4,7 @@ import {fetcher} from "@/lib/api/fetcher";
 import {Prisma} from ".prisma/client";
 import {Profession} from "@prisma/client";
 import {useRouter} from "next/navigation";
-import PillButton from "@/components/buttons/PillButtons";
+import PillButton from "@/components/buttons/pillButtons";
 import ProfessionUpdateInput = Prisma.ProfessionUpdateInput;
 
 interface DeactivateProfessionButtonProps {

@@ -2,7 +2,7 @@
 import {FC, MouseEventHandler} from "react";
 import {useRouter} from "next/navigation";
 import {Area, Prisma} from "@prisma/client";
-import PillButton from "@/components/buttons/PillButtons";
+import PillButton from "@/components/buttons/pillButtons";
 import {fetcher} from "@/lib/api/fetcher";
 import AreaUpdateInput = Prisma.AreaUpdateInput;
 

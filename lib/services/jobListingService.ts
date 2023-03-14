@@ -10,7 +10,7 @@ export async function getJobListings({skip, take, active}: { skip: number | unde
     return {data: {jobListings}}
 }
 
-export async function countJobListings({active}: { active: boolean | undefined }): Promise<{ data: { count: number } }> {
+export async function countJobListings({active = undefined}: { active?: boolean } = {}): Promise<{ data: { count: number } }> {
     const count = await prisma.jobListing.count({
         where: {active: active ? active : undefined}
     });
@@ -32,3 +32,9 @@ export async function updateJobListing(id: string, data: Prisma.JobListingUpdate
     return {data: {jobListing: updatedJobListing}};
 }
 
+export async function getJobListingById(id: string): Promise<{ data: { jobListing: JobListing | null } }> {
+    const jobListing = await prisma.jobListing.findUnique({
+        where: {id}
+    });
+    return {data: {jobListing}}
+}
