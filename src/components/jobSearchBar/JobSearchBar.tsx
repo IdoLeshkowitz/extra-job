@@ -6,6 +6,7 @@ import {Col, Row, SSRProvider} from "react-bootstrap";
 import {Area, PositionScope, Profession} from "@prisma/client";
 import {SyntheticEvent, useEffect, useRef, useState} from "react";
 import Button from "react-bootstrap/Button";
+import {useRouter} from "next/navigation";
 
 
 const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
@@ -32,15 +33,13 @@ const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionSc
     return await res.json()
 }
 export default function JobSearchBar() {
-
     const areaIdRef = useRef<string | null>(null)
     const professionIdRef = useRef<string | null>(null)
     const positionScopeIdRef = useRef<string | null>(null)
-
-
     const [areas, setAreas] = useState<Area[]>([])
     const [professions, setProfessions] = useState<Profession[]>([])
     const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
+    const router = useRouter()
     useEffect(() => {
         Promise.all([getAreas(), getProfessions(), getPositionScopes()])
             .then(([{data: {areas}}, {data: {professions}}, {data: {positionScopes}}]) => {
@@ -54,9 +53,21 @@ export default function JobSearchBar() {
     }, [])
 
     const handleSubmit = (e: SyntheticEvent<HTMLButtonElement>) => {
-        console.log(areaIdRef.current);
-        console.log(professionIdRef.current);
-        console.log(positionScopeIdRef.current);
+        const areaId = areaIdRef.current
+        const professionId = professionIdRef.current
+        const positionScopeId = positionScopeIdRef.current
+        const query = new URLSearchParams()
+        if (areaId) {
+            query.append('areaId', areaId)
+        }
+        if (professionId) {
+            query.append('professionId', professionId)
+        }
+        if (positionScopeId) {
+            query.append('positionScopeId', positionScopeId)
+        }
+        const url = `/joblisting?${query.toString()}`
+        router.push(url)
     };
 
 

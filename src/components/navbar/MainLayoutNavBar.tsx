@@ -18,6 +18,7 @@ const SIGNIN_URL = '/api/auth/signin'
 const SIGNOUT_URL = '/api/auth/signout'
 const ME_URL = '/api/me'
 const DEFAULT_AVATAR_URL = '/images/avatars/38.png'
+const JOB_LISTING_URL = '/joblisting'
 export default function MainLayoutNavBar() {
     const {data} = useSession()
     const {user} = data ?? {}
@@ -42,8 +43,8 @@ export default function MainLayoutNavBar() {
 
                     <Navbar.Collapse id='navbarNav' className='order-md-2'>
                         <Nav navbarScroll style={{maxHeight: '35rem'}}>
-                            <Nav.Item as={Nav.Link} href="/all-jobs">
-                                <Nav.Link active={false}>כל המשרות</Nav.Link>
+                            <Nav.Item as={Nav.Link} href={JOB_LISTING_URL} >
+                                <Nav.Link active={false} href={JOB_LISTING_URL} className="text-light">כל המשרות</Nav.Link>
                             </Nav.Item>
                             <MobileAvatar avatarUrl={avatarUrl}/>
                         </Nav>
