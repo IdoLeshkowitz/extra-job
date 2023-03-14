@@ -1,4 +1,5 @@
 import CursorParallax from '@/components/cursorParallax/CursorParallax'
+import SearchJobBar from '@/components/jobSearchBar/SearchJobBar'
 
 export default function HomePage() {
     return (
@@ -16,7 +17,7 @@ export default function HomePage() {
                         <CursorParallax className='mx-auto'/>
                     </div>
                 </div>
-                <div className='container content-overlay py-md-5 mt-n2 mb-lg-3'>
+                <div className='container-fluid  py-md-5 mt-n2 mb-lg-3'>
                     <div className='mt-5 mb-md-5 py-5'>
                         <div className='col-xl-6 col-lg-8 col-md-10 mx-auto mb-sm-5 mb-4  text-center'>
                             <h1 className='display-5 text-light d-flex flex-wrap align-items-center justify-content-center mt-sm-5 mt-4 my-3'>
@@ -28,7 +29,7 @@ export default function HomePage() {
                         <div className='mx-auto px-0 col-xl-8 col-lg-9 col-md-10'>
 
                             {/* Search form */}
-                            search job bar
+                            <SearchJobBar />
                         </div>
                     </div>
                 </div>
