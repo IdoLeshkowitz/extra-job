@@ -1,108 +1,115 @@
 'use client'
 
 
-import InputGroup from "react-bootstrap/InputGroup";
 import DropdownSelect from "@/components/dropdown/DropdownSelect";
+import {Col, Row, SSRProvider} from "react-bootstrap";
+import {Area, PositionScope, Profession} from "@prisma/client";
+import {SyntheticEvent, useEffect, useRef, useState} from "react";
 import Button from "react-bootstrap/Button";
-import {object, string} from "yup";
-import {Form} from "react-bootstrap";
-import {useFormik} from "formik";
-import { Area, Profession } from "@prisma/client";
-import { useState, useEffect, useRef, SetStateAction } from "react";
 
 
+const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
+    const res = await fetch('/api/area?active=true')
+    if (!res.ok) {
+        return Promise.reject(await res.json())
+    }
+    return await res.json()
+}
+
+const getProfessions = async (): Promise<{ data: { professions: Profession[] } }> => {
+    const res = await fetch('/api/profession')
+    if (!res.ok) {
+        return Promise.reject(await res.json())
+    }
+    return await res.json()
+}
+
+const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionScope[] } }> => {
+    const res = await fetch('/api/positionscope')
+    if (!res.ok) {
+        return Promise.reject(await res.json())
+    }
+    return await res.json()
+}
 export default function SearchJobBar() {
 
-    const areaRef = useRef<any>(null)
-    const proffRef = useRef<any>(null)
-    const jobRef = useRef<any>(null)
+    const areaIdRef = useRef<string | null>(null)
+    const professionIdRef = useRef<string | null>(null)
+    const positionScopeIdRef = useRef<string | null>(null)
 
-    const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
-        const res = await fetch('/api/area?active=true')
-        if (!res.ok) {
-            return Promise.reject(await res.json())
-        }
-        return await res.json()
-    }
-
-    const getProfessions = async (): Promise<{ data: { professions: Profession[] } }> => {
-        const res = await fetch('/api/profession')
-        if (!res.ok) {
-            return Promise.reject(await res.json())
-        }
-        return await res.json()
-    }
 
     const [areas, setAreas] = useState<Area[]>([])
     const [professions, setProfessions] = useState<Profession[]>([])
+    const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
     useEffect(() => {
-        Promise.all([getAreas(), getProfessions()])
-            .then(([{data: {areas}}, {data: {professions}}]) => {
+        Promise.all([getAreas(), getProfessions(), getPositionScopes()])
+            .then(([{data: {areas}}, {data: {professions}}, {data: {positionScopes}}]) => {
                 setAreas(areas)
                 setProfessions(professions)
+                setPositionScopes(positionScopes)
             })
             .catch((err) => {
                 console.error(err)
             })
     }, [])
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log(areaRef.current);
-        console.log(proffRef.current);
-        console.log(jobRef.current);
-
-      };
+    const handleSubmit = (e: SyntheticEvent<HTMLButtonElement>) => {
+        console.log(areaIdRef.current);
+        console.log(professionIdRef.current);
+        console.log(positionScopeIdRef.current);
+    };
 
 
     return (
-        <Form className='form-group d-block d-md-flex rounded-md-pill mb-2 mb-sm-4 w-75'
-        onSubmit={handleSubmit}>
+        <SSRProvider>
+            <div className='d-block rounded-md-pill form-group-light'>
+                <Row className='py-2'>
+                    <Col sm={10} md={3} className='d-sm-flex align-items-center justify-content-between'>
+                        {/*AREA SELECT*/}
+                        <DropdownSelect
+                            darkMenu={true}
+                            instructions='בחר אזור'
+                            icon='fi-geo'
+                            chosenIdRef={areaIdRef}
+                            options={areas.map((area) => {
+                                return {id: area.id, text: area.name, icon: 'fi-geo'}
+                            })}
+                            variant='link btn-lg ps-2 ps-sm-3'
+                            className='text-center col-xs-10'
+                        />
+                    </Col>
+                    <Col sm={10} md={3} className="d-sm-flex align-items-center justify-content-between">
+                        <DropdownSelect
+                            darkMenu={true}
+                            instructions='בחר מקצוע'
+                            icon='fi-briefcase'
+                            chosenIdRef={professionIdRef}
+                            options={professions.map((profession) => {
+                                return {id: profession.id, text: profession.name, icon: 'fi-briefcase'}
+                            })}
+                            variant='link btn-lg ps-2 ps-sm-3'
+                            className=' text-center'
+                        />
+                    </Col>
+                    <Col sm={10} md={3} className="d-sm-flex align-items-center justify-content-between">
 
-            {/*AREA SELECT*/}
-            <div className='d-sm-flex'>
-                <DropdownSelect 
-                    darkMenu={true}
-                    defaultValue='בחר אזור'
-                    icon='fi-geo'
-                    name="areaId"
-                    state={areaRef}
-                    options={areas.map((area) => ['fi-geo', area.name, area.id])}
-                    variant='link btn-lg ps-2 ps-sm-3'
-                    className='w-100 mb-sm-0 mb-3'
-                />
-                <hr className='d-md-none my-2'/>
-
-                {/*CATEGORY SELECT*/}
-                <DropdownSelect
-                    darkMenu={true}
-                    defaultValue='בחר מקצוע'
-                    icon='fi-list'
-                    name="professionId"
-                    state={proffRef}
-                    options={professions.map((profession) => ['fi-geo', profession.name, profession.id])}
-                    variant='link btn-lg ps-2 ps-sm-3'
-                    className='w-100 mb-sm-0 mb-3'
-                />
-                <hr className='d-md-none my-2'/>
-
-                {/*JOB SELECT*/}
-                <DropdownSelect
-                    darkMenu={true}
-                    defaultValue='בחר היקף משרה'
-                    icon='fi-list'
-                    name="jobId"
-                    state={jobRef}
-                    options={[
-                        ['fi-geo', 'משרה מלאה', '123'],
-                        ['fi-geo', 'משרה חלקית', '124']
-                    ]}
-                    variant='link btn-lg ps-2 ps-sm-3'
-                    className='w-100 mb-sm-0 mb-3'
-                />
-
-                <Button size='lg' className='rounded-pill w-100 w-md-auto ms-sm-3' type="submit" >Search</Button>
+                        <DropdownSelect
+                            darkMenu={true}
+                            instructions='בחר היקף משרה'
+                            icon='fi-briefcase'
+                            chosenIdRef={positionScopeIdRef}
+                            options={positionScopes.map(positionScope => {
+                                return {id: positionScope.id, text: positionScope.name, icon: 'fi-briefcase'}
+                            })}
+                            variant="link btn-lg ps-2 ps-sm-3"
+                            className='text-center'
+                        />
+                    </Col>
+                    <Col md={3} sm={12} className='d-flex align-items-center justify-content-end pe-md-4'>
+                        <Button size='lg' className='rounded-md-pill w-100' onClick={handleSubmit}>Search</Button>
+                    </Col>
+                </Row>
             </div>
-        </Form>
+        </SSRProvider>
     )
 }
