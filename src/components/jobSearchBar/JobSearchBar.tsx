@@ -1,7 +1,7 @@
 'use client'
 
 
-import DropdownSelect from "@/components/dropdown/DropdownSelect";
+import DropdownSelect from "@/components/dropdown/dropdownSelect";
 import {Col, Row, SSRProvider} from "react-bootstrap";
 import {Area, PositionScope, Profession} from "@prisma/client";
 import {SyntheticEvent, useEffect, useRef, useState} from "react";
@@ -31,7 +31,7 @@ const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionSc
     }
     return await res.json()
 }
-export default function SearchJobBar() {
+export default function JobSearchBar() {
 
     const areaIdRef = useRef<string | null>(null)
     const professionIdRef = useRef<string | null>(null)

@@ -34,7 +34,7 @@ export default async function JobListingPage({searchParams}: { searchParams: { s
                 <div className="row pt-2 bg-dark">
                     {
                         jobListings.map((jobListing, index) => (
-                            <JobListingCardAdmin key={index} jobListing={JSON.stringify(jobListing)}/>
+                            <JobListingCardAdmin key={index} jobListing={jobListing}/>
                         ))
                     }
                 </div>

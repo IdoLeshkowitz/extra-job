@@ -29,63 +29,7 @@ export default async function JobListingPage({params: {id}}: { params: { id: str
                         </div>
                     </div>
                     {/* DETAILS */}
-                    <div className="col-md-5 col">
-                        <div className='card mb-4 p-2 shadow-sm card-light card-hover'>
-                            <div className="card-body">
-                                <div className='d-flex align-items-start mb-3 pb-2 border-bottom'>
-                                    {/*IMAGE*/}
-                                    <ImageLoader
-                                        src='/images/car-finder/icons/buyers.svg'
-                                        width={60}
-                                        height={60}
-                                        alt='Thumbnail'
-                                        style={{transform: 'scale(.8)'}}
-                                    />
-                                    <div className='ps-2 ms-1'>
-                                        <h3 className='h5 mb-2 me-2 text-light'>{jobListing?.name}</h3>
-                                    </div>
-                                </div>
 
-                                {/* Place contacts */}
-                                <div className='mb-4 pb-4 border-bottom'>
-                                    <div className="me-n1">
-                                        <div className='row g-2'>
-                                            {/*AREA*/}
-                                            <div className='col me-sm-1'>
-                                                <div
-                                                    className={`${'bg-dark text-light'} rounded text-center w-100 h-100 text-nowrap p-2`}>
-                                                    <i className={`fi-geo text-light d-block h4 mb-0`}></i>
-                                                    <span className='fs-xs'>{jobListing?.area.name}</span>
-                                                </div>
-                                            </div>
-                                            {/*PROFESSION*/}
-                                            <div className='col me-sm-1'>
-                                                <div
-                                                    className={`${'bg-dark text-light'} rounded text-center w-100 h-100 text-nowrap p-2`}>
-                                                    <i className={`fi-briefcase text-light d-block h4 mb-0`}></i>
-                                                    <span className='fs-xs'>{jobListing?.profession.name}</span>
-                                                </div>
-                                            </div>
-                                            {/*POSITION SCOPE*/}
-                                            <div className='col me-sm-1'>
-                                                <div
-                                                    className={`${'bg-dark text-light'} rounded text-center w-100 h-100 text-nowrap p-2`}>
-                                                    <i className="fi-accounting text-light d-block h4 mb-0"></i>
-                                                    <span className='fs-xs'>{jobListing?.positionScope.name}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/*APPLY BUTTON*/}
-                                <div className='mb-4 pb-4 border-bottom'>
-                                    <ApplyButton jobListingId={id}/>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </>

@@ -1,38 +1,22 @@
-'use client'
 import Link from 'next/link'
-import Dropdown from 'react-bootstrap/Dropdown'
 import ImageLoader from '@/components/Image/ImageLoader'
 import {FC} from "react";
-import {Area, JobListing, PositionScope, Prisma, Profession} from "@prisma/client";
-import {fetcher} from "@/lib/api/fetcher";
-import {useRouter} from "next/navigation";
+import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
+import ToggleJobListingActive from "@/app/admin/joblisting/components/ToggleJobListingButton";
+import DropDownButtons from "@/components/dropdown/dropdownButtons";
 
 interface JobListingCardProps extends React.HTMLAttributes<HTMLDivElement> {
-    jobListing: string
+    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
     light?: boolean
     key?: number
 }
 
 const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
-    const router = useRouter()
     const light = true;
-    const {name, area, profession, positionScope, active, createdAt,id} = JSON.parse(jobListing) as unknown as (JobListing & { area: Area, profession: Profession, positionScope: PositionScope })
+    const {name, area, profession, positionScope, active, createdAt, id} = jobListing
     const img = {
         src: '/images/car-finder/icons/buyers.svg',
         alt: name
-    }
-
-    async function onDeactivate() {
-        const positionScopeUpdateInput: Prisma.PositionScopeUpdateInput = {active: !active}
-        /* send the request */
-        const {data: {area}} = await fetcher(
-            {
-                url   : `/api/joblisting/${id}`,
-                method: "PUT",
-                body  : {...positionScopeUpdateInput},
-                json  : true,
-            }) as { data: { area: Area } }
-        router.refresh()
     }
 
     return (
@@ -92,18 +76,9 @@ const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
                         </div>
                     </div>
                     <div className='d-flex flex-column align-items-end justify-content-between'>
-                        <Dropdown className='position-relative zindex-10'>
-                            <Dropdown.Toggle
-                                variant={`${light ? 'translucent-light' : 'light shadow-sm'} btn-icon btn-xs rounded-circle`}>
-                                <i className='fi-dots-vertical'></i>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu variant={light ? 'dark' : ''} className='my-1'>
-                                <Dropdown.Item onClick={onDeactivate}>
-                                    <i className="opacity-60 me-2 fi-minus-circle"></i>
-                                    {active ? 'הפסק פרסום' : 'הפעל פרסום'}
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                        <DropDownButtons light={light}>
+                            <ToggleJobListingActive isActive={active} jobListingId={id}/>
+                        </DropDownButtons>
                     </div>
                 </div>
             </div>
