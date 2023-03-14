@@ -3,7 +3,7 @@
 import {FormEventHandler, useRef} from "react";
 import {useRouter} from "next/navigation";
 import {FormControl, FormGroup} from "react-bootstrap";
-import PillButton from "@/components/buttons/PillButtons";
+import PillButton from "@/components/buttons/pillButtons";
 import ListItemForm from "@/components/forms/ListItemForm";
 import {Area, Prisma} from "@prisma/client";
 import {fetcher} from "@/lib/api/fetcher";

@@ -3,7 +3,7 @@ import {FC, MouseEventHandler} from "react";
 import {useRouter} from "next/navigation";
 import {Area, Prisma} from "@prisma/client";
 import {fetcher} from "@/lib/api/fetcher";
-import PillButton from "@/components/buttons/PillButtons";
+import PillButton from "@/components/buttons/pillButtons";
 
 interface DeactivatePositionScope {
     id: string

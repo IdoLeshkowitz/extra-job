@@ -8,13 +8,12 @@ import {fetcher} from "@/lib/api/fetcher";
 import {useRouter} from "next/navigation";
 
 interface JobListingCardProps extends React.HTMLAttributes<HTMLDivElement> {
-    href: string
     jobListing: string
     light?: boolean
     key?: number
 }
 
-const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing, href, className}) => {
+const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
     const router = useRouter()
     const light = true;
     const {name, area, profession, positionScope, active, createdAt,id} = JSON.parse(jobListing) as unknown as (JobListing & { area: Area, profession: Profession, positionScope: PositionScope })
@@ -62,7 +61,7 @@ const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing, href, classNa
 
                             {/*TITLE*/}
                             <h3 className='h6 card-title pb-1 mb-2'>
-                                <Link href={href}
+                                <Link href={`/joblisting/${id}`}
                                       className={`${light ? 'text-light opacity-80' : 'text-nav'} stretched-link text-decoration-none`}>
                                     {name}
                                 </Link>

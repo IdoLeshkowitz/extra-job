@@ -2,6 +2,8 @@ import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
 import {countJobListings} from "@/services/jobListingService";
 import prisma from "@/lib/prisma";
 import JobListingCardAdmin from "@/app/admin/joblisting/components/JobListingCardAdmin";
+import PillLink from "@/components/links/pillLinks";
+import CustomPagination from "@/components/pagination/customPagination";
 
 
 const countAllJobListings = (): Promise<{ data: { count: number } }> => {
@@ -23,16 +25,22 @@ export default async function JobListingPage({searchParams}: { searchParams: { s
     const [skip, take]: number[] = [searchParams.skip ?? '0', searchParams.take ?? '5'].map((param) => parseInt(param))
     const [{data: {jobListings}}, {data: {count}}] = await Promise.all([getJobListingsByRange({skip, take}), countAllJobListings()])
     return (
-        <div>
-            <h1 className="h2 text-light">משרות</h1>
-            <div className="row pt-2 bg-dark">
-                {
-                    jobListings.map((jobListing, index) => (
-                        <JobListingCardAdmin key={index} jobListing={JSON.stringify(jobListing)} href='#'/>
-                    ))
-                }
+        <>
+            <div>
+                <div className="d-flex justify-content-between">
+                    <h1 className="h2 text-light">משרות</h1>
+                    <PillLink href="/admin/joblisting/create" text="הוסף משרה" icon="fi-plus"/>
+                </div>
+                <div className="row pt-2 bg-dark">
+                    {
+                        jobListings.map((jobListing, index) => (
+                            <JobListingCardAdmin key={index} jobListing={JSON.stringify(jobListing)}/>
+                        ))
+                    }
+                </div>
             </div>
-        </div>
+            <div className="row pt-2 bg-dark"><CustomPagination count={count} skip={skip} take={take}/></div>
+        </>
     )
 }
 
