@@ -1,104 +1,13 @@
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import UserAuthorization from "@/components/userPage/UserAuthorization";
 
 export default async function JobSeekerPage() {
     const {user} = await getServerSession(authOptions) ?? {}
     return (
         <>
-            {/*USER HEADER --> LAYOUT LATER*/}
-            <div className="d-flex align-items-start justify-content-between pb-4 mb-2">
-                <div className="d-flex align-items-start">
-                <div className="position-relative flex-shrink-0"><img className="rounded-circle" src="img/avatars/37.png" width="100" alt="Annette Black"/>
-                    <button className="btn btn-icon btn-light btn-xs rounded-circle shadow-sm position-absolute end-0 bottom-0" type="button" data-bs-toggle="tooltip" title="Change image"><i className="fi-pencil fs-xs"></i></button>
-                </div>
-                <div className="ps-3 ps-sm-4">
-                    <h3 className="h5">Annette Black</h3>
-                    <ul className="list-unstyled fs-sm mb-0">
-                    <li className="d-flex text-nav text-break"><i className="fi-mail opacity-60 mt-1 me-2"></i><span>annette_black@email.com</span></li>
-                    <li className="d-flex text-nav text-break"><i className="fi-phone opacity-60 mt-1 me-2"></i><span>(302) 555-0107</span></li>
-                    </ul>
-                </div>
-                </div><a className="nav-link p-0 d-none d-md-block" href="signin-light.html"><i className="fi-logout mt-n1 me-2"></i>Sign out</a>
-            </div>
-            {/*USER MENU*/}
-            <a className="btn btn-outline-primary btn-lg rounded-pill w-100 d-md-none" href="#account-nav" data-bs-toggle="collapse"><i className="fi-align-justify me-2"></i>Account Menu</a>
-            <div className="collapse d-md-block" id="account-nav">
-                <ul className="nav nav-pills flex-column flex-md-row pt-3 pt-md-0 pb-md-4 border-bottom-md">
-                    <li className="nav-item mb-md-0 me-md-2 pe-md-1"><a className="nav-link active" href="job-board-account-profile.html" aria-current="page"><i className="fi-settings mt-n1 me-2 fs-base"></i>Profile Settings</a></li>
-                    <li className="nav-item mb-md-0 me-md-2 pe-md-1"><a className="nav-link" href="job-board-account-my-resumes.html"><i className="fi-file mt-n1 me-2 fs-base"></i>My Resumes</a></li>
-                    <li className="nav-item mb-md-0 me-md-2 pe-md-1"><a className="nav-link" href="job-board-account-saved-jobs.html"><i className="fi-heart mt-n1 me-2 fs-base"></i>Saved Jobs</a></li>
-                    <li className="nav-item mb-md-0"><a className="nav-link" href="job-board-account-notifications.html"><i className="fi-bell mt-n1 me-2 fs-base"></i>Notifications</a></li>
-                    <li className="nav-item d-md-none"><a className="nav-link" href="signin-light.html"><i className="fi-logout mt-n1 me-2 fs-base"></i>Sign Out</a></li>
-                </ul>
-            </div>
             {/*USER AUTHORIZATION INFO*/}
-            <div className="row pt-4 mt-3">
-                <div className="col-lg-3">
-                    <h2 className="h4">Authorization info</h2>
-                </div>
-                <div className="col-lg-9">
-                    <div className="border rounded-3 p-3" id="auth-info">
-                        {/* <!-- Email--> */}
-                        <div className="border-bottom pb-3 mb-3">
-                            <div className="d-flex align-items-center justify-content-between">
-                                <div className="pe-2">
-                                    <label className="form-label fw-bold">Email</label>
-                                        <div id="email-value">annette_black@email.com</div>
-                                </div>
-                                <div data-bs-toggle="tooltip" title="Edit"><a className="nav-link py-0" href="#email-collapse" data-bs-toggle="collapse"><i className="fi-edit"></i></a></div>
-                            </div>
-                            <div className="collapse" id="email-collapse" data-bs-parent="#auth-info">
-                                <input className="form-control mt-3" type="email" data-bs-binded-element="#email-value" data-bs-unset-value="Not specified" value="annette_black@email.com"/>
-                            </div>
-                        </div>
-                        {/* <!-- Password--> */}
-                        <div>
-                        <div className="d-flex align-items-center justify-content-between">
-                            <div className="pe-2">
-                                <label className="form-label fw-bold">Password</label>
-                                    <div>********</div>
-                            </div>
-                            <div data-bs-toggle="tooltip" title="Edit"><a className="nav-link py-0" href="#password-collapse" data-bs-toggle="collapse"><i className="fi-edit"></i></a></div>
-                        </div>
-                        <div className="collapse" id="password-collapse" data-bs-parent="#auth-info">
-                            <div className="row gx-3 align-items-center my-3">
-                                <label className="col-sm-4 col-md-3 col-form-label" htmlFor="account-password-current">Current password:</label>
-                                <div className="col-sm-8 col-md-9">
-                                    <div className="password-toggle">
-                                        <input className="form-control" type="password" id="account-password-current" placeholder="Enter current password"/>
-                                        <label className="password-toggle-btn" aria-label="Show/hide password">
-                                        <input className="password-toggle-check" type="checkbox"/><span className="password-toggle-indicator"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row gx-3 align-items-center my-3">
-                                <label className="col-sm-4 col-md-3 col-form-label" htmlFor="account-password-new">New password:</label>
-                            <div className="col-sm-8 col-md-9">
-                                <div className="password-toggle">
-                                    <input className="form-control" type="password" id="account-password-new" placeholder="Enter new password"/>
-                                    <label className="password-toggle-btn" aria-label="Show/hide password">
-                                    <input className="password-toggle-check" type="checkbox"/><span className="password-toggle-indicator"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row gx-3 align-items-center">
-                            <label className="col-sm-4 col-md-3 col-form-label" htmlFor="account-password-confirm">Confirm new password:</label>
-                            <div className="col-sm-8 col-md-9">
-                                <div className="password-toggle">
-                                    <input className="form-control" type="password" id="account-password-confirm" placeholder="Confirm new password"/>
-                                    <label className="password-toggle-btn" aria-label="Show/hide password">
-                                    <input className="password-toggle-check" type="checkbox"/><span className="password-toggle-indicator"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
+            <UserAuthorization />
             {/*USER PROFILE INFO*/}
             <div className="row pt-4 mt-2">
                 <div className="col-lg-3">

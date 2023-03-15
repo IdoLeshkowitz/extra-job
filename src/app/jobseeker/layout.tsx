@@ -2,6 +2,7 @@
 import {Breadcrumb, Col, Container, Row, SSRProvider} from "react-bootstrap";
 import Link from "next/link";
 import AdminPageSideBar from "@/app/admin/components/AdminPageSideBar";
+import HeaderMenu from "@/components/userPage/HeaderMenu";
 
 export default function JobSeekerLayout({children}: { children: React.ReactNode }) {
     return (
@@ -17,6 +18,7 @@ export default function JobSeekerLayout({children}: { children: React.ReactNode 
                 </Breadcrumb>
 
                 <div className="bg-light shadow-sm rounded-3 p-4 p-md-5 mb-2">
+                    <HeaderMenu /> 
                     {children}
                 </div>
             </Container>
