@@ -1,128 +1,149 @@
+'use client';
 
+import { useState } from 'react'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Accordion from 'react-bootstrap/Accordion'
+import { useAccordionButton } from 'react-bootstrap/AccordionButton'
+import FormControl from 'react-bootstrap/FormControl'
+import FormSelect from 'react-bootstrap/FormSelect'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
+import { useSession } from 'next-auth/react';
 
-export default function UserProfileInfo(){
+const UserProfileInfo = () => {
+
+    // Get session
+    const {data: session, status} = useSession()
+
+    // Custom accordion toggle
+    const CustomToggle = ({ eventKey } : {eventKey : string}) => {
+        const handleClick = useAccordionButton(eventKey, (e) => e.preventDefault())
+        return (
+        <OverlayTrigger
+            placement='top'
+            overlay={<Tooltip>Edit</Tooltip>}
+        >
+            <a
+            href='#'
+            className='nav-link py-0'
+            onClick={handleClick}
+            >
+            <i className='fi-edit'></i>
+            </a>
+        </OverlayTrigger>
+        )
+    }
+
+    // Name field state
+    const [name, setName] = useState<string>('')
+
+    // Gender field state
+    const [gender, setGender] = useState<string>('')
+
+    // Phone field state
+    const [phone, setPhone] = useState<string>('')
+
+    // Handle name field change
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setName(e.target.value)
+        if (session?.user != undefined) {
+            session.user.name = e.target.value
+        }
+    }
+
+    // Handle gender field change
+    const handleGenderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setGender(e.target.value)
+        if (session?.user != undefined) {
+            session.user.gender = e.target.value
+        }
+    }
+
+    // Handle phone field change
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPhone(e.target.value)
+        if (session?.user != undefined) {
+            session.user.phone = e.target.value
+        }
+        console.log(session?.user)
+    }
+
     return (
-        <div className="row pt-4 mt-2">
-            <div className="col-lg-3">
-                <h2 className="h4">Personal details</h2>
-            </div>
-            <div className="col-lg-9">
-                <div className="border rounded-3 p-3" id="personal-details">
-                    {/* <!-- Full name--> */}
-                    <div className="border-bottom pb-3 mb-3">
-                        <div className="d-flex align-items-center justify-content-between">
-                            <div className="pe-2">
-                                <label className="form-label fw-bold">Full name</label>
-                                <div id="fn-value">Annette Black</div>
-                            </div>
-                            <div data-bs-toggle="tooltip" title="Edit"><a className="nav-link py-0" href="#fn-collapse" data-bs-toggle="collapse"><i className="fi-edit"></i></a></div>
+
+        <>
+            {/* Personal details */}
+            <Row className='pt-4 mt-3'>
+            <Col xs={12} lg={3}>
+                <h2 className='h4'>Personal details</h2>
+            </Col>
+            <Col xs={12} lg={9}>
+                <Accordion>
+                <div className='border rounded-3 p-3'>
+
+                    {/* Name */}
+                    <div className='border-bottom pb-3 mb-3'>
+                    <div className='d-flex align-items-center justify-content-between'>
+                        <div className='pe-2'>
+                        <h2 className='form-label fw-bold'>Full name</h2>
+                        <p className='mb-0'>{session?.user?.name ? session?.user?.name : 'Not specified'}</p>
                         </div>
-                        <div className="collapse" id="fn-collapse" data-bs-parent="#personal-details">
-                            <input className="form-control mt-3" type="email" data-bs-binded-element="#fn-value" data-bs-unset-value="Not specified" value="Annette Black"/>
-                        </div>
+                        <CustomToggle eventKey='name' />
                     </div>
-                    {/* <!-- Gender--> */}
-                    <div className="border-bottom pb-3 mb-3">
-                        <div className="d-flex align-items-center justify-content-between">
-                            <div className="pe-2">
-                                <label className="form-label fw-bold">Gender</label>
-                                <div id="gender-value">Female</div>
-                            </div>
-                            <div data-bs-toggle="tooltip" title="Edit"><a className="nav-link py-0" href="#gender-collapse" data-bs-toggle="collapse"><i className="fi-edit"></i></a></div>
-                        </div>
-                        <div className="collapse" id="gender-collapse" data-bs-parent="#personal-details">
-                            <select className="form-select mt-3" data-bs-binded-element="#gender-value">
-                                <option value="" disabled>Select your gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female" selected>Female</option>
-                            </select>
-                        </div>
+                    <Accordion.Collapse eventKey='name'>
+                        <FormControl
+                        className='mt-3'
+                        value={name}
+                        onChange={handleNameChange}
+                        placeholder='Your full name'
+                        />
+                    </Accordion.Collapse>
                     </div>
-                    {/* <!-- Date of birth--> */}
-                    <div className="border-bottom pb-3 mb-3">
-                        <div className="d-flex align-items-center justify-content-between">
-                            <div className="pe-2">
-                                <label className="form-label fw-bold">Date of birth</label>
-                                <div id="birth-value">Not specified</div>
-                            </div>
-                            <div data-bs-toggle="tooltip" title="Edit"><a className="nav-link py-0" href="#birth-collapse" data-bs-toggle="collapse"><i className="fi-edit"></i></a></div>
+
+                    {/* Gender */}
+                    <div className='border-bottom pb-3 mb-3'>
+                    <div className='d-flex align-items-center justify-content-between'>
+                        <div className='pe-2'>
+                        <h2 className='form-label fw-bold'>Gender</h2>
+                        <p className='mb-0'>{session?.user?.gender ? session?.user?.gender : 'Not specified'}</p>
                         </div>
-                        <div className="collapse" id="birth-collapse" data-bs-parent="#personal-details">
-                            <div className="mt-3 pt-3 border-top">
-                                <div className="input-group">
-                                    <input className="form-control date-picker rounded pe-5" type="text" data-bs-binded-element="#birth-value" data-datepicker-options="{&quot;altInput&quot;: true, &quot;altFormat&quot;: &quot;F j, Y&quot;, &quot;dateFormat&quot;: &quot;F j, Y&quot;}" placeholder="Choose date"/><i className="fi-calendar text-muted position-absolute top-50 end-0 translate-middle-y me-3"></i>
-                                </div>
-                            </div>
-                        </div>
+                        <CustomToggle eventKey='gender' />
                     </div>
-                    {/* <!-- Phone number--> */}
-                    <div className="border-bottom pb-3 mb-3">
-                        <div className="d-flex align-items-center justify-content-between">
-                            <div className="pe-2">
-                                <label className="form-label fw-bold">Phone number</label>
-                                <div id="phone-value">(302) 555-0107</div>
-                            </div>
-                            <div data-bs-toggle="tooltip" title="Edit"><a className="nav-link py-0" href="#phone-collapse" data-bs-toggle="collapse"><i className="fi-edit"></i></a></div>
-                        </div>
-                        <div className="collapse" id="phone-collapse" data-bs-parent="#personal-details">
-                            <input className="form-control mt-3" type="text" data-bs-binded-element="#phone-value" data-bs-unset-value="Not specified" value="(302) 555-0107"/>
-                        </div>
+                    <Accordion.Collapse eventKey='gender'>
+                        <FormSelect className='mt-3' value={gender} onChange={handleGenderChange}>
+                        <option value='Not specified'>Choose gender</option>
+                        <option value='Male'>Male</option>
+                        <option value='Female'>Female</option>
+                        </FormSelect>
+                    </Accordion.Collapse>
                     </div>
-                    {/* <!-- Address--> */}
-                    <div className="border-bottom pb-3 mb-3">
-                        <div className="d-flex align-items-center justify-content-between">
-                            <div className="pe-2">
-                                <label className="form-label fw-bold">Address</label>
-                                <div id="address-value">Not specified</div>
-                            </div>
-                            <div data-bs-toggle="tooltip" title="Edit"><a className="nav-link py-0" href="#address-collapse" data-bs-toggle="collapse"><i className="fi-edit"></i></a></div>
+
+                    {/* Phone number */}
+                    {/* <div className='border-bottom pb-3 mb-3'> */}
+                    <div className='d-flex align-items-center justify-content-between'>
+                        <div className='pe-2'>
+                        <h2 className='form-label fw-bold'>Phone number</h2>
+                        <p className='mb-0'>{session?.user?.phone ? session?.user?.phone : 'Not specified'}</p>
                         </div>
-                        <div className="collapse" id="address-collapse" data-bs-parent="#personal-details">
-                            <input className="form-control mt-3" type="text" data-bs-binded-element="#address-value" data-bs-unset-value="Not specified" placeholder="Enter address"/>
-                        </div>
+                        <CustomToggle eventKey='phone' />
                     </div>
-                    {/* <!-- Socials--> */}
-                    <div>
-                        <div className="d-flex align-items-center justify-content-between">
-                            <div className="pe-2">
-                                <label className="form-label fw-bold">Socials</label>
-                                <ul className="list-unstyled mb-0">
-                                    <li id="facebook-value">Not specified</li>
-                                    <li id="linkedin-value"></li>
-                                    <li id="twitter-value"></li>
-                                    <li id="instagram-value"></li>
-                                    <li id="behance-value"></li>
-                                </ul>
-                            </div>
-                            <div data-bs-toggle="tooltip" title="Edit"><a className="nav-link py-0" href="#socials-collapse" data-bs-toggle="collapse"><i className="fi-edit"></i></a></div>
-                        </div>
-                        <div className="collapse mt-3" id="socials-collapse" data-bs-parent="#personal-details">
-                            <div className="d-flex align-items-center mb-3">
-                                <div className="btn btn-icon btn-light btn-xs shadow-sm rounded-circle pe-none flex-shrink-0 me-3"><i className="fi-facebook text-body"></i></div>
-                                <input className="form-control" type="text" data-bs-binded-element="#facebook-value" placeholder="Your Facebook account"/>
-                            </div>
-                            <div className="d-flex align-items-center mb-3">
-                                <div className="btn btn-icon btn-light btn-xs shadow-sm rounded-circle pe-none flex-shrink-0 me-3"><i className="fi-linkedin text-body"></i></div>
-                                <input className="form-control" type="text" data-bs-binded-element="#linkedin-value" placeholder="Your LinkedIn account"/>
-                            </div>
-                            <div className="d-flex align-items-center mb-3">
-                                <div className="btn btn-icon btn-light btn-xs shadow-sm rounded-circle pe-none flex-shrink-0 me-3"><i className="fi-twitter text-body"></i></div>
-                                <input className="form-control" type="text" data-bs-binded-element="#twitter-value" placeholder="Your Twitter account"/>
-                            </div>
-                            <div className="collapse" id="showMoreSocials">
-                                <div className="d-flex align-items-center mb-3">
-                                    <div className="btn btn-icon btn-light btn-xs shadow-sm rounded-circle pe-none flex-shrink-0 me-3"><i className="fi-instagram text-body"></i></div>
-                                    <input className="form-control" type="text" data-bs-binded-element="#instagram-value" placeholder="Your Instagram account"/>
-                                </div>
-                                <div className="d-flex align-items-center mb-3">
-                                    <div className="btn btn-icon btn-light btn-xs shadow-sm rounded-circle pe-none flex-shrink-0 me-3"><i className="fi-behance text-body"></i></div>
-                                    <input className="form-control" type="text" data-bs-binded-element="#behance-value" placeholder="Your Behance account"/>
-                                </div>
-                                </div><a className="collapse-label collapsed d-inline-block fs-sm fw-bold text-decoration-none pt-2 pb-3" href="#showMoreSocials" data-bs-toggle="collapse" data-bs-label-collapsed="Show more" data-bs-label-expanded="Show less" role="button" aria-expanded="false" aria-controls="showMoreSocials"><i className="fi-arrow-down me-2"></i></a>
-                            </div>
-                        </div>
+                    <Accordion.Collapse eventKey='phone'>
+                        <FormControl
+                        type='tel'
+                        className='mt-3'
+                        value={phone}
+                        onChange={handlePhoneChange}
+                        placeholder='Enter your phone number'
+                        />
+                    </Accordion.Collapse>
                     </div>
-                </div>
-        </div>
+
+                {/* </div> */}
+                </Accordion>
+            </Col>
+        </Row>
+        </>
     )
 }
+
+export default UserProfileInfo

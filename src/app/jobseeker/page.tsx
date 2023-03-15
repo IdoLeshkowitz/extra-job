@@ -8,7 +8,9 @@ export default async function JobSeekerPage() {
     const {user} = await getServerSession(authOptions) ?? {}
     return (
         <>
+        
             {/*USER AUTHORIZATION INFO*/}
+            {/* @ts-expect-error Server Component */}
             <UserAuthorization />
             {/*USER PROFILE INFO*/}
             <UserProfileInfo />

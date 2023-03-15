@@ -6,6 +6,8 @@ declare module "next-auth" {
      */
     interface User{
         role: Role
+        phone: string
+        gender: string
     }
     interface Session {
         user: User

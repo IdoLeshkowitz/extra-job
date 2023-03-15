@@ -52,10 +52,11 @@ model User {
   name                String?
   email               String?          @unique
   image               String?
+  gender              String?
   accounts            Account[]
   sessions            Session[]
   role                Role             @default(JOBSEEKER)
-  phone               Int?
+  phone               String?
   likedJobListingsIds String[]         @default([]) @db.ObjectId
   appliedFor          JobApplication[]
   emailVerified       Boolean?         @default(false)
