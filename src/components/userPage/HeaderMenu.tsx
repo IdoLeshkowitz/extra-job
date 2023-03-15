@@ -21,7 +21,6 @@ export default function HeaderMenu(){
             <div className="collapse d-md-block" id="account-nav">
                 <ul className="nav nav-pills flex-column flex-md-row pt-3 pt-md-0 pb-md-4 border-bottom-md">
                     <li className="nav-item mb-md-0 me-md-2 pe-md-1"><a className="nav-link active" href="job-board-account-profile.html" aria-current="page"><i className="fi-settings mt-n1 me-2 fs-base"></i>Profile Settings</a></li>
-                    <li className="nav-item mb-md-0 me-md-2 pe-md-1"><a className="nav-link" href="job-board-account-my-resumes.html"><i className="fi-file mt-n1 me-2 fs-base"></i>My Resumes</a></li>
                     <li className="nav-item mb-md-0 me-md-2 pe-md-1"><a className="nav-link" href="job-board-account-saved-jobs.html"><i className="fi-heart mt-n1 me-2 fs-base"></i>Saved Jobs</a></li>
                     <li className="nav-item mb-md-0"><a className="nav-link" href="job-board-account-notifications.html"><i className="fi-bell mt-n1 me-2 fs-base"></i>Notifications</a></li>
                     <li className="nav-item d-md-none"><a className="nav-link" href="signin-light.html"><i className="fi-logout mt-n1 me-2 fs-base"></i>Sign Out</a></li>
