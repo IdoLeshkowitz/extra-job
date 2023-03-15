@@ -30,7 +30,7 @@ const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionSc
     return await res.json()
 }
 const validationSchema = object({
-    name           : string().required('שדה חובה').max(20, 'שם יכול להכיל עד 20 תווים'),
+    name           : string().required('שדה חובה').max(50, 'שם יכול להכיל עד 50 תווים'),
     description    : string().required('שדה חובה').max(1000, 'תיאור יכול להכיל עד 1000 תווים'),
     serialNumber   : number().required('שדה חובה'),
     areaId         : string().required('שדה חובה'),

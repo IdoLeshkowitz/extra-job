@@ -28,6 +28,7 @@
     "filepond-plugin-image-resize": "^2.0.10",
     "filepond-plugin-image-transform": "^3.8.7",
     "formik": "^2.2.9",
+    "js-base64": "^3.7.5",
     "leaflet": "^1.9.3",
     "lightgallery": "^2.7.0",
     "lottie-web": "^5.10.1",

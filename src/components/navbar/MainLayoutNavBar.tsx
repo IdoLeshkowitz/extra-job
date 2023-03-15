@@ -14,6 +14,7 @@ import {Session} from "next-auth";
 import Avatar from "@/components/avatar/Avatar";
 import {SSRProvider} from "react-bootstrap";
 import {Shalimar} from "@next/font/google";
+import UploadCvButton from "@/components/uploadCvButton/uploadCvButton";
 
 const SIGNIN_URL = '/api/auth/signin'
 const SIGNOUT_URL = '/api/auth/signout'
@@ -34,7 +35,8 @@ export default function MainLayoutNavBar() {
                     {/*HOME BUTTON*/}
                     <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
                         {/*<ImageLoader src='/images/extra-job-svg.svg' alt='extra job' width={100} height={32} />*/}
-                        <Image width={100} height={32} src='/images/extra-job-svg.svg' alt='extra job' style={{height:'32px',objectFit:'contain'}}/>
+                        <Image width={100} height={32} src='/images/extra-job-svg.svg' alt='extra job'
+                               style={{height: '32px', objectFit: 'contain'}}/>
                     </Navbar.Brand>
 
 
@@ -42,11 +44,12 @@ export default function MainLayoutNavBar() {
                     {/*DESKTOP AVATAR*/}
                     <DesktopAvatar avatarUrl={avatarUrl}/>
 
-
+                    {/*<UploadCvButton/>*/}
                     <Navbar.Collapse id='navbarNav' className='order-md-2'>
                         <Nav navbarScroll style={{maxHeight: '35rem'}}>
-                            <Nav.Item as={Nav.Link} href={JOB_LISTING_URL} >
-                                <Nav.Link active={false} href={JOB_LISTING_URL} className="text-light">כל המשרות</Nav.Link>
+                            <Nav.Item as={Nav.Link} href={JOB_LISTING_URL}>
+                                <Nav.Link active={false} href={JOB_LISTING_URL} className="text-light">כל
+                                    המשרות</Nav.Link>
                             </Nav.Item>
                             <MobileAvatar avatarUrl={avatarUrl}/>
                         </Nav>

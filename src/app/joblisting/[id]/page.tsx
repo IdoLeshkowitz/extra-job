@@ -25,8 +25,6 @@ export default async function JobListingPage({params: {id}}: { params: { id: str
                     </div>
                 </div>
                 <div className="col-md-8 p-2 justify-content-end d-flex" style={{direction: 'rtl'}}>
-                    {/* DESCRIPTION */}
-                    {/* DETAILS */}
                     {/* @ts-expect-error Async Server Component */}
                     <JobListingCard jobListing={jobListing}/>
                 </div>
