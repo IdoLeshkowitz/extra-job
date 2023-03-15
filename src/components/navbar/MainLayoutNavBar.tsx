@@ -13,6 +13,7 @@ import {signIn, signOut, useSession} from "next-auth/react";
 import {Session} from "next-auth";
 import Avatar from "@/components/avatar/Avatar";
 import {SSRProvider} from "react-bootstrap";
+import {Shalimar} from "@next/font/google";
 
 const SIGNIN_URL = '/api/auth/signin'
 const SIGNOUT_URL = '/api/auth/signout'
@@ -32,7 +33,8 @@ export default function MainLayoutNavBar() {
                 <Container>
                     {/*HOME BUTTON*/}
                     <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
-                        <ImageLoader src='/images/logo/extra-job.png' alt='extra job' width={100} height={32}/>
+                        {/*<ImageLoader src='/images/extra-job-svg.svg' alt='extra job' width={100} height={32} />*/}
+                        <Image width={100} height={32} src='/images/extra-job-svg.svg' alt='extra job' style={{height:'32px',objectFit:'contain'}}/>
                     </Navbar.Brand>
 
 

@@ -1,12 +1,9 @@
 import Image from "next/image";
 import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
-import {FC} from "react";
-import PillLink from "@/components/links/pillLinks";
-import PillButton from "@/components/buttons/pillButtons";
-
-interface JobListingCardProps {
-    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
-}
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import ApplyButton from "@/app/joblisting/components/ApplyButton";
+import prisma from "@/lib/prisma";
 
 function getDateString(date: Date) {
     const d = new Date(date)
@@ -16,9 +13,20 @@ function getDateString(date: Date) {
     return `${year} ${month} ${day}`.split(' ').reverse().join(' ')
 }
 
-const JobListingCard: FC<JobListingCardProps> = ({jobListing}) => {
+async function didUserApply(jobListingId: string) {
+    const {user} = await getServerSession(authOptions) ?? {}
+    if (!user) {
+        return false
+    }
+    const foundApplication = await prisma.jobApplication.findFirst({where: {jobListingId, appliedById: user.id}})
+    return !!foundApplication
+}
+
+
+export default async function JobListingCard({jobListing}: { jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope } }) {
     const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
     const dateString = getDateString(createdAt)
+    const didApply = await didUserApply(id)
     const jobListingLink = `/joblisting/${id}`
     //todo add like button
     return (
@@ -54,7 +62,8 @@ const JobListingCard: FC<JobListingCardProps> = ({jobListing}) => {
                             </h3>
                         </div>
                         <div className="col-auto">
-                            <PillLink href='/' text='הגש מועמדות' icon='fi-briefcase' />
+                            <ApplyButton jobListingId={id} text={didApply ? 'בתהליך' : 'הגש מועמדות'}
+                                         icon="fi-briefcase"/>
                         </div>
                     </div>
                 </div>
@@ -89,4 +98,3 @@ const JobListingCard: FC<JobListingCardProps> = ({jobListing}) => {
         </div>
     )
 }
-export default JobListingCard
