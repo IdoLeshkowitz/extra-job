@@ -15,6 +15,7 @@ export default async function JobSeekerPage() {
             {/*USER PROFILE INFO*/}
             <UserProfileInfo />
             {/*ACCOUNT SETTINGS*/}
+            {/* @ts-expect-error Server Component */}
             <UserAccountSettings />
             {/*ACTION BUTTONS*/}
             <div className="row pt-4 mt-2">
