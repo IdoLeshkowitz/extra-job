@@ -1,6 +1,9 @@
+import { authOptions } from "@/pages/api/auth/[...nextauth]"
+import { getServerSession } from "next-auth"
 
 
-export default function UserAuthorization() {
+export default async function UserAuthorization() {
+    const {user} = await getServerSession(authOptions) ?? {}
     return (
         <div className="row pt-4 mt-3">
             <div className="col-lg-3">

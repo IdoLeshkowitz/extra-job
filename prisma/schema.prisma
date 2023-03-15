@@ -58,6 +58,7 @@ model User {
   phone               Int?
   likedJobListingsIds String[]         @default([]) @db.ObjectId
   appliedFor          JobApplication[]
+  emailVerified       Boolean?         @default(false)
 
   likedJobListings JobListing[] @relation(fields: [likedJobListingsIds], references: [id])
 }
