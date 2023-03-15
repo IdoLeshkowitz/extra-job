@@ -4,6 +4,7 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import ApplyButton from "@/app/joblisting/components/ApplyButton";
 import prisma from "@/lib/prisma";
+import {FC, ReactElement} from "react";
 
 function getDateString(date: Date) {
     const d = new Date(date)
@@ -22,8 +23,12 @@ async function didUserApply(jobListingId: string) {
     return !!foundApplication
 }
 
+interface JobListingCardProps {
+    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
+}
 
-export default async function JobListingCard({jobListing}: { jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope } }) {
+
+export default async function JobListingCard({jobListing}: JobListingCardProps) {
     const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
     const dateString = getDateString(createdAt)
     const didApply = await didUserApply(id)

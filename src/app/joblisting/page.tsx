@@ -1,6 +1,6 @@
-import JobListingCard from "@/components/cards/JobListingCard";
 import prisma from "@/lib/prisma";
 import JobSearchBar from "@/components/jobSearchBar/JobSearchBar";
+import JobListingCard from "@/components/cards/JobListingCard";
 
 async function getJobListings({positionScopeId, areaId, professionId, skip, take}: SearchParams) {
     return prisma.jobListing.findMany({
@@ -42,10 +42,17 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
                 </div>
             </div>
             <div className="row">
-                {
-                    jobListings.map((jobListing, index) => (
-                        <JobListingCard key={index} jobListing={jobListing}/>))
+                {jobListings.map((jobListing, index) => {
+                    return (
+                        <>
+                            {/* @ts-expect-error Async Server Component */}
+                            <JobListingCard key={index} jobListing={jobListing}/>
+                        </>
+                    )
                 }
+
+                )}
+
             </div>
         </>
     )

@@ -58,8 +58,9 @@ model User {
   phone               Int?
   likedJobListingsIds String[]         @default([]) @db.ObjectId
   appliedFor          JobApplication[]
-
-  likedJobListings JobListing[] @relation(fields: [likedJobListingsIds], references: [id])
+  emailVerified       Boolean?         @default(false)
+  cv                  Cv[]
+  likedJobListings    JobListing[]     @relation(fields: [likedJobListingsIds], references: [id])
 }
 
 model JobApplication {
@@ -72,7 +73,7 @@ model JobApplication {
   appliedBy  User       @relation(fields: [appliedById], references: [id])
   joblisting JobListing @relation(fields: [jobListingId], references: [id])
 
-  @@fulltext([appliedById, jobListingId, createdAt(sort: Asc)])
+  @@fulltext([appliedById, jobListingId, createdAt(sort: Desc)])
 }
 
 model PositionScope {
@@ -103,7 +104,7 @@ model JobListing {
   positionScope   PositionScope    @relation(fields: [positionScopeId], references: [id])
   JobApplications JobApplication[]
 
-  @@fulltext([name, serialNumber, createdAt(sort: Asc)])
+  @@fulltext([name, serialNumber, createdAt(sort: Desc)])
 }
 
 model VerificationToken {
@@ -132,4 +133,14 @@ model Profession {
   jobListings JobListing[]
 
   @@fulltext([name, createdAt(sort: Asc)])
+}
+
+model Cv {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  User      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @db.Date
+
+  @@unique([id, userId])
+  @@fulltext([userId, createdAt(sort: Desc)])
 }
