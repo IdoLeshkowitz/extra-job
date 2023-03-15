@@ -2,28 +2,25 @@
 import {Breadcrumb, Col, Container, Row, SSRProvider} from "react-bootstrap";
 import Link from "next/link";
 import AdminPageSideBar from "@/app/admin/components/AdminPageSideBar";
+import HeaderMenu from "@/components/userPage/HeaderMenu";
 
 export default function JobSeekerLayout({children}: { children: React.ReactNode }) {
     return (
         <SSRProvider>
-            <Container className='pt-5 pb-lg-4 mt-5 mb-sm-2'>
+            <div className="position-absolute top-0 start-0 w-100 bg-dark" style={{height: "398px"}}></div>
+            <Container className='container content-overlay mt-5 mb-md-4 py-5'>
 
                 {/* Breadcrumb */}
                 <Breadcrumb className='breadcrumb-light mb-4 pt-md-3'>
                     <Breadcrumb.Item linkAs={Link} href='/car-finder'>Home</Breadcrumb.Item>
                     <Breadcrumb.Item linkAs={Link} href='/car-finder/account-info'>Account</Breadcrumb.Item>
-                    <Breadcrumb.Item active>Title</Breadcrumb.Item>
+                    <Breadcrumb.Item active>Details</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Row>
-                    {/*SIDE BAR*/}
-                    <AdminPageSideBar/>
-
-                    {/* Page content */}
-                    <Col md={7} lg={8} className='mb-5 '>
-                        {children}
-                    </Col>
-                </Row>
+                <div className="bg-light shadow-sm rounded-3 p-4 p-md-5 mb-2">
+                    <HeaderMenu /> 
+                    {children}
+                </div>
             </Container>
         </SSRProvider>
     )
