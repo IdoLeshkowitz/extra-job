@@ -10,6 +10,7 @@ import FormSelect from 'react-bootstrap/FormSelect'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { useSession } from 'next-auth/react';
+import UploadCvButton from "@/components/uploadCvButton/uploadCvButton";
 
 const UserProfileInfo = () => {
 
@@ -137,9 +138,10 @@ const UserProfileInfo = () => {
                         />
                     </Accordion.Collapse>
                     </div>
-
+                    <UploadCvButton/>
                 {/* </div> */}
                 </Accordion>
+
             </Col>
         </Row>
         </>

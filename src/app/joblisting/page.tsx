@@ -31,6 +31,7 @@ interface SearchParams {
 export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
     const [skip, take]: number[] = [searchParams.skip ?? '0', searchParams.take ?? '10'].map((param) => parseInt(param))
     const jobListings = await getJobListings({...searchParams})
+    console.log(jobListings)
     return (
         <>
             <div className="row justify-content-center pb-3">
