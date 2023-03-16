@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react'
+import {useState} from 'react'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Accordion from 'react-bootstrap/Accordion'
-import { useAccordionButton } from 'react-bootstrap/AccordionButton'
+import {useAccordionButton} from 'react-bootstrap/AccordionButton'
 import FormControl from 'react-bootstrap/FormControl'
 import FormSelect from 'react-bootstrap/FormSelect'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
-import { useSession } from 'next-auth/react';
+import {useSession} from 'next-auth/react';
+import UploadCvButton from "@/components/uploadCvButton/uploadCvButton";
 
 const UserProfileInfo = () => {
 
@@ -17,21 +18,21 @@ const UserProfileInfo = () => {
     const {data: session, status} = useSession()
 
     // Custom accordion toggle
-    const CustomToggle = ({ eventKey } : {eventKey : string}) => {
+    const CustomToggle = ({eventKey}: { eventKey: string }) => {
         const handleClick = useAccordionButton(eventKey, (e) => e.preventDefault())
         return (
-        <OverlayTrigger
-            placement='top'
-            overlay={<Tooltip>Edit</Tooltip>}
-        >
-            <a
-            href='#'
-            className='nav-link py-0'
-            onClick={handleClick}
+            <OverlayTrigger
+                placement='top'
+                overlay={<Tooltip>Edit</Tooltip>}
             >
-            <i className='fi-edit'></i>
-            </a>
-        </OverlayTrigger>
+                <a
+                    href='#'
+                    className='nav-link py-0'
+                    onClick={handleClick}
+                >
+                    <i className='fi-edit'></i>
+                </a>
+            </OverlayTrigger>
         )
     }
 
@@ -74,74 +75,75 @@ const UserProfileInfo = () => {
         <>
             {/* Personal details */}
             <Row className='pt-4 mt-3'>
-            <Col xs={12} lg={3}>
-                <h2 className='h4'>Personal details</h2>
-            </Col>
-            <Col xs={12} lg={9}>
-                <Accordion>
-                <div className='border rounded-3 p-3'>
+                <Col xs={12} lg={3}>
+                    <h2 className='h4'>Personal details</h2>
+                </Col>
+                <Col xs={12} lg={9}>
+                    <Accordion>
+                        <div className='border rounded-3 p-3'>
 
-                    {/* Name */}
-                    <div className='border-bottom pb-3 mb-3'>
-                    <div className='d-flex align-items-center justify-content-between'>
-                        <div className='pe-2'>
-                        <h2 className='form-label fw-bold'>Full name</h2>
-                        <p className='mb-0'>{session?.user?.name ? session?.user?.name : 'Not specified'}</p>
+                            {/* Name */}
+                            <div className='border-bottom pb-3 mb-3'>
+                                <div className='d-flex align-items-center justify-content-between'>
+                                    <div className='pe-2'>
+                                        <h2 className='form-label fw-bold'>Full name</h2>
+                                        <p className='mb-0'>{session?.user?.name ? session?.user?.name : 'Not specified'}</p>
+                                    </div>
+                                    <CustomToggle eventKey='name'/>
+                                </div>
+                                <Accordion.Collapse eventKey='name'>
+                                    <FormControl
+                                        className='mt-3'
+                                        value={name}
+                                        onChange={handleNameChange}
+                                        placeholder='Your full name'
+                                    />
+                                </Accordion.Collapse>
+                            </div>
+
+                            {/* Gender */}
+                            <div className='border-bottom pb-3 mb-3'>
+                                <div className='d-flex align-items-center justify-content-between'>
+                                    <div className='pe-2'>
+                                        <h2 className='form-label fw-bold'>Gender</h2>
+                                        <p className='mb-0'>{session?.user?.gender ? session?.user?.gender : 'Not specified'}</p>
+                                    </div>
+                                    <CustomToggle eventKey='gender'/>
+                                </div>
+                                <Accordion.Collapse eventKey='gender'>
+                                    <FormSelect className='mt-3' value={gender} onChange={handleGenderChange}>
+                                        <option value='Not specified'>Choose gender</option>
+                                        <option value='Male'>Male</option>
+                                        <option value='Female'>Female</option>
+                                    </FormSelect>
+                                </Accordion.Collapse>
+                            </div>
+
+                            {/* Phone number */}
+                            {/* <div className='border-bottom pb-3 mb-3'> */}
+                            <div className='d-flex align-items-center justify-content-between'>
+                                <div className='pe-2'>
+                                    <h2 className='form-label fw-bold'>Phone number</h2>
+                                    <p className='mb-0'>{session?.user?.phone ? session?.user?.phone : 'Not specified'}</p>
+                                </div>
+                                <CustomToggle eventKey='phone'/>
+                            </div>
+                            <Accordion.Collapse eventKey='phone'>
+                                <FormControl
+                                    type='tel'
+                                    className='mt-3'
+                                    value={phone}
+                                    onChange={handlePhoneChange}
+                                    placeholder='Enter your phone number'
+                                />
+                            </Accordion.Collapse>
                         </div>
-                        <CustomToggle eventKey='name' />
-                    </div>
-                    <Accordion.Collapse eventKey='name'>
-                        <FormControl
-                        className='mt-3'
-                        value={name}
-                        onChange={handleNameChange}
-                        placeholder='Your full name'
-                        />
-                    </Accordion.Collapse>
-                    </div>
 
-                    {/* Gender */}
-                    <div className='border-bottom pb-3 mb-3'>
-                    <div className='d-flex align-items-center justify-content-between'>
-                        <div className='pe-2'>
-                        <h2 className='form-label fw-bold'>Gender</h2>
-                        <p className='mb-0'>{session?.user?.gender ? session?.user?.gender : 'Not specified'}</p>
-                        </div>
-                        <CustomToggle eventKey='gender' />
-                    </div>
-                    <Accordion.Collapse eventKey='gender'>
-                        <FormSelect className='mt-3' value={gender} onChange={handleGenderChange}>
-                        <option value='Not specified'>Choose gender</option>
-                        <option value='Male'>Male</option>
-                        <option value='Female'>Female</option>
-                        </FormSelect>
-                    </Accordion.Collapse>
-                    </div>
-
-                    {/* Phone number */}
-                    {/* <div className='border-bottom pb-3 mb-3'> */}
-                    <div className='d-flex align-items-center justify-content-between'>
-                        <div className='pe-2'>
-                        <h2 className='form-label fw-bold'>Phone number</h2>
-                        <p className='mb-0'>{session?.user?.phone ? session?.user?.phone : 'Not specified'}</p>
-                        </div>
-                        <CustomToggle eventKey='phone' />
-                    </div>
-                    <Accordion.Collapse eventKey='phone'>
-                        <FormControl
-                        type='tel'
-                        className='mt-3'
-                        value={phone}
-                        onChange={handlePhoneChange}
-                        placeholder='Enter your phone number'
-                        />
-                    </Accordion.Collapse>
-                    </div>
-
-                {/* </div> */}
-                </Accordion>
-            </Col>
-        </Row>
+                        {/* </div> */}
+                    </Accordion>
+                    <UploadCvButton/>
+                </Col>
+            </Row>
         </>
     )
 }
