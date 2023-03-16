@@ -2,13 +2,17 @@
 import {createRouter} from "next-connect";
 import {NextApiRequest, NextApiResponse} from "next";
 import multer from "multer";
-import * as fs from "fs";
 import {Prisma} from ".prisma/client";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import prisma from "@/lib/prisma";
 import CvCreateInput = Prisma.CvCreateInput;
 
+export const config = {
+    api: {
+        bodyParser: false
+    }
+}
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/')
