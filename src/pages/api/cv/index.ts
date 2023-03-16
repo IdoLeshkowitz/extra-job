@@ -6,6 +6,7 @@ import {Prisma} from ".prisma/client";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import prisma from "@/lib/prisma";
+import * as fs from "fs";
 import CvCreateInput = Prisma.CvCreateInput;
 
 export const config = {
@@ -22,16 +23,16 @@ const storage = multer.diskStorage({
     }
 })
 const upload = multer({storage: storage})
-const router = createRouter<NextApiRequest, NextApiResponse>()
+const router = createRouter<NextApiRequest & {file : any}, NextApiResponse>()
 // @ts-ignore
-
+router.use(upload.single("cv"))
 router.post(async (req, res) => {
     const {user} = await getServerSession(req, res, authOptions) ?? {}
     if (!user) {
         res.status(401).json({message: "Unauthorized"})
         return
     }
-    const file = Buffer.from(req.body)
+    const file = fs.readFileSync(req.file.path)
     const cvToCreate: CvCreateInput = {
         file: file,
         User: {connect: {id: user.id}}
