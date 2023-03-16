@@ -33,14 +33,17 @@ router.post(async (req, res) => {
         return
     }
     const file = fs.readFileSync(req.file.path)
+
     const cvToCreate: CvCreateInput = {
         file: file,
         User: {connect: {id: user.id}}
     }
     try {
         const createdCv = await prisma.cv.create({data: cvToCreate})
+        res.status(200).json({message: "OK"})
     } catch (e) {
         console.log(e)
+        res.status(500).json({message: "Internal server error"})
     }
 })
 router.get(async (req, res) => {
@@ -49,18 +52,13 @@ router.get(async (req, res) => {
         res.status(401).json({message: "Unauthorized"})
         return
     }
-    try {
-        const [cv] = await prisma.cv.findMany({where: {userId: user.id}, orderBy: {createdAt: "desc"}, take: 1})
-        if (!cv) {
-            res.status(404).json({message: "Not found"})
-            return
-        }
-        res.setHeader("Content-Type", "application/pdf")
-        res.setHeader("Content-Disposition", "attachment; filename=cv.pdf")
-        res.send(cv.file)
-    } catch (e) {
-        console.log(e)
-        res.status(500).json({message: "Internal server error"})
+    const [cv] = await prisma.cv.findMany({where: {userId: user.id}, orderBy: {createdAt: "desc"}, take: 1})
+    if (!cv) {
+        res.status(404).json({message: "Not found"})
+        return
     }
+    res.setHeader("Content-Type", "application/pdf")
+    res.setHeader("Content-Disposition", "attachment; filename=cv.pdf")
+    res.send(cv.file)
 })
 export default router.handler({})
