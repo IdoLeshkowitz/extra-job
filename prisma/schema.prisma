@@ -141,7 +141,7 @@ model Cv {
   userId    String   @db.ObjectId
   User      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now()) @db.Date
-  file      String
+  file      Bytes
 
   @@unique([id, userId])
   @@fulltext([userId, createdAt(sort: Desc)])
