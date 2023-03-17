@@ -11,11 +11,11 @@ export default async function AdminLayout({children}: { children: React.ReactNod
     }
     return (
         <div className='container pt-5 pb-lg-4 mt-5 mb-sm-2'>
-            <div className="row">
+            <div className="row justify-content-sm-center">
                 {/*SIDE BAR*/}
                 <AdminPageSideBar/>
                 {/* Page content */}
-                <div className=' col-sm-7 col-lg-8 mb-5 '>
+                <div className='col-md-7 col-lg-8 mb-5 col-sm-11'>
                     {children}
                 </div>
             </div>

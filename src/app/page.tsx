@@ -1,5 +1,5 @@
 import CursorParallax from '@/components/cursorParallax/CursorParallax'
-import JobSearchBar from '@/components/jobSearchBar/JobSearchBar'
+import JobListingSearchBar from '@/app/components/JobListingSearchBar'
 
 export default function HomePage() {
     return (
@@ -29,7 +29,7 @@ export default function HomePage() {
                         <div className='mx-auto px-0 col-xl-8 col-lg-9 col-md-10'>
 
                             {/* Search form */}
-                            <JobSearchBar />
+                            <JobListingSearchBar />
                         </div>
                     </div>
                 </div>

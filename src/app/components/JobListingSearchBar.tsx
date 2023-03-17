@@ -32,7 +32,7 @@ const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionSc
     }
     return await res.json()
 }
-export default function JobSearchBar() {
+export default function JobListingSearchBar() {
     const areaIdRef = useRef<string | null>(null)
     const professionIdRef = useRef<string | null>(null)
     const positionScopeIdRef = useRef<string | null>(null)

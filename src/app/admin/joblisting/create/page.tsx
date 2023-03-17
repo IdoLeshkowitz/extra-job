@@ -42,6 +42,7 @@ export default function CreateJobListingPage() {
     const [areas, setAreas] = useState<Area[]>([])
     const [professions, setProfessions] = useState<Profession[]>([])
     const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
     useEffect(() => {
         Promise.all([getAreas(), getProfessions(), getPositionScopes()])
             .then(([{data: {areas}}, {data: {professions}}, {data: {positionScopes}}]) => {
@@ -65,17 +66,29 @@ export default function CreateJobListingPage() {
         validationSchema,
         onSubmit     : async (values) => {
             try {
-                const {data} = await fetcher({
+                setLoading(true)
+                const {data: {jobListing}} = await fetcher({
                     url   : '/api/joblisting',
                     method: 'POST',
                     body  : {...values},
                     json  : true,
                 }) as { data: { jobListing: JobListing } }
+                setLoading(false)
+                router.push(`/joblisting/${jobListing.id}`)
             } catch (e) {
                 console.log(e)
             }
         }
     })
+    if (loading) {
+        return (
+            <div className="row justify-content-center">
+                <div className="spinner-grow" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        )
+    }
     return (
         <Container className='mb-md-4 '>
             <Row>

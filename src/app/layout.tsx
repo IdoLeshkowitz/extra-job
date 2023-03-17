@@ -1,7 +1,7 @@
 import '../../styles/theme.scss'
 import '../../styles/theme.scss'
 import AuthProvider from './AuthProvider';
-import MainLayoutNavBar from "@/components/navbar/MainLayoutNavBar";
+import MainLayoutNavBar from "@/app/components/MainLayoutNavBar";
 import Footer from "@/components/footer/Footer";
 import {ReactNode} from 'react';
 import {SSRProvider} from "react-bootstrap";

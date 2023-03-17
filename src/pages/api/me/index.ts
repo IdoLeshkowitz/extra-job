@@ -1,7 +1,7 @@
 import {NextApiHandler} from "next";
-import {redirect} from "next/navigation";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import {Role} from "@prisma/client";
 
 const handler: NextApiHandler = async (req, res) => {
     const {user} = await getServerSession(req, res, authOptions) ?? {}
@@ -11,9 +11,13 @@ const handler: NextApiHandler = async (req, res) => {
     }
     /*     if user is authenticated, check role    */
     const {role} = user
-    /*     if role is not admin, redirect to admin page    */
-    if (role === "ADMIN") {
+    /*     if role is admin, redirect to admin page    */
+    if (role === Role.ADMIN) {
         return res.redirect("/admin")
+    }
+    /*     if role is jobseeker, redirect to jobseeker page    */
+    if (role === Role.JOBSEEKER) {
+        return res.redirect("/job-seeker")
     }
 }
 

@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
-import JobSearchBar from "@/components/jobSearchBar/JobSearchBar";
+import JobListingSearchBar from "@/app/components/JobListingSearchBar";
 import JobListingCard from "@/components/cards/JobListingCard";
+import CustomPagination from "@/components/pagination/customPagination";
 
 async function getJobListings({positionScopeId, areaId, professionId, skip, take}: SearchParams) {
     return prisma.jobListing.findMany({
@@ -20,6 +21,17 @@ async function getJobListings({positionScopeId, areaId, professionId, skip, take
     });
 }
 
+async function countJobListings({positionScopeId, areaId, professionId}: SearchParams) {
+    return prisma.jobListing.count({
+        where: {
+            active         : true,
+            areaId         : areaId,
+            positionScopeId: positionScopeId,
+            professionId   : professionId
+        }
+    })
+}
+
 interface SearchParams {
     positionScopeId?: string,
     professionId?: string,
@@ -29,8 +41,8 @@ interface SearchParams {
 }
 
 export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
-    const [skip, take]: number[] = [searchParams.skip ?? '0', searchParams.take ?? '10'].map((param) => parseInt(param))
-    const jobListings = await getJobListings({...searchParams})
+    const [skip, take]: string[] = [searchParams.skip ?? '0', searchParams.take ?? '10'].map((param) => param)
+    const [jobListings, count] = await Promise.all([getJobListings({...searchParams, skip, take}), countJobListings({...searchParams, skip, take})])
     return (
         <>
             <div className="row justify-content-center pb-3">
@@ -38,22 +50,21 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
                     <h1 className='display-4 text-light pb-2 mb-4 mb-lg-5 text-center'>
                         המשרות<span className='text-primary'> שלנו</span>
                     </h1>
-                    <JobSearchBar/>
+                    <JobListingSearchBar/>
                 </div>
             </div>
             <div className="row">
                 {jobListings.map((jobListing, index) => {
-                    return (
-                        <>
-                            {/* @ts-expect-error Async Server Component */}
-                            <JobListingCard key={index} jobListing={jobListing}/>
-                        </>
-                    )
-                }
-
+                        return (
+                            <>
+                                {/* @ts-expect-error Async Server Component */}
+                                <JobListingCard key={index} jobListing={jobListing} className="col-md-4"/>
+                            </>
+                        )
+                    }
                 )}
-
             </div>
+               <CustomPagination count={count} take={parseInt(take)} skip={parseInt(skip)}/>
         </>
     )
 }

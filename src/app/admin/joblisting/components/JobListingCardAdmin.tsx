@@ -13,7 +13,7 @@ interface JobListingCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
     const light = true;
-    const {name, area, profession, positionScope, active, createdAt, id} = jobListing
+    const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
     const img = {
         src: '/images/car-finder/icons/buyers.svg',
         alt: name
@@ -21,14 +21,17 @@ const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
 
     return (
         <div
-            style={{maxWidth: '42rem'}}
-            className="card card-light card-hover"
+            className="card card-light card-hover col-md-12 col-sm-12"
         >
             <div className='card-body'>
                 <div className='d-flex justify-content-between'>
+                    <div className="position-absolute start-0 top-0 pt-3 ps-3">
+                        {/*SERIAL NUMBER*/}
+                        <span className="d-table badge bg-info">{`#${serialNumber}`}</span>
+                    </div>
                     <div className='d-flex align-items-start'>
                         <div
-                            className='position-relative rounded-circle overflow-hidden flex-shrink-0 d-none d-sm-block'
+                            className='position-relative rounded-circle overflow-hidden flex-shrink-0 d-none d-sm-block align-self-end'
                             style={{width: 100, height: 100}}
                         >
                             {/*ICON*/}

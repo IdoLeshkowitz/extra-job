@@ -4,7 +4,6 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import ApplyButton from "@/app/joblisting/components/ApplyButton";
 import prisma from "@/lib/prisma";
-import {FC, ReactElement} from "react";
 
 function getDateString(date: Date) {
     const d = new Date(date)
@@ -25,34 +24,42 @@ async function didUserApply(jobListingId: string) {
 
 interface JobListingCardProps {
     jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
+    className?: string
 }
 
 
-export default async function JobListingCard({jobListing}: JobListingCardProps) {
+export default async function JobListingCard({jobListing, className}: JobListingCardProps) {
     const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
     const dateString = getDateString(createdAt)
     const didApply = await didUserApply(id)
     const jobListingLink = `/joblisting/${id}`
     //todo add like button
     return (
-        <div className="col-sm-6">
+        <div className={className}>
             <div className="card card-light card-hover">
                 {/*IMAGE CARD*/}
-                <div className="card-img-top card-img-hover justify-content-center d-flex p-5">
-                    <a href={jobListingLink} className="img-overlay"></a>
-                    <div className="position-absolute start-0 top-0 pt-3 ps-3">
-                        {/*SERIAL NUMBER*/}
-                        <span className="d-table badge bg-info">{`#${serialNumber}`}</span>
-                    </div>
-                    {/*LIKE BUTTON*/}
-                    <div className="content-overlay end-0 top-0 pt-3 pe-3">
-                        <button type="button" className="btn btn-icon btn-light btn-xs text-primary rounded-circle"
-                                data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Wishlist">
-                            <i className="fi-heart"></i>
-                        </button>
+                <div
+                    className="card-img-top card-img-hover justify-content-between d-flex gap-4 flex-column align-items-center">
+                    <div className="row">
+                        <a href={jobListingLink} className="img-overlay"></a>
+                        <div className="position-absolute start-0 top-0 pt-3 ps-3">
+                            {/*SERIAL NUMBER*/}
+                            <span className="d-table badge bg-info">{`#${serialNumber}`}</span>
+                        </div>
+                        {/*LIKE BUTTON*/}
+                        <div className="content-overlay end-0  bottom-0 pt-3 pe-3">
+                            <button type="button" className="btn btn-icon btn-light btn-xs text-primary rounded-circle"
+                                    data-bs-toggle="tooltip" data-bs-placement="left" title="Add to Wishlist">
+                                <i className="fi-heart"></i>
+                            </button>
+                        </div>
                     </div>
                     {/*IMAGE*/}
                     <Image width={100} height={100} src="/images/car-finder/icons/buyers.svg" alt="Image"/>
+                    <div className="row" style={{zIndex: '100'}}>
+                        <ApplyButton jobListingId={id}
+                                     icon="fi-briefcase"/>
+                    </div>
                 </div>
                 <div className="card-body" style={{direction: 'rtl'}}>
                     <div className="row">
@@ -65,10 +72,6 @@ export default async function JobListingCard({jobListing}: JobListingCardProps) 
                             <h3 className="h6 mb-1">
                                 <a href="#" className="nav-link-light">{name}</a>
                             </h3>
-                        </div>
-                        <div className="col-auto">
-                            <ApplyButton jobListingId={id} text={didApply ? 'בתהליך' : 'הגש מועמדות'}
-                                         icon="fi-briefcase"/>
                         </div>
                     </div>
                 </div>

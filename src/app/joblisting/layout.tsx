@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import JobSearchBar from "@/components/jobSearchBar/JobSearchBar";
+import JobListingSearchBar from "@/app/components/JobListingSearchBar";
 
 export default function JobListingLayout({children}: { children: ReactNode }) {
     return (

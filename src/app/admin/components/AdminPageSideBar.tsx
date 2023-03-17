@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import CardNav from '@/components/navbar/CardNav';
 import {useState} from "react";
-import {Col} from "react-bootstrap";
+import {Col, SSRProvider} from "react-bootstrap";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import {usePathname} from "next/navigation";
@@ -26,9 +26,9 @@ const navItems: NavItem[] = [
         icon: 'fi-briefcase'
     },
     {
-        name : 'היקף משרות',
-        href : '/admin/positionscope',
-        icon : 'fi-briefcase'
+        name: 'היקף משרות',
+        href: '/admin/positionscope',
+        icon: 'fi-briefcase'
     },
     {
         name: 'משרות',
@@ -37,56 +37,55 @@ const navItems: NavItem[] = [
     },
 ]
 export default function AdminPageSideBar() {
-    const [open, setOpen] = useState(false)
     const accountPageTitle = 'title'
     return (
-        <>
+        <SSRProvider>
             <Col md={5} lg={4} className='pe-xl-4 mb-5'>
                 <div className='card card-body card-light border-0 shadow-sm pb-1 me-lg-1'>
                     {/*ACCOUNT DETAILS */}
                     <AccountDetails/>
-
-                    {/*NAV COLLAPSE TOGGLE BUTTON*/}
-                    <Button
-                        variant='outline-light'
-                        className='d-block d-md-none w-100 mb-3'
-                        onClick={() => setOpen(!open)}
-                        aria-controls='account-menu'
-                        aria-expanded={open}
-                    >
-                        <i className='fi-align-justify me-2'></i>
-                        Menu
-                    </Button>
-
-                    {/*COLLAPSE NAV*/}
-                    <Collapse in={open} className='d-md-block'>
-                        <Nav/>
-                    </Collapse>
+                    {/*<Nav/>*/}
+                    <Nav/>
                 </div>
             </Col>
-        </>
+        </SSRProvider>
     )
 }
 
 function Nav() {
+    const [open, setOpen] = useState(false)
     const pathname = usePathname()
     return (
-        <div id='account-menu'>
-            <CardNav className='pt-3'>
-                {
-                    navItems.map((item, index) =>
-                        (
-                            <CardNav.Item
-                                href={item.href}
-                                icon={item.icon}
-                                key={index}
-                                active ={pathname=== item.href}
-                            >
-                                {item.name}
-                            </CardNav.Item>
-                        ))}
-            </CardNav>
-        </div>
+        <>
+            <Button
+                variant='outline-light'
+                className='d-block d-md-none w-100 mb-3'
+                onClick={() => setOpen(!open)}
+                aria-controls='account-menu'
+                aria-expanded={open}
+            >
+                <i className='fi-align-justify me-2'></i>
+                Menu
+            </Button>
+            <Collapse in={open} className='d-md-block'>
+                <div id='account-menu'>
+                    <CardNav className='pt-3'>
+                        {
+                            navItems.map((item, index) =>
+                                (
+                                    <CardNav.Item
+                                        href={item.href}
+                                        icon={item.icon}
+                                        key={index}
+                                        active={pathname === item.href}
+                                    >
+                                        {item.name}
+                                    </CardNav.Item>
+                                ))}
+                    </CardNav>
+                </div>
+            </Collapse>
+        </>
     )
 }
 

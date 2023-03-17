@@ -2,6 +2,13 @@ import prisma from "@/lib/prisma";
 import JobListingCard from "@/components/cards/JobListingCard";
 import {notFound} from "next/navigation";
 
+export async function generateStaticParams() {
+    const jobListings = await prisma.jobListing.findMany({
+        where: {active: true}
+    })
+    return jobListings.map((jobListing) => ({params: {id: jobListing.id}}))
+}
+
 export default async function JobListingPage({params: {id}}: { params: { id: string } }) {
     const jobListing = await prisma.jobListing.findUnique({
         where  : {id},
@@ -26,7 +33,7 @@ export default async function JobListingPage({params: {id}}: { params: { id: str
                 </div>
                 <div className="col-md-8 p-2 justify-content-end d-flex" style={{direction: 'rtl'}}>
                     {/* @ts-expect-error Async Server Component */}
-                    <JobListingCard jobListing={jobListing}/>
+                    <JobListingCard jobListing={jobListing} className="col-md-6"/>
                 </div>
             </div>
         </div>
