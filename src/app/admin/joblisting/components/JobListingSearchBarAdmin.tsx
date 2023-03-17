@@ -4,7 +4,7 @@ import {Col, FormControl, FormGroup, InputGroup, Row, SSRProvider} from "react-b
 import {Area, PositionScope, Profession} from "@prisma/client";
 import {SyntheticEvent, useEffect, useRef, useState} from "react";
 import Button from "react-bootstrap/Button";
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 
 
 const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
@@ -30,7 +30,8 @@ const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionSc
     }
     return await res.json()
 }
-export default function JobListingSearchBar() {
+
+function useSearchBar() {
     const areaIdRef = useRef<string | null>(null)
     const professionIdRef = useRef<string | null>(null)
     const positionScopeIdRef = useRef<string | null>(null)
@@ -39,6 +40,7 @@ export default function JobListingSearchBar() {
     const [areas, setAreas] = useState<Area[]>([])
     const [professions, setProfessions] = useState<Profession[]>([])
     const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
+    const url = usePathname()
     const router = useRouter()
     useEffect(() => {
         Promise.all([getAreas(), getProfessions(), getPositionScopes()])
@@ -59,11 +61,8 @@ export default function JobListingSearchBar() {
         const serialNumber = serialNumberRef.current
         const status = statusRef.current
         const query = new URLSearchParams()
-        if (serialNumber) {
+        if (serialNumber && serialNumber.value){
             query.append('serialNumber', serialNumber.value)
-        }
-        if (status) {
-            query.append('status', status)
         }
         if (areaId) {
             query.append('areaId', areaId)
@@ -74,11 +73,27 @@ export default function JobListingSearchBar() {
         if (positionScopeId) {
             query.append('positionScopeId', positionScopeId)
         }
-        const url = `/joblisting?${query.toString()}`
-        router.push(url)
-    };
+        if (status) {
+            query.append('status', status)
+        }
+        router.push(`${url}?${query.toString()}`)
+    }
 
+    return {
+        areas,
+        professions,
+        positionScopes,
+        areaIdRef,
+        professionIdRef,
+        positionScopeIdRef,
+        statusRef,
+        serialNumberRef,
+        handleSubmit
+    }
+}
 
+export default function JobListingSearchBar() {
+    const {serialNumberRef, statusRef, professionIdRef, positionScopeIdRef, positionScopes, areaIdRef, areas, professions, handleSubmit} = useSearchBar()
     return (
         <SSRProvider>
             <FormGroup className='form-group form-group-light d-block' onSubmit={handleSubmit}>
