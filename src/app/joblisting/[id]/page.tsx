@@ -2,12 +2,6 @@ import prisma from "@/lib/prisma";
 import JobListingCard from "@/components/cards/JobListingCard";
 import {notFound} from "next/navigation";
 
-export async function generateStaticParams() {
-    const jobListings = await prisma.jobListing.findMany({
-        where: {active: true}
-    })
-    return jobListings.map((jobListing) => ({params: {id: jobListing.id}}))
-}
 
 export default async function JobListingPage({params: {id}}: { params: { id: string } }) {
     const jobListing = await prisma.jobListing.findUnique({
