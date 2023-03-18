@@ -1,92 +1,126 @@
 'use client'
-import {FC, MouseEvent} from "react";
+import {FC, Reducer, useEffect, useReducer, useState} from "react";
 import Button from "react-bootstrap/Button";
-import {fetcher} from "@/lib/api/fetcher";
-import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
+import {notFound, usePathname, useRouter} from "next/navigation";
+import {signIn, useSession} from "next-auth/react";
 import {User} from "next-auth";
+import {fetcher} from "@/lib/api/fetcher";
 
 interface ApplyButtonProps {
     jobListingId: string
     applied: boolean
-    href?: string
+    LoggedIn: boolean
+    MissingCV: boolean
 }
 
-function getState(user: User | undefined, applied: boolean): ButtonStates {
-    if (!user) {
-        return ButtonStates.NOT_LOGGED_IN
-    }
-    if (!user.cv) {
-        return ButtonStates.MISSING_CV
-    }
-    if (applied) {
-        return ButtonStates.APPLIED
-    }
-    return ButtonStates.NOT_APPLIED
-}
-
-enum ButtonStates {
+enum State {
     NOT_LOGGED_IN,
     MISSING_CV,
     NOT_APPLIED,
-    APPLIED
+    APPLIED,
+    LOADING
 }
 
-function getTextByState(state: ButtonStates): string {
+function getTextByState(state: State): string {
     switch (state) {
-        case ButtonStates.NOT_LOGGED_IN:
+        case State.NOT_LOGGED_IN:
             return 'עלייך להתחבר כדי להמשיך'
-        case ButtonStates.MISSING_CV:
+        case State.MISSING_CV:
             return 'הוסף קורות חיים כדי להמשיך'
-        case ButtonStates.NOT_APPLIED:
+        case State.NOT_APPLIED:
             return 'הגש מועמדות'
-        case ButtonStates.APPLIED:
+        case State.APPLIED:
             return 'המועמדות נשלחה'
+        default:
+            return 'טוען...'
     }
 }
 
-function getIconByState(state: ButtonStates): string {
-    if (state === ButtonStates.APPLIED) {
+function getIconByState(state: State): string {
+    if (state === State.APPLIED) {
         return 'fi-check'
     }
-    if (state === ButtonStates.NOT_LOGGED_IN) {
+    if (state === State.NOT_LOGGED_IN) {
         return 'fi-arrow-right'
     }
-    if (state === ButtonStates.MISSING_CV) {
+    if (state === State.MISSING_CV) {
         return 'fi-lock'
     }
     return 'fi-plus'
 }
 
-const ApplyButton: FC<ApplyButtonProps> = (props) => {
-    const {href, jobListingId, applied} = props
-    const router = useRouter()
-    const {data} = useSession()
-    const {user} = data ?? {}
-    const state = getState(user, applied)
-    console.log(user)
+function getState({applied, MissingCV, LoggedIn}: ApplyButtonProps): State {
+    if (!LoggedIn) {
+        return State.NOT_LOGGED_IN
+    }
+    if (MissingCV) {
+        return State.MISSING_CV
+    }
+    if (applied) {
+        return State.APPLIED
+    }
+    return State.NOT_APPLIED
+}
 
-    async function handleClick(e: MouseEvent<HTMLButtonElement>) {
-        try {
-            await fetcher({json: true, method: 'POST', url: '/api/jobapplication', body: {jobListingId}})
+const ApplyButton: FC<ApplyButtonProps> = (props) => {
+    const {jobListingId, applied, MissingCV, LoggedIn} = props
+    const [state, setState] = useState<State>(State.LOADING)
+    const router = useRouter()
+    const pathname = usePathname()
+    useEffect(() => {
+        setState(getState(props))
+    }, [props])
+
+    async function onClick(state: State) {
+        if (state === State.NOT_LOGGED_IN) {
+            try {
+                await signIn()
+                router.push(pathname ?? '/joblisting')
+            } catch (e) {
+                console.error(e)
+                notFound()
+            }
+        }
+        if (state === State.MISSING_CV) {
+            router.push('/uploadcv')
             router.refresh()
-        } catch (e) {
-            console.error(e)
+        }
+        if (state === State.NOT_APPLIED) {
+            try {
+                setState(State.LOADING)
+                await fetcher({url: 'api/jobapplication', method: 'POST', body: {jobListingId}})
+                router.push(pathname ?? '/joblisting')
+                router.refresh()
+                setState(State.APPLIED)
+            } catch (e) {
+                console.error(e)
+                notFound()
+            }
         }
     }
 
-    // if (user?.role === Role.ADMIN) {
-    //     return null
-    // }
+    if (state === State.LOADING) {
+        return (
+            <Button
+                disabled
+                className="icon-box card card-light flex-row align-items-center card-hover rounded-pill p-1"
+            >
+                    <div className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center">
+                        <div className="spinner-grow" role="status">
+                        </div>
+                </div>
+            </Button>
+        )
+    }
     return (
         <Button
-            onClick={handleClick}
-            href={href}
+            disabled={state === State.APPLIED}
+            onClick={() => onClick(state)}
             className="icon-box card card-light flex-row align-items-center card-hover rounded-pill p-1"
         >
             <div className="col d-flex justify-content-center align-items-center">
                 <div className="icon-box-media bg-faded-light text-light rounded-circle">
-                    <i className={`${getIconByState(state)} text-end ${state === ButtonStates.NOT_APPLIED ? 'text-success' : 'text-warning'}`}/>
+                    <i className={`${getIconByState(state)} text-end ${state === State.NOT_APPLIED ? 'text-success' : 'text-warning'}`}/>
                 </div>
                 <h3 className="icon-box-title fs-sm text-light text-end px-1 pt-1">{getTextByState(state)}</h3>
             </div>

@@ -3,7 +3,8 @@ import JobListingSearchBar from "@/app/components/JobListingSearchBar";
 import JobListingCard from "@/app/joblisting/components/JobListingCard";
 import CustomPagination from "@/components/pagination/customPagination";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {getServerSession} from "next-auth";
+import {getServerSession, User} from "next-auth";
+import ApplyButton from "@/app/joblisting/components/ApplyButton";
 
 function getJobListings({positionScopeId, areaId, professionId, skip, take}: SearchParams) {
     return prisma.jobListing.findMany({
@@ -23,12 +24,12 @@ function getJobListings({positionScopeId, areaId, professionId, skip, take}: Sea
     });
 }
 
-async function getUserJobApplication() {
-    const {user} = await getServerSession(authOptions) ?? {}
+async function getUserJobApplications(user: User | undefined) {
     if (!user) return []
     return prisma.jobApplication.findMany({
         where: {
-            appliedById: user.id,
+            appliedById : user.id,
+            jobListingId: {}
         }
     })
 }
@@ -53,8 +54,9 @@ interface SearchParams {
 }
 
 export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
+    const {user} = await getServerSession(authOptions) ?? {}
     const [skip, take]: string[] = [searchParams.skip ?? '0', searchParams.take ?? '10'].map((param) => param)
-    const [jobListings, count, jobApplications] = await Promise.all([getJobListings({...searchParams, skip, take}), countJobListings({...searchParams, skip, take}), getUserJobApplication()])
+    const [jobListings, count, jobApplications] = await Promise.all([getJobListings({...searchParams, skip, take}), countJobListings({...searchParams, skip, take}), getUserJobApplications(user)])
     return (
         <>
             <div className="row justify-content-center pb-3">
@@ -73,9 +75,17 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
                                 {/* @ts-expect-error Async Server Component */}
                                 <JobListingCard
                                     key={index}
-                                    jobListing={{...jobListing, applied}}
+                                    jobListing={{...jobListing}}
                                     className="col-md-4"
-                                />
+                                >
+                                    <ApplyButton
+                                        key={index}
+                                        jobListingId={jobListing.id}
+                                        applied={applied}
+                                        LoggedIn={!!user}
+                                        MissingCV={!user?.cv}
+                                    />
+                                </JobListingCard>
                             </>
                         )
                     }

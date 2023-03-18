@@ -74,6 +74,7 @@ model JobApplication {
   appliedBy  User       @relation(fields: [appliedById], references: [id])
   joblisting JobListing @relation(fields: [jobListingId], references: [id])
 
+  @@unique([appliedById, jobListingId])
   @@fulltext([appliedById, jobListingId, createdAt(sort: Desc)])
 }
 

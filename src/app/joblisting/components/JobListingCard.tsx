@@ -11,12 +11,13 @@ function getDateString(date: Date) {
 }
 
 interface JobListingCardProps {
-    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope } & { applied: boolean }
+    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
     className?: string
+    children?: React.ReactNode
 }
 
-export default async function JobListingCard({jobListing, className}: JobListingCardProps) {
-    const {name, area, profession, positionScope, active, createdAt, id, serialNumber,applied} = jobListing
+export default async function JobListingCard({jobListing, className, children}: JobListingCardProps) {
+    const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
     const dateString = getDateString(createdAt)
     const jobListingLink = `/joblisting/${id}`
     //todo add like button
@@ -43,10 +44,7 @@ export default async function JobListingCard({jobListing, className}: JobListing
                     {/*IMAGE*/}
                     <Image width={100} height={100} src="/images/car-finder/icons/buyers.svg" alt="Image"/>
                     <div className="row" style={{zIndex: '100'}}>
-                        <ApplyButton
-                            jobListingId={id}
-                            applied={applied}
-                        />
+                        {children}
                     </div>
                 </div>
                 <div className="card-body" style={{direction: 'rtl'}}>
