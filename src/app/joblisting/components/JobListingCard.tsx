@@ -1,9 +1,6 @@
 import Image from "next/image";
 import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import ApplyButton from "@/app/joblisting/components/ApplyButton";
-import prisma from "@/lib/prisma";
 
 function getDateString(date: Date) {
     const d = new Date(date)
@@ -13,25 +10,14 @@ function getDateString(date: Date) {
     return `${year} ${month} ${day}`.split(' ').reverse().join(' ')
 }
 
-async function didUserApply(jobListingId: string) {
-    const {user} = await getServerSession(authOptions) ?? {}
-    if (!user) {
-        return false
-    }
-    const foundApplication = await prisma.jobApplication.findFirst({where: {jobListingId, appliedById: user.id}})
-    return !!foundApplication
-}
-
 interface JobListingCardProps {
-    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
+    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope } & { applied: boolean }
     className?: string
 }
 
-
 export default async function JobListingCard({jobListing, className}: JobListingCardProps) {
-    const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
+    const {name, area, profession, positionScope, active, createdAt, id, serialNumber,applied} = jobListing
     const dateString = getDateString(createdAt)
-    const didApply = await didUserApply(id)
     const jobListingLink = `/joblisting/${id}`
     //todo add like button
     return (
@@ -57,8 +43,10 @@ export default async function JobListingCard({jobListing, className}: JobListing
                     {/*IMAGE*/}
                     <Image width={100} height={100} src="/images/car-finder/icons/buyers.svg" alt="Image"/>
                     <div className="row" style={{zIndex: '100'}}>
-                        <ApplyButton jobListingId={id}
-                                     icon="fi-briefcase"/>
+                        <ApplyButton
+                            jobListingId={id}
+                            applied={applied}
+                        />
                     </div>
                 </div>
                 <div className="card-body" style={{direction: 'rtl'}}>
@@ -70,7 +58,7 @@ export default async function JobListingCard({jobListing, className}: JobListing
                             </div>
                             {/*TITLE*/}
                             <h3 className="h6 mb-1">
-                                <a href="#" className="nav-link-light">{name}</a>
+                                <a href="src/components/cards#" className="nav-link-light">{name}</a>
                             </h3>
                         </div>
                     </div>

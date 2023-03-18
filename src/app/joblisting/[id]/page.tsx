@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import JobListingCard from "@/components/cards/JobListingCard";
+import JobListingCard from "@/app/joblisting/components/JobListingCard";
 import {notFound} from "next/navigation";
 
 

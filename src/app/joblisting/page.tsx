@@ -1,9 +1,11 @@
 import prisma from "@/lib/prisma";
 import JobListingSearchBar from "@/app/components/JobListingSearchBar";
-import JobListingCard from "@/components/cards/JobListingCard";
+import JobListingCard from "@/app/joblisting/components/JobListingCard";
 import CustomPagination from "@/components/pagination/customPagination";
+import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import {getServerSession} from "next-auth";
 
-async function getJobListings({positionScopeId, areaId, professionId, skip, take}: SearchParams) {
+function getJobListings({positionScopeId, areaId, professionId, skip, take}: SearchParams) {
     return prisma.jobListing.findMany({
         where  : {
             active         : true,
@@ -21,7 +23,17 @@ async function getJobListings({positionScopeId, areaId, professionId, skip, take
     });
 }
 
-async function countJobListings({positionScopeId, areaId, professionId}: SearchParams) {
+async function getUserJobApplication() {
+    const {user} = await getServerSession(authOptions) ?? {}
+    if (!user) return []
+    return prisma.jobApplication.findMany({
+        where: {
+            appliedById: user.id,
+        }
+    })
+}
+
+function countJobListings({positionScopeId, areaId, professionId}: SearchParams) {
     return prisma.jobListing.count({
         where: {
             active         : true,
@@ -42,7 +54,7 @@ interface SearchParams {
 
 export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
     const [skip, take]: string[] = [searchParams.skip ?? '0', searchParams.take ?? '10'].map((param) => param)
-    const [jobListings, count] = await Promise.all([getJobListings({...searchParams, skip, take}), countJobListings({...searchParams, skip, take})])
+    const [jobListings, count, jobApplications] = await Promise.all([getJobListings({...searchParams, skip, take}), countJobListings({...searchParams, skip, take}), getUserJobApplication()])
     return (
         <>
             <div className="row justify-content-center pb-3">
@@ -55,16 +67,21 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
             </div>
             <div className="row">
                 {jobListings.map((jobListing, index) => {
+                        const applied = !!jobApplications.find((jobApplication) => jobApplication.jobListingId === jobListing.id)
                         return (
                             <>
                                 {/* @ts-expect-error Async Server Component */}
-                                <JobListingCard key={index} jobListing={jobListing} className="col-md-4"/>
+                                <JobListingCard
+                                    key={index}
+                                    jobListing={{...jobListing, applied}}
+                                    className="col-md-4"
+                                />
                             </>
                         )
                     }
                 )}
             </div>
-               <CustomPagination count={count} take={parseInt(take)} skip={parseInt(skip)}/>
+            <CustomPagination count={count} take={parseInt(take)} skip={parseInt(skip)}/>
         </>
     )
 }

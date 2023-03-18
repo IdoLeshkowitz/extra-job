@@ -23,6 +23,12 @@ export const authOptions: NextAuthOptions = {
             session.user.id = user.id;
             session.user.phone = user.phone;
             session.user.gender = user.gender;
+            const cvByUserId = await prisma.cv.findFirst({
+                where: {
+                    userId: user.id
+                }
+            });
+            session.user.cv = !!cvByUserId;
             return session
         }
     }

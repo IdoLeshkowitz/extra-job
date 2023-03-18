@@ -7,10 +7,10 @@ import JobListingSearchBarAdmin from "./components/JobListingSearchBarAdmin";
 
 
 const countAllJobListings = async (searchParams: SearchParams): Promise<{ data: { count: number } }> => {
-    const {skip, take, professionId, areaId, positionScopeId, active, serialNumber} = searchParams
+    const {skip, take, professionId, areaId, positionScopeId, status, serialNumber} = searchParams
     const count = await prisma.jobListing.count({
         where: {
-            active: active === "false" ? false : true,
+            active: status ? status === 'true' : undefined,
             serialNumber,
             areaId,
             positionScopeId,
@@ -20,8 +20,7 @@ const countAllJobListings = async (searchParams: SearchParams): Promise<{ data: 
     return {data: {count}}
 }
 const getJobListings = async (searchParams: SearchParams): Promise<{ data: { jobListings: (JobListing & { area: Area, profession: Profession, positionScope: PositionScope })[] } }> => {
-    const {skip, take, professionId, areaId, positionScopeId, active, serialNumber} = searchParams
-    console.log(searchParams)
+    let {skip, take, professionId, areaId, positionScopeId, status, serialNumber} = searchParams
     const jobListings = await prisma.jobListing.findMany({
         skip   : parseInt(skip ?? '0'),
         take   : parseInt(take ?? '10'),
@@ -32,7 +31,7 @@ const getJobListings = async (searchParams: SearchParams): Promise<{ data: { job
         },
         where  : {
             serialNumber,
-            active: active === 'false' ? false : true,
+            active: status ? status === 'true' : undefined,
             areaId,
             positionScopeId,
             professionId
@@ -48,12 +47,11 @@ interface SearchParams {
     areaId?: string,
     skip?: string,
     take?: string
-    active?: string
+    status?: string | boolean
 }
 
 export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
     const [{data: {jobListings}}, {data: {count}}] = await Promise.all([getJobListings(searchParams), countAllJobListings(searchParams)])
-    console.log(count)
     return (
         <>
             <div className="row">

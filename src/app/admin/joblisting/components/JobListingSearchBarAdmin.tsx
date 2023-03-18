@@ -101,7 +101,7 @@ export default function JobListingSearchBar() {
                     <Col lg={2}>
                         <InputGroup className='border-end-lg border-light'>
                             <InputGroup.Text id='search-icon' className='text-muted ps-2 ps-sm-3'>
-                                <i className='fi-search'></i>
+                                <i className='fi-search jus'></i>
                             </InputGroup.Text>
                             <FormControl
                                 ref={serialNumberRef}

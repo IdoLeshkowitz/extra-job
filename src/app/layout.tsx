@@ -12,7 +12,7 @@ function RootLayout({children}: { children: ReactNode }) {
             <html>
                 <body className="bg-dark">
                     <AuthProvider>
-                        <main className="page-wrapper">
+                        <main className="page-wrapper bg-dark d-flex ">
                             <MainLayoutNavBar/>
                             {children}
                         </main>
