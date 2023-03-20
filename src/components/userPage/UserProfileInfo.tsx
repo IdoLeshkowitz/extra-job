@@ -10,7 +10,7 @@ import FormSelect from 'react-bootstrap/FormSelect'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import {useSession} from 'next-auth/react';
-import UploadCvButton from "@/components/uploadCvButton/uploadCvButton";
+import UploadCvButton from "@/app/uploadcv/components/uploadCvButton";
 
 const UserProfileInfo = () => {
 

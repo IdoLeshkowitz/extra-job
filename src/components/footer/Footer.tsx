@@ -5,13 +5,10 @@ import SocialButton from "@/components/socialButton/SocialButton";
 
 export default function Footer() {
     return (
-        <footer className='footer bg-dark pt-5'>
+        <footer className='pt-5'>
             <Container className='pb-2'>
                 <Row className='align-items-center pb-4'>
                     <Col md={6} xl={5}>
-
-                        {/* Links */}
-
                         {/* Socials */}
                         <div className='text-nowrap border-top border-light mt-3 py-4'>
                             <SocialButton size="sm" href='#' brand='facebook' variant='translucent'
@@ -26,8 +23,6 @@ export default function Footer() {
                         </div>
                     </Col>
                 </Row>
-
-
                 {/*/!* Copyright *!/*/}
                 {/*<p className='fs-sm text-center text-sm-start mb-4'>*/}
                 {/*    <span className='text-light opacity-50'>&copy; All rights reserved. Made by </span>*/}

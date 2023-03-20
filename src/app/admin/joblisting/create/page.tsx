@@ -92,7 +92,7 @@ export default function CreateJobListingPage() {
     return (
         <Container className='mb-md-4 '>
             <Row>
-                <form onSubmit={formik.handleSubmit}>
+                <form onSubmit={formik.handleSubmit} style={{direction:'rtl'}}>
                     <Col xs={12} lg={12}>
                         {/* Title */}
                         <div className='mb-4'>
