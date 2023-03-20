@@ -1,18 +1,23 @@
+import { authOptions } from "@/pages/api/auth/[...nextauth]"
+import { getServerSession } from "next-auth"
 
 
-export default function HeaderMenu(){
+export default async function HeaderMenu(){
+
+    const {user} = await getServerSession(authOptions) ?? {}
+
     return (
         <>
             <div className="d-flex align-items-start justify-content-between pb-4 mb-2">
                 <div className="d-flex align-items-start">
-                    <div className="position-relative flex-shrink-0"><img className="rounded-circle" src="img/avatars/37.png" width="100" alt="Annette Black"/>
-                        <button className="btn btn-icon btn-light btn-xs rounded-circle shadow-sm position-absolute end-0 bottom-0" type="button" data-bs-toggle="tooltip" title="Change image"><i className="fi-pencil fs-xs"></i></button>
-                    </div>
                     <div className="ps-3 ps-sm-4">
-                        <h3 className="h5">Annette Black</h3>
+                        <h3 className="h5">{user?.name}</h3>
                         <ul className="list-unstyled fs-sm mb-0">
-                            <li className="d-flex text-nav text-break"><i className="fi-mail opacity-60 mt-1 me-2"></i><span>annette_black@email.com</span></li>
-                            <li className="d-flex text-nav text-break"><i className="fi-phone opacity-60 mt-1 me-2"></i><span>(302) 555-0107</span></li>
+                            <li className="d-flex text-nav text-break"><i className="fi-mail opacity-60 mt-1 me-2"></i><span>{user?.email}</span></li>
+                            {user?.phone ?
+                                <li className="d-flex text-nav text-break"><i className="fi-phone opacity-60 mt-1 me-2"></i><span>{user.phone}</span></li> :
+                                null
+                            }
                         </ul>
                     </div>
                 </div><a className="nav-link p-0 d-none d-md-block" href="signin-light.html"><i className="fi-logout mt-n1 me-2"></i>Sign out</a>

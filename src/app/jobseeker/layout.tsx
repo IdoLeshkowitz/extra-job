@@ -18,7 +18,6 @@ export default function JobSeekerLayout({children}: { children: React.ReactNode 
                 </Breadcrumb>
 
                 <div className="bg-light shadow-sm rounded-3 p-4 p-md-5 mb-2">
-                    <HeaderMenu /> 
                     {children}
                 </div>
             </Container>
