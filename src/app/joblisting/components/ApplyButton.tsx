@@ -70,7 +70,6 @@ const ApplyButton: FC<ApplyButtonProps> = (props) => {
     useEffect(() => {
         setState(getState(props))
     }, [props])
-
     async function onClick(state: State) {
         if (state === State.NOT_LOGGED_IN) {
             try {
@@ -82,8 +81,7 @@ const ApplyButton: FC<ApplyButtonProps> = (props) => {
             }
         }
         if (state === State.MISSING_CV) {
-            router.push('/uploadcv')
-            router.refresh()
+            await router.push('/uploadcv')
         }
         if (state === State.NOT_APPLIED) {
             try {

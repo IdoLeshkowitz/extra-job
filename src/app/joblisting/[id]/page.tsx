@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import JobListingCard from "@/app/joblisting/components/JobListingCard";
 import {notFound} from "next/navigation";
+import ApplyButton from "@/app/joblisting/components/ApplyButton";
 
 
 export default async function JobListingPage({params: {id}}: { params: { id: string } }) {

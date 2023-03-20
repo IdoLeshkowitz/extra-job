@@ -1,5 +1,5 @@
 import ImageLoader from '@/components/Image/ImageLoader'
-import UploadCvButton from "@/components/uploadCvButton/uploadCvButton";
+import UploadCvButton from "@/app/uploadcv/components/uploadCvButton";
 import RouteBackButton from "@/components/buttons/routeBackButton";
 
 const UploadCvPage = () => {

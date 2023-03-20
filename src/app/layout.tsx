@@ -6,17 +6,17 @@ import Footer from "@/components/footer/Footer";
 import {ReactNode} from 'react';
 import {SSRProvider} from "react-bootstrap";
 
-
+//"linear-gradient(#e66465, #9198e5)"
 function RootLayout({children}: { children: ReactNode }) {
     return (
             <html>
-                <body className="bg-dark">
+                <body >
                     <AuthProvider>
-                        <main className="page-wrapper">
+                        <main className="page-wrapper" style={{background:"linear-gradient(#e66465, #9198e5)"}}>
                             <MainLayoutNavBar/>
                             {children}
                         </main>
-                        <Footer/>
+                        {/*<Footer/>*/}
                     </AuthProvider>
                 </body>
             </html>

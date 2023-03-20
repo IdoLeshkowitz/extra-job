@@ -10,7 +10,6 @@ import FormSelect from 'react-bootstrap/FormSelect'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import {useSession} from 'next-auth/react';
-import UploadCvButton from "@/components/uploadCvButton/uploadCvButton";
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 
@@ -164,7 +163,7 @@ const UserProfileInfo = () => {
                                     }
                                     {
                                         session?.user?.cv  &&
-                                        
+
                                         <i className='fi-check' style={{color: "green"}}></i>
                                     }
                                     </div>
@@ -174,7 +173,7 @@ const UserProfileInfo = () => {
                                         <div className="border-bottom pb-3 mb-3"></div>
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <div className='pe-2'>
-                                            <Link href="uploadcv" className='form-label fw-bold'><Button>Download CV</Button></Link> 
+                                            <Link href="uploadcv" className='form-label fw-bold'><Button>Download CV</Button></Link>
                                             </div>
                                             <Link href="uploadcv" className='form-label fw-bold'><Button>Reupload CV</Button></Link>
                                         </div>

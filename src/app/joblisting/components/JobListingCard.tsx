@@ -23,7 +23,7 @@ export default async function JobListingCard({jobListing, className, children}: 
     //todo add like button
     return (
         <div className={className}>
-            <div className="card card-light card-hover">
+            <div className="card card-light card-hover h-100">
                 {/*IMAGE CARD*/}
                 <div
                     className="card-img-top card-img-hover justify-content-between d-flex gap-4 flex-column align-items-center">

@@ -14,7 +14,7 @@ import {Session} from "next-auth";
 import Avatar from "@/components/avatar/Avatar";
 import {SSRProvider} from "react-bootstrap";
 import {Shalimar} from "@next/font/google";
-import UploadCvButton from "@/components/uploadCvButton/uploadCvButton";
+import UploadCvButton from "@/app/uploadcv/components/uploadCvButton";
 
 const SIGNIN_URL = '/api/auth/signin'
 const SIGNOUT_URL = '/api/auth/signout'
@@ -29,7 +29,8 @@ export default function MainLayoutNavBar() {
         <SSRProvider>
             <Navbar as={StickyNavbar}
                     expand='lg'
-                    className='fixed-top navbar-dark bg-dark'
+                    className='fixed-top navbar-expand-lg navbar-stuck p-0'
+                    style={{background: "none"}}
             >
                 <Container>
                     {/*HOME BUTTON*/}
