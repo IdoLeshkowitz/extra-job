@@ -7,7 +7,6 @@ interface DropDownButtonsProps {
     light: boolean,
     children: ReactNode
 }
-
 const DropDownButtons: FC<DropDownButtonsProps> = ({light, children}) => {
     return (
         <SSRProvider>
@@ -23,5 +22,4 @@ const DropDownButtons: FC<DropDownButtonsProps> = ({light, children}) => {
         </SSRProvider>
     )
 }
-
 export default DropDownButtons

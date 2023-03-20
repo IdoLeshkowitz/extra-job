@@ -73,12 +73,11 @@ export default function JobListingSearchBar() {
 
     return (
         <SSRProvider>
-            <div className='d-block rounded-md-pill form-group-light'>
+            <div className='d-block rounded-md-pill form-group shadow-lg'>
                 <Row className='py-2'>
                     <Col sm={10} md={3} className='d-sm-flex align-items-center justify-content-between'>
                         {/*AREA SELECT*/}
                         <DropdownSelect
-                            darkMenu={true}
                             instructions='בחר אזור'
                             icon='fi-geo'
                             chosenIdRef={areaIdRef}

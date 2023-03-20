@@ -58,8 +58,6 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
     const {user} = await getServerSession(authOptions) ?? {}
     const [skip, take]: string[] = [searchParams.skip ?? '0', searchParams.take ?? '10'].map((param) => param)
     const [jobListings, count, jobApplications] = await Promise.all([getJobListings({...searchParams, skip, take}), countJobListings({...searchParams, skip, take}), getUserJobApplications(user)])
-    // console.log(user)
-    console.log('running')
     return (
         <>
             <div className="row justify-content-center pb-3">
@@ -70,7 +68,7 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
                     <JobListingSearchBar/>
                 </div>
             </div>
-            <div className="row align-items-stretch">
+            <div className="row align-items-stretch" >
                 {jobListings.map((jobListing, index) => {
                         const applied = !!jobApplications.find((jobApplication) => jobApplication.jobListingId === jobListing.id)
                         return (

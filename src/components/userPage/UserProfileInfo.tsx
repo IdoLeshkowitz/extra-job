@@ -11,14 +11,12 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import {useSession} from 'next-auth/react';
 import Link from 'next/link';
-import { Button } from 'react-bootstrap';
+import {Button, SSRProvider} from 'react-bootstrap';
 
 
 const UserProfileInfo = () => {
-
     // Get session
     const {data: session, status} = useSession()
-
     // Custom accordion toggle
     const CustomToggle = ({eventKey}: { eventKey: string }) => {
         const handleClick = useAccordionButton(eventKey, (e) => e.preventDefault())
@@ -74,7 +72,7 @@ const UserProfileInfo = () => {
 
     return (
 
-        <>
+        <SSRProvider>
             {/* Personal details */}
             <Row className='pt-4 mt-3'>
                 <Col xs={12} lg={3}>
@@ -153,37 +151,40 @@ const UserProfileInfo = () => {
                     <Accordion>
                         <div className='border rounded-3 p-3'>
                             {/* CV */}
-                                <div className='d-flex align-items-center justify-content-between'>
-                                    <div className='pe-2'>
-                                        <h2 className='form-label fw-bold'>{session?.user?.cv ? 'CV uploaded successfully' : 'No matching CV'}</h2>
-                                    </div>
-                                    {
-                                        !session?.user?.cv  &&
-                                        <Link href="uploadcv" className='form-label fw-bold'><Button>Upload CV</Button></Link>
-                                    }
-                                    {
-                                        session?.user?.cv  &&
-
-                                        <i className='fi-check' style={{color: "green"}}></i>
-                                    }
-                                    </div>
-                                    {
-                                        session?.user?.cv  &&
-                                        <>
-                                        <div className="border-bottom pb-3 mb-3"></div>
-                                        <div className='d-flex align-items-center justify-content-between'>
-                                            <div className='pe-2'>
-                                            <Link href="uploadcv" className='form-label fw-bold'><Button>Download CV</Button></Link>
-                                            </div>
-                                            <Link href="uploadcv" className='form-label fw-bold'><Button>Reupload CV</Button></Link>
-                                        </div>
-                                        </>
-                                    }
+                            <div className='d-flex align-items-center justify-content-between'>
+                                <div className='pe-2'>
+                                    <h2 className='form-label fw-bold'>{session?.user?.cv ? 'CV uploaded successfully' : 'No matching CV'}</h2>
                                 </div>
-                        </Accordion>
+                                {
+                                    !session?.user?.cv &&
+                                    <Link href="uploadcv" className='form-label fw-bold'><Button>Upload
+                                        CV</Button></Link>
+                                }
+                                {
+                                    session?.user?.cv &&
+
+                                    <i className='fi-check' style={{color: "green"}}></i>
+                                }
+                            </div>
+                            {
+                                session?.user?.cv &&
+                                <>
+                                    <div className="border-bottom pb-3 mb-3"></div>
+                                    <div className='d-flex align-items-center justify-content-between'>
+                                        <div className='pe-2'>
+                                            <Link href="uploadcv" className='form-label fw-bold'><Button>Download
+                                                CV</Button></Link>
+                                        </div>
+                                        <Link href="uploadcv" className='form-label fw-bold'><Button>Reupload
+                                            CV</Button></Link>
+                                    </div>
+                                </>
+                            }
+                        </div>
+                    </Accordion>
                 </Col>
             </Row>
-        </>
+        </SSRProvider>
     )
 }
 
