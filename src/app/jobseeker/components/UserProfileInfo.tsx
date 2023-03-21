@@ -138,11 +138,11 @@ const UserProfileInfo = () => {
                             {/* CV */}
                                 <div className='d-flex align-items-center justify-content-between'>
                                     <div className='pe-2'>
-                                        <h2 className='form-label fw-bold'>{session?.user?.cv ? 'קורות חיים הועלו בהצלחה' : 'לא קיים קו"ח במערכת'}</h2>
+                                        <h2 className='form-label fw-bold'>{session?.user?.cv ? 'קורות חיים הועלו בהצלחה' : `לא קיים קו"ח במערכת`}</h2>
                                     </div>
                                     {
                                         !session?.user?.cv  &&
-                                        <Link href="uploadcv" className='form-label fw-bold'><Button>העלה קו"ח</Button></Link>
+                                        <Link href="uploadcv" className='form-label fw-bold'><Button>העלה קוח</Button></Link>
                                     }
                                     {
                                         session?.user?.cv  &&
@@ -156,7 +156,7 @@ const UserProfileInfo = () => {
                                         <div className="border-bottom pb-3 mb-3"></div>
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <div className='pe-2'>
-                                            <Link href="api/cv" className='form-label fw-bold'><Button>הורד קו"ח</Button></Link>
+                                            <Link href="api/cv" className='form-label fw-bold'><Button>הורד קוח</Button></Link>
                                             </div>
                                             <div className='pe-2'>
                                             <Link href="uploadcv" className='form-label fw-bold'><Button>העלה מחדש</Button></Link>
