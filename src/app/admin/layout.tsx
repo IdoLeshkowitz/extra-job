@@ -5,10 +5,10 @@ import {Role} from "@prisma/client";
 import {redirect} from "next/navigation";
 
 export default async function AdminLayout({children}: { children: React.ReactNode }) {
-    const {user} = await getServerSession(authOptions) ?? {}
-    if (!user || user.role !== Role.ADMIN) {
-        return redirect('api/auth/signin')
-    }
+    // const {user} = await getServerSession(authOptions) ?? {}
+    // if (!user || user.role !== Role.ADMIN) {
+    //     return redirect('api/auth/signin')
+    // }
     return (
         <div className='container pt-5 pb-lg-4 mt-5 mb-sm-2'>
             <div className="row justify-content-sm-center">
