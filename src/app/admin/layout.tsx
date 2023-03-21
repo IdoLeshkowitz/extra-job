@@ -1,8 +1,4 @@
 import AdminPageSideBar from "@/app/admin/components/AdminPageSideBar";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {Role} from "@prisma/client";
-import {redirect} from "next/navigation";
 
 export default async function AdminLayout({children}: { children: React.ReactNode }) {
     // const {user} = await getServerSession(authOptions) ?? {}

@@ -48,3 +48,5 @@ const AreaRow: FC<AreaRowProps> = ({name, id}) => {
     )
 }
 
+export const revalidate = 0;
+
