@@ -13,25 +13,25 @@ const DeactivatePositionScope: FC<DeactivatePositionScope> = ({id}) => {
     const router = useRouter()
     const onDeactivate: MouseEventHandler<HTMLButtonElement> = async (e) => {
         e.preventDefault()
-        const positionScopeUpdateInput :Prisma.PositionScopeUpdateInput = {active: false}
+        const positionScopeUpdateInput: Prisma.PositionScopeUpdateInput = {active: false}
 
         /* send the request */
         const {data: {area}} = await fetcher(
             {
-                url: `/api/positionscope/${id}`,
-                method : "PUT",
-                body : {...positionScopeUpdateInput},
-                json: true,
-            })as {data :{area:Area}}
+                url   : `/api/positionscope/${id}`,
+                method: "PUT",
+                body  : {...positionScopeUpdateInput},
+                json  : true,
+            }) as { data: { area: Area } }
         router.refresh()
     }
 
     return (
         <PillButton
             onClick={onDeactivate}
-            icon ='fi-trash'
+            icon='fi-trash'
             text="מחק"
-                />
+        />
     )
 }
 export default DeactivatePositionScope

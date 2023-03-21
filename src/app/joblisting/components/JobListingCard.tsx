@@ -1,6 +1,6 @@
 import Image from "next/image";
-import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
-import ApplyButton from "@/app/joblisting/components/ApplyButton";
+import {getJobListingById} from "@/services/jobListingService";
+import {notFound} from "next/navigation";
 
 function getDateString(date: Date) {
     const d = new Date(date)
@@ -11,19 +11,21 @@ function getDateString(date: Date) {
 }
 
 interface JobListingCardProps {
-    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
+    jobListingId: string
     className?: string
     children?: React.ReactNode
 }
 
-export default async function JobListingCard({jobListing, className, children}: JobListingCardProps) {
-    const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
+export default async function JobListingCard({jobListingId, className, children}: JobListingCardProps) {
+    const {data: {jobListing}} = await getJobListingById(jobListingId)
+    if (!jobListing) return notFound()
+    const {id, name, createdAt, area, profession, positionScope, serialNumber} = jobListing
     const dateString = getDateString(createdAt)
     const jobListingLink = `/joblisting/${id}`
     //todo add like button
     return (
         <div className={className}>
-            <div className="card bg-faded-dark card h-100" >
+            <div className="card bg-faded-dark card h-100">
                 {/*IMAGE CARD*/}
                 <div
                     className="card-img-top card-img-hover justify-content-between d-flex gap-4 flex-column align-items-center">

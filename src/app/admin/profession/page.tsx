@@ -18,19 +18,17 @@ export default async function ProfessionPage({searchParams}: { searchParams: any
     return (
         <>
             <h1 className='h2 text-light'>מקצועות</h1>
-            <div className="row pt-2 bg-dark">
-                <div className="col-sm-12 col-md-12 col-lg-11 bg-dark">
-                    <div className="card bg-dark">
-                        <ul className="list-group list-group-flush">
-                            <CreateProfession/>
-                            {professions.map((profession) => (
-                                <ProfessionRow key={profession.id} name={profession.name} id={profession.id}/>
-                            ))}
-                        </ul>
-                    </div>
+            <div className="row pt-2">
+                <div className="col-sm-12 col-md-12 col-lg-11">
+                    <ul className="list-group">
+                        <CreateProfession/>
+                        {professions.map((profession) => (
+                            <ProfessionRow key={profession.id} name={profession.name} id={profession.id}/>
+                        ))}
+                    </ul>
                 </div>
             </div>
-            <div className="row pt-2 bg-dark"><CustomPagination count={count} skip={skip} take={take}/></div>
+            <div className="row pt-2"><CustomPagination count={count} skip={skip} take={take}/></div>
         </>
     )
 }
@@ -44,7 +42,7 @@ interface ProfessionRowProps {
 
 const ProfessionRow: FC<ProfessionRowProps> = ({name, id}) => {
     return (
-        <li className="list-group-item bg-dark border-bottom border-light text-white d-flex flex-row-reverse justify-content-between h-25 align-items-center">
+        <li className="list-group-item-text border-light bg-faded-light d-flex flex-row-reverse justify-content-between h-25 align-items-center p-2">
             {name}
             <DeactivateProfession id={id}/>
         </li>

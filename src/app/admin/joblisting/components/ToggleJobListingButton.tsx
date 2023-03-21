@@ -1,10 +1,10 @@
 'use client'
 import Dropdown from "react-bootstrap/Dropdown";
-import {Area, Prisma} from "@prisma/client";
 import {fetcher} from "@/lib/api/fetcher";
-import {mockProviders} from "next-auth/client/__tests__/helpers/mocks";
 import {FC} from "react";
-import {useRouter} from "next/navigation";
+import {notFound, useRouter} from "next/navigation";
+import {Prisma} from ".prisma/client";
+import JobListingUpdateInput = Prisma.JobListingUpdateInput;
 
 interface DeactivateJobListingButtonProps {
     isActive: boolean
@@ -15,16 +15,22 @@ const ToggleJobListingButton: FC<DeactivateJobListingButtonProps> = ({isActive, 
     const router = useRouter()
 
     async function onToggle() {
-        const positionScopeUpdateInput: Prisma.PositionScopeUpdateInput = {active: !isActive}
-        /* send the request */
-        const {data: {area}} = await fetcher(
-            {
-                url   : `/api/joblisting/${id}`,
-                method: "PUT",
-                body  : {...positionScopeUpdateInput},
-                json  : true,
-            }) as { data: { area: Area } }
-        router.refresh()
+        try {
+            const jobListingUpdateInput: JobListingUpdateInput = {
+                active: !isActive
+            }
+            const res = await fetcher(
+                {
+                    method: 'PUT',
+                    url   : `/api/joblisting/${id}`,
+                    body  : jobListingUpdateInput,
+                    json  : true
+                })
+            router.refresh()
+        } catch (e) {
+            console.error(e)
+            notFound()
+        }
     }
 
     return (

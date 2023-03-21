@@ -1,18 +1,19 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Prisma} from ".prisma/client";
-import {updateArea} from "../../../../../lib/services/areaService";
-import AreaUpdateInput = Prisma.AreaUpdateInput;
+import {updateArea} from "@/services/areaService";
 
-export default async function index(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "PUT") {
-        const id = req.query.id as unknown as string
-        const areaUpdateInput: AreaUpdateInput = req.body
+        const {id} = req.query as unknown as { id: string };
+        const {name, active} = req.body;
+        if (!id) {
+            return res.status(400).json({error: {message: "id is required"}})
+        }
         try {
-            const updatedArea = await updateArea(id, areaUpdateInput)
-            res.json({data : updatedArea})
-        }catch (e){
+            const area = await updateArea(id, {name, active})
+            res.json(area)
+        } catch (e) {
             console.error(e)
-            res.status(400).json({error:{message : 'unable to update area'}})
+            res.status(500).json({error: {message: "unable to update area"}})
         }
     }
 }

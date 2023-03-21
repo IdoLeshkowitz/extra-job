@@ -6,14 +6,17 @@
     "dev": "next dev",
     "build": "prisma generate && prisma db push && next build ",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.5",
     "@next/font": "13.1.6",
     "@prisma/client": "^4.11.0",
     "@types/formidable": "^2.0.5",
-    "@types/node": "18.14.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
     "bootstrap": "^5.2.3",
@@ -52,15 +55,16 @@
     "rellax": "^1.12.1",
     "simplebar-react": "^2.4.3",
     "swiper": "^8.4.5",
-    "typescript": "4.9.5",
     "yup": "^1.0.2"
   },
   "devDependencies": {
+    "@types/node": "^18.15.3",
     "@types/parallax-js": "^3.1.0",
     "@types/react-bootstrap": "^0.32.32",
     "prisma": "^4.11.0",
     "sass": "^1.58.3",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "4.1.1"
+    "tsconfig-paths": "4.1.1",
+    "typescript": "^5.0.2"
   }
 }

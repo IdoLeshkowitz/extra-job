@@ -1,57 +1,46 @@
-import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
-import prisma from "@/lib/prisma";
-import JobListingCardAdmin from "@/app/admin/joblisting/components/JobListingCardAdmin";
 import PillLink from "@/components/links/pillLinks";
 import CustomPagination from "@/components/pagination/customPagination";
 import JobListingSearchBarAdmin from "./components/JobListingSearchBarAdmin";
+import {countJobListings, getJobListingIds} from "@/services/jobListingService";
+import JobListingCardAdmin from "./components/JobListingCardAdmin";
+import {Fragment} from "react";
 
-
-const countAllJobListings = async (searchParams: SearchParams): Promise<{ data: { count: number } }> => {
-    const {skip, take, professionId, areaId, positionScopeId, status, serialNumber} = searchParams
-    const count = await prisma.jobListing.count({
-        where: {
-            active: status ? status === 'true' : undefined,
-            serialNumber,
-            areaId,
-            positionScopeId,
-            professionId
-        },
+const countJobListingsByOptions = async (searchParams: Options): Promise<{ data: { count: number } }> => {
+    const {professionId, areaId, positionScopeId, active, serialNumber} = searchParams
+    return await countJobListings({
+        active: active ? active === 'true' : undefined,
+        serialNumber,
+        areaId,
+        positionScopeId,
+        professionId
     })
-    return {data: {count}}
-}
-const getJobListings = async (searchParams: SearchParams): Promise<{ data: { jobListings: (JobListing & { area: Area, profession: Profession, positionScope: PositionScope })[] } }> => {
-    let {skip, take, professionId, areaId, positionScopeId, status, serialNumber} = searchParams
-    const jobListings = await prisma.jobListing.findMany({
-        skip   : parseInt(skip ?? '0'),
-        take   : parseInt(take ?? '10'),
-        include: {
-            area         : true,
-            profession   : true,
-            positionScope: true,
-        },
-        where  : {
-            serialNumber,
-            active: status ? status === 'true' : undefined,
-            areaId,
-            positionScopeId,
-            professionId
-        }
-    })
-    return {data: {jobListings}}
 }
 
-interface SearchParams {
+const getJobListingIdsByOptions = async (searchParams: Options): Promise<{ data: { jobListingIds: string[] } }> => {
+    const {professionId, areaId, positionScopeId, active, serialNumber, skip, take} = searchParams
+    return await getJobListingIds({
+        active: active ? active === 'true' : undefined,
+        serialNumber,
+        areaId,
+        positionScopeId,
+        professionId,
+        skip,
+        take,
+    })
+}
+
+interface Options {
     serialNumber?: string,
     positionScopeId?: string,
     professionId?: string,
     areaId?: string,
     skip?: string,
     take?: string
-    status?: string | boolean
+    active?: string | boolean
 }
 
-export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
-    const [{data: {jobListings}}, {data: {count}}] = await Promise.all([getJobListings(searchParams), countAllJobListings(searchParams)])
+export default async function JobListingPage({searchParams}: { searchParams: Options }) {
+    const [{data: {jobListingIds}}, {data: {count}}] = await Promise.all([getJobListingIdsByOptions(searchParams), countJobListingsByOptions(searchParams)])
     return (
         <>
             <div className="row">
@@ -67,12 +56,17 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
                 <JobListingSearchBarAdmin/>
             </div>
             {/*CARDS*/}
-            <div className="row pt-2 bg-dark">
-                {jobListings.map((jobListing, index) => (
-                    <JobListingCardAdmin key={index} jobListing={jobListing}/>
-                ))}
+            <div className="row pt-2">
+                {
+                    jobListingIds.map((jobListingId, index) => (
+                        <Fragment key={index}>
+                            {/* @ts-expect-error Async Server Component */}
+                            <JobListingCardAdmin key={jobListingId} jobListingId={jobListingId}/>
+                        </Fragment>
+                    ))
+                }
             </div>
-            <div className="row pt-2 bg-dark">
+            <div className="row pt-2">
                 {/*Pagination*/}
                 <CustomPagination
                     count={count}
@@ -83,4 +77,6 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
         </>
     )
 }
+
+export const dynamic = true
 

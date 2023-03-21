@@ -92,6 +92,7 @@ model JobListing {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   description     String
+  jobRequirements String[] @default([])
   serialNumber    String   @unique
   professionId    String   @db.ObjectId
   areaId          String   @db.ObjectId

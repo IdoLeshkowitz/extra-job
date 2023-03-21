@@ -1,29 +1,10 @@
 import prisma from "@/lib/prisma";
 import JobListingSearchBar from "@/app/components/JobListingSearchBar";
+import {User} from "next-auth";
+import {getJobListingIds} from "@/services/jobListingService";
 import JobListingCard from "@/app/joblisting/components/JobListingCard";
 import CustomPagination from "@/components/pagination/customPagination";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {getServerSession, User} from "next-auth";
-import ApplyButton from "@/app/joblisting/components/ApplyButton";
 import {Fragment} from "react";
-
-function getJobListings({positionScopeId, areaId, professionId, skip, take}: SearchParams) {
-    return prisma.jobListing.findMany({
-        where  : {
-            active         : true,
-            areaId         : areaId,
-            positionScopeId: positionScopeId,
-            professionId   : professionId
-        },
-        skip   : skip ? parseInt(skip) : undefined,
-        take   : take ? parseInt(take) : undefined,
-        include: {
-            area         : true,
-            profession   : true,
-            positionScope: true,
-        }
-    });
-}
 
 async function getUserJobApplications(user: User | undefined) {
     if (!user) return []
@@ -55,9 +36,11 @@ interface SearchParams {
 }
 
 export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
-    const {user} = await getServerSession(authOptions) ?? {}
-    const [skip, take]: string[] = [searchParams.skip ?? '0', searchParams.take ?? '10'].map((param) => param)
-    const [jobListings, count, jobApplications] = await Promise.all([getJobListings({...searchParams, skip, take}), countJobListings({...searchParams, skip, take}), getUserJobApplications(user)])
+    const [skip, take] = [searchParams.skip ?? '0', searchParams.take ?? '10']
+    const [{data: {jobListingIds}}, count] = await Promise.all([
+        getJobListingIds({...searchParams, active: true, skip, take}),
+        countJobListings(searchParams)
+    ])
     return (
         <>
             <div className="row justify-content-center pb-3">
@@ -68,24 +51,24 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
                     <JobListingSearchBar/>
                 </div>
             </div>
-            <div className="row align-items-stretch" >
-                {jobListings.map((jobListing, index) => {
-                        const applied = !!jobApplications.find((jobApplication) => jobApplication.jobListingId === jobListing.id)
+            <div className="row align-items-stretch">
+                {jobListingIds.map((jobListingId, index) => {
+                        // const applied = !!jobApplications.find((jobApplication) => jobApplication.jobListingId === jobListing.id)
                         return (
                             <Fragment key={index}>
                                 {/* @ts-expect-error Async Server Component */}
                                 <JobListingCard
                                     key={index}
-                                    jobListing={{...jobListing}}
+                                    jobListingId={jobListingId}
                                     className="col-md-4"
                                 >
-                                    <ApplyButton
-                                        key={`${index}_apply_button`}
-                                        jobListingId={jobListing.id}
-                                        applied={applied}
-                                        LoggedIn={!!user}
-                                        MissingCV={!user?.cv}
-                                    />
+                                    {/*<ApplyButton*/}
+                                    {/*    key={`${index}_apply_button`}*/}
+                                    {/*    jobListingId={jobListing.id}*/}
+                                    {/*    applied={applied}*/}
+                                    {/*    LoggedIn={!!user}*/}
+                                    {/*    MissingCV={!user?.cv}*/}
+                                    {/*/>*/}
                                 </JobListingCard>
                             </Fragment>
                         )

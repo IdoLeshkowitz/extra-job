@@ -36,6 +36,10 @@ const DropdownSelect: FC<DropdownSelectProps> = ({instructions, options, icon, v
                 {selected ? selected.text : instructions}
             </Dropdown.Toggle>
             <Dropdown.Menu variant={darkMenu ? 'dark' : ''}>
+                <Dropdown.Item key={-1} eventKey={undefined}>
+                    {iconEl}
+                    {instructions}
+                </Dropdown.Item>
                 {options ? options.map((option, indx) =>
                     <Dropdown.Item key={indx} eventKey={option.id}>
                         {option.icon && <i className={`${option.icon} fs-lg opacity-60 me-2`}></i>}

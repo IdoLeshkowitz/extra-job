@@ -18,20 +18,18 @@ export default async function AreaPage({searchParams}: { searchParams: { skip?: 
     const [{data: {areas}}, {data: {count}}] = await Promise.all([getActiveAreasByRange({skip, take}), countAllActiveAreas()])
     return (
         <>
-            <h1 className='h2 text-light'>איזורים</h1>
-            <div className="row pt-2 bg-dark">
-                <div className="col-sm-12 col-md-12 col-lg-11 bg-dark">
-                    <div className="card bg-dark">
-                        <ul className="list-group list-group-flush">
+            <h1 className='h2'>איזורים</h1>
+            <div className="row pt-2">
+                <div className="col-sm-12 col-md-12 col-lg-11">
+                        <ul className="list-group">
                             <CreateArea/>
                             {areas.map((area) => (
                                 <AreaRow key={area.id} name={area.name} id={area.id}/>
                             ))}
                         </ul>
-                    </div>
                 </div>
             </div>
-            <div className="row pt-2 bg-dark"><CustomPagination count={count} skip={skip} take={take}/></div>
+            <div className="row pt-2"><CustomPagination count={count} skip={skip} take={take}/></div>
         </>
     )
 }
@@ -43,7 +41,7 @@ interface AreaRowProps {
 
 const AreaRow: FC<AreaRowProps> = ({name, id}) => {
     return (
-        <li className="list-group-item bg-dark border-bottom border-light text-white d-flex flex-row-reverse justify-content-between h-25 align-items-center">
+        <li className="list-group-item-text bg-faded-light rounded border-light d-flex flex-row-reverse justify-content-between h-25 align-items-center p-2">
             {name}
             <DeactivateArea id={id}/>
         </li>

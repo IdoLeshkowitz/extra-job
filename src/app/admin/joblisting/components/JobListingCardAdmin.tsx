@@ -1,19 +1,21 @@
 import Link from 'next/link'
 import ImageLoader from '@/components/Image/ImageLoader'
-import {FC} from "react";
-import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
 import ToggleJobListingActive from "@/app/admin/joblisting/components/ToggleJobListingButton";
 import DropDownButtons from "@/components/dropdown/dropdownButtons";
+import {getJobListingById} from "@/services/jobListingService";
 
 interface JobListingCardProps extends React.HTMLAttributes<HTMLDivElement> {
-    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
+    jobListingId: string
     light?: boolean
     key?: number
 }
 
-const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
+
+export default async function JobListingCardAdmin({jobListingId}: JobListingCardProps) {
     const light = true;
-    const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
+    const {data: {jobListing}} = await getJobListingById(jobListingId) ?? {}
+    if (!jobListing) return null
+    const {positionScope, profession, area, name, serialNumber, active, id} = jobListing
     const img = {
         src: '/images/car-finder/icons/buyers.svg',
         alt: name
@@ -21,7 +23,7 @@ const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
 
     return (
         <div
-            className="card card-light card-hover col-md-12 col-sm-12"
+            className="card card-light card-hover col-md-12 col-sm-12 mb-2"
         >
             <div className='card-body'>
                 <div className='d-flex justify-content-between'>
@@ -89,4 +91,3 @@ const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
     )
 }
 
-export default JobListingCardAdmin

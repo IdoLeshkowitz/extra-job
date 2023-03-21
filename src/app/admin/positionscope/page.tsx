@@ -17,17 +17,15 @@ export default async function PositionScopePage({searchParams}: { searchParams: 
     return (
         <>
             <h1 className='h2 text-light'>היקף משרות</h1>
-            <div className="row pt-2 bg-dark">
-                <div className="col-sm-12 col-md-12 col-lg-11 bg-dark">
-                    <div className="card bg-dark">
-                        <ul className="list-group list-group-flush">
-                            <CreatePositionScope/>
-                            {positionScopes.map((positionScope) => (
-                                <PositionScopeRow key={positionScope.id} name={positionScope.name}
-                                                  id={positionScope.id}/>
-                            ))}
-                        </ul>
-                    </div>
+            <div className="row pt-2">
+                <div className="col-sm-12 col-md-12 col-lg-11">
+                    <ul className="list-group">
+                        <CreatePositionScope/>
+                        {positionScopes.map((positionScope) => (
+                            <PositionScopeRow key={positionScope.id} name={positionScope.name}
+                                              id={positionScope.id}/>
+                        ))}
+                    </ul>
                 </div>
             </div>
         </>
@@ -43,7 +41,7 @@ interface PositionScopeRowProps {
 
 const PositionScopeRow: FC<PositionScopeRowProps> = ({name, id}) => {
     return (
-        <li className="list-group-item bg-dark border-bottom border-light text-white d-flex flex-row-reverse justify-content-between h-25 align-items-center">
+        <li className="list-group-item-text bg-faded-light rounded border-light d-flex flex-row-reverse justify-content-between h-25 align-items-center p-2">
             {name}
             <DeactivatePositionScope id={id}/>
         </li>

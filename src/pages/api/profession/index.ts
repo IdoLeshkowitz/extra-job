@@ -1,15 +1,9 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Role} from "@prisma/client";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {createProfession, getProfessionByName, getProfessions, updateProfession} from "@/services/professionService";
+import {createProfession, getProfessions} from "@/services/professionService";
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
-        const session = await getServerSession(req, res, authOptions)
-        if (!session || session.user.role !== Role.ADMIN) {
-            return res.status(403).json({error: {message: "unauthorized"}})
-        }
+        //todo : add admin check
         /*
         Required body params:
         {name : string}
@@ -17,31 +11,16 @@ export default async function index(req: NextApiRequest, res: NextApiResponse) {
         else a new area is created and returned
         */
         const {name} = req.body;
+        if (!name) {
+            return res.status(400).json({error: {message: "name is required"}})
+        }
         try {
-            const professionWithSameName = await getProfessionByName(name);
-            if (professionWithSameName.data.profession) {
-                /*
-                case profession with the same name exists:
-                    if inactive -> reactivate it
-                    if active -> return it
-                */
-                if (!professionWithSameName.data.profession.active) {
-                    const updatedProfession = await updateProfession(professionWithSameName.data.profession.id, {active: true})
-                    return res.status(200).json(updatedProfession)
-                }
-                return res.status(200).json(professionWithSameName)
-            }
-            /*
-            case profession with the same name does not exist:
-                create a new profession and return it
-             */
-            const newProfession = await createProfession({name})
-            res.status(200).json(newProfession)
+            const profession = await createProfession({name})
+            res.json(profession)
         } catch (e) {
             console.error(e)
             res.status(500).json({error: {message: "unable to create profession"}})
         }
-
     }
     if (req.method === "GET") {
         /*

@@ -1,47 +1,20 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {getServerSession} from "next-auth";
-import {Role} from "@prisma/client";
-import {
-    createPositionScope,
-    getPositionScopeByName,
-    getPositionScopes,
-    updatePositionScope
-} from "@/services/positionScopeService";
+import {createPositionScope, getPositionScopes} from "@/services/positionScopeService";
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
-        const session = await getServerSession(req, res, authOptions)
-        if (!session || session.user.role !== Role.ADMIN) {
-            return res.status(403).json({error: {message: "unauthorized"}})
-        }
+        //todo : add admin check
         /*
         Required body params:
         {name : string}
-        if a position scope  with the same name already exists, it is reactivated and returned
-        else a new position scope is created and returned
-         */
+        */
         const {name} = req.body;
+        if (!name) {
+            return res.status(400).json({error: {message: "name is required"}})
+        }
         try {
-            const positionScopeWithSameName = await getPositionScopeByName(name);
-            if (positionScopeWithSameName.data.positionScope) {
-                /*
-                case position scope with the same name exists:
-                    if inactive -> reactivate it
-                    if active -> return it
-                 */
-                if (!positionScopeWithSameName.data.positionScope.active) {
-                    const updatedPositionScope = await updatePositionScope(positionScopeWithSameName.data.positionScope.id, {active: true})
-                    return res.status(200).json(updatedPositionScope)
-                }
-                return res.status(200).json(positionScopeWithSameName)
-            }
-            /*
-            case position scope with the same name does not exist:
-                create a new position scope and return it
-             */
-            const newPositionScope = await createPositionScope({name})
-            res.status(200).json(newPositionScope)
+            const positionScope = await createPositionScope({name})
+            res.json(positionScope)
         } catch (e) {
             console.error(e)
             res.status(500).json({error: {message: "unable to create position scope"}})

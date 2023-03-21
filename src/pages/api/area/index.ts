@@ -1,49 +1,20 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {createArea, getAreaByName, getAreas, updateArea} from "@/services/areaService";
-import {cookies} from "next/headers";
-import {session} from "next-auth/core/routes";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {Role} from "@prisma/client";
+import {createArea, getAreas} from "@/services/areaService";
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const session = await getServerSession(req, res, authOptions)
-        if (!session || session.user.role !== Role.ADMIN) {
-            return res.status(403).json({error: {message: "unauthorized"}})
-        }
-        /*
-        Required body params:
-        {name : string}
-        if an area with the same name already exists, it is reactivated and returned
-        else a new area is created and returned
-        */
+        //todo : add admin check
         const {name} = req.body;
+        if (!name) {
+            res.status(400).json({error: {message: "name is required"}})
+        }
         try {
-            const areaWithSameName = await getAreaByName(name);
-            if (areaWithSameName.data.area) {
-                /*
-                case area with the same name exists:
-                    if inactive -> reactivate it
-                    if active -> return it
-                */
-                if (!areaWithSameName.data.area.active) {
-                    const updatedArea = await updateArea(areaWithSameName.data.area.id, {active: true})
-                    return res.status(200).json(updatedArea)
-                }
-                return res.status(200).json(areaWithSameName)
-            }
-            /*
-            case area with the same name does not exist:
-                create a new area and return it
-             */
-            const newArea = await createArea({name})
-            res.status(200).json(newArea)
+            const area = await createArea({name})
+            res.json(area)
         } catch (e) {
             console.error(e)
             res.status(500).json({error: {message: "unable to create area"}})
         }
-
     }
     if (req.method === 'GET') {
         /*

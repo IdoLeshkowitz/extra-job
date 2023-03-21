@@ -1,41 +1,64 @@
 import prisma from "@/lib/prisma";
 import {Prisma} from ".prisma/client";
-import PositionScopeUpdateInput = Prisma.PositionScopeUpdateInput;
 import {PositionScope} from "@prisma/client";
+import {notFound} from "next/navigation";
+import {cache} from "react";
 
-
-export async function getPositionScopes({skip, take, active}: { skip: number | undefined, take: number | undefined, active: boolean | undefined }): Promise<{ data: { positionScopes: PositionScope[] } }> {
-    const positionScopes = await prisma.positionScope.findMany({
-        skip,
-        take,
-        where: {active: active ? active : undefined}
-    });
-    return {data: {positionScopes}}
+export const createPositionScope = async (positionScopeToCreate: Prisma.PositionScopeCreateInput): Promise<{ data: { positionScope: PositionScope } }> => {
+    try {
+        /*
+          if positionScope with the same name exists, updates its status to active
+             else creates a new positionScope
+         */
+        const positionScope = await prisma.positionScope.upsert({
+            where : {name: positionScopeToCreate.name},
+            update: {active: true},
+            create: positionScopeToCreate
+        });
+        return {
+            data: {positionScope}
+        }
+    } catch (e) {
+        console.error(e);
+        return notFound();
+    }
 }
 
-export async function countPositionScopes({active}: { active: boolean | undefined }): Promise<{ data: { count: number } }> {
-    const count = await prisma.positionScope.count({
-        where: {active: active ? active : undefined}
-    });
-    return {data: {count}}
-}
+export const countPositionScopes = cache(async ({active}: { active: boolean | undefined }): Promise<{ data: { count: number } }> => {
+    try {
+        const count = await prisma.positionScope.count({
+            where: {active: active ? active : undefined}
+        });
+        return {data: {count}}
+    } catch (e) {
+        console.error(e);
+        return notFound();
+    }
+})
 
-export async function createPositionScope(positionScopeToCreate: Prisma.PositionScopeCreateInput): Promise<{ data: { positionScope: PositionScope } }> {
-    const positionScope = await prisma.positionScope.create({
-        data: positionScopeToCreate,
-    });
-    return {data: {positionScope}};
-}
-export async function updatePositionScope(id: string, data: PositionScopeUpdateInput): Promise<{ data: { positionScopes: PositionScope } }> {
-    const updatedPositionScope = await prisma.positionScope.update({
-        where: {id},
-        data,
-    });
-    return {data: {positionScopes: updatedPositionScope}};
-}
-export async function getPositionScopeByName(name: string): Promise<{ data: { positionScope: PositionScope | null } }> {
-    const positionScope = await prisma.positionScope.findUnique({
-        where: {name}
-    });
-    return {data: {positionScope}}
+export const getPositionScopes = cache(async ({skip, take, active}: { skip: number | undefined, take: number | undefined, active: boolean | undefined }): Promise<{ data: { positionScopes: PositionScope[] } }> => {
+    try {
+        const positionScopes = await prisma.positionScope.findMany({
+            skip,
+            take,
+            where: {active: active ? active : undefined}
+        });
+        return {data: {positionScopes}}
+    } catch (e) {
+        console.error(e);
+        return notFound();
+    }
+})
+
+export const updatePositionScope = async (id: string, positionScopeToUpdate: Prisma.PositionScopeUpdateInput): Promise<{ data: { positionScope: PositionScope } }> => {
+    try {
+        const positionScope = await prisma.positionScope.update({
+            where: {id},
+            data : positionScopeToUpdate
+        })
+        return {data: {positionScope}}
+    } catch (e) {
+        console.error(e);
+        return notFound();
+    }
 }
