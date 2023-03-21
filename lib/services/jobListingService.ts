@@ -61,7 +61,7 @@ export const updateJobListing = async (id: string, jobListingUpdateInput: JobLis
             where: {id},
             data : jobListingUpdateInput
         })
-        return jobListing
+        return {data: {jobListing}}
     } catch (e) {
         console.error(e)
         return notFound()
@@ -73,7 +73,7 @@ export const createJobListing = async (jobListingToCreate: Prisma.JobListingCrea
         const jobListing = await prisma.jobListing.create({
             data: jobListingToCreate
         })
-        return jobListing
+        return {data: {jobListing}}
     } catch (e) {
         console.error(e)
         return notFound()
@@ -99,7 +99,7 @@ export const countJobListings = cache(async (options: GetJobListingIdsOptions): 
     }
 })
 
-export const getJobListingById = async (id: string) => {
+export const getJobListingById = cache(async (id: string) => {
     try {
         const jobListing = await prisma.jobListing.findUnique({
             where  : {id},
@@ -114,4 +114,4 @@ export const getJobListingById = async (id: string) => {
         console.error(e)
         return notFound()
     }
-}
+})

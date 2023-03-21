@@ -79,5 +79,3 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
         </>
     )
 }
-
-export const dynamic = true

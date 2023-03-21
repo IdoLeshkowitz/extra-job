@@ -78,5 +78,3 @@ export default async function JobListingPage({searchParams}: { searchParams: Opt
     )
 }
 
-export const dynamic = true
-
