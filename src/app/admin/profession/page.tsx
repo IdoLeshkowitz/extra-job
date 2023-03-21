@@ -48,3 +48,5 @@ const ProfessionRow: FC<ProfessionRowProps> = ({name, id}) => {
         </li>
     )
 }
+
+export const revalidate = 0;

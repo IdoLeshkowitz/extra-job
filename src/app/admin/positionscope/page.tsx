@@ -49,3 +49,4 @@ const PositionScopeRow: FC<PositionScopeRowProps> = ({name, id}) => {
 }
 
 
+export const revalidate = 0;

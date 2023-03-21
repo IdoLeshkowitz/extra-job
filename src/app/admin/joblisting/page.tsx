@@ -77,4 +77,4 @@ export default async function JobListingPage({searchParams}: { searchParams: Opt
         </>
     )
 }
-
+export const revalidate = 0;
