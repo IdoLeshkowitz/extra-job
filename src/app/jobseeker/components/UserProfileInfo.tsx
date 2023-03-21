@@ -12,31 +12,14 @@ import Tooltip from 'react-bootstrap/Tooltip'
 import {useSession} from 'next-auth/react';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
+import CustomToggle from '@/components/toggle/CustomToggle';
+
 
 
 const UserProfileInfo = () => {
 
     // Get session
     const {data: session, status} = useSession()
-
-    // Custom accordion toggle
-    const CustomToggle = ({eventKey}: { eventKey: string }) => {
-        const handleClick = useAccordionButton(eventKey, (e) => e.preventDefault())
-        return (
-            <OverlayTrigger
-                placement='top'
-                overlay={<Tooltip>Edit</Tooltip>}
-            >
-                <a
-                    href='#'
-                    className='nav-link py-0'
-                    onClick={handleClick}
-                >
-                    <i className='fi-edit'></i>
-                </a>
-            </OverlayTrigger>
-        )
-    }
 
     // Name field state
     const [name, setName] = useState<string>('')
@@ -78,7 +61,7 @@ const UserProfileInfo = () => {
             {/* Personal details */}
             <Row className='pt-4 mt-3'>
                 <Col xs={12} lg={3}>
-                    <h2 className='h4'>Personal details</h2>
+                    <h2 className='h4'>פרטים אישיים</h2>
                 </Col>
                 <Col xs={12} lg={9}>
                     <Accordion>
@@ -88,8 +71,8 @@ const UserProfileInfo = () => {
                             <div className='border-bottom pb-3 mb-3'>
                                 <div className='d-flex align-items-center justify-content-between'>
                                     <div className='pe-2'>
-                                        <h2 className='form-label fw-bold'>Full name</h2>
-                                        <p className='mb-0'>{session?.user?.name ? session?.user?.name : 'Not specified'}</p>
+                                        <h2 className='form-label fw-bold'>שם מלא</h2>
+                                        <p className='mb-0'>{session?.user?.name ? session?.user?.name : 'לא הוגדר'}</p>
                                     </div>
                                     <CustomToggle eventKey='name'/>
                                 </div>
@@ -98,7 +81,7 @@ const UserProfileInfo = () => {
                                         className='mt-3'
                                         value={name}
                                         onChange={handleNameChange}
-                                        placeholder='Your full name'
+                                        placeholder='השם המלא שלך'
                                     />
                                 </Accordion.Collapse>
                             </div>
@@ -107,16 +90,16 @@ const UserProfileInfo = () => {
                             <div className='border-bottom pb-3 mb-3'>
                                 <div className='d-flex align-items-center justify-content-between'>
                                     <div className='pe-2'>
-                                        <h2 className='form-label fw-bold'>Gender</h2>
-                                        <p className='mb-0'>{session?.user?.gender ? session?.user?.gender : 'Not specified'}</p>
+                                        <h2 className='form-label fw-bold'>מין</h2>
+                                        <p className='mb-0'>{session?.user?.gender ? session?.user?.gender : 'לא הוגדר'}</p>
                                     </div>
                                     <CustomToggle eventKey='gender'/>
                                 </div>
                                 <Accordion.Collapse eventKey='gender'>
-                                    <FormSelect className='mt-3' value={gender} onChange={handleGenderChange}>
-                                        <option value='Not specified'>Choose gender</option>
-                                        <option value='Male'>Male</option>
-                                        <option value='Female'>Female</option>
+                                    <FormSelect className='mt-3' value={gender} onChange={handleGenderChange} >
+                                        <option value='Not specified'>בחר מין</option>
+                                        <option value='Male'>זכר</option>
+                                        <option value='Female'>נקבה</option>
                                     </FormSelect>
                                 </Accordion.Collapse>
                             </div>
@@ -125,8 +108,8 @@ const UserProfileInfo = () => {
                             {/* <div className='border-bottom pb-3 mb-3'> */}
                             <div className='d-flex align-items-center justify-content-between'>
                                 <div className='pe-2'>
-                                    <h2 className='form-label fw-bold'>Phone number</h2>
-                                    <p className='mb-0'>{session?.user?.phone ? session?.user?.phone : 'Not specified'}</p>
+                                    <h2 className='form-label fw-bold'>מספר פלאפון</h2>
+                                    <p className='mb-0'>{session?.user?.phone ? session?.user?.phone : 'לא הוגדר'}</p>
                                 </div>
                                 <CustomToggle eventKey='phone'/>
                             </div>
@@ -136,7 +119,7 @@ const UserProfileInfo = () => {
                                     className='mt-3'
                                     value={phone}
                                     onChange={handlePhoneChange}
-                                    placeholder='Enter your phone number'
+                                    placeholder='הזן את מספר הפלאפון שלך'
                                 />
                             </Accordion.Collapse>
                         </div>
@@ -147,7 +130,7 @@ const UserProfileInfo = () => {
             </Row>
             <Row className='pt-4 mt-3'>
                 <Col xs={12} lg={3}>
-                    <h2 className='h4'>CV</h2>
+                    <h2 className='h4'>קורות חיים</h2>
                 </Col>
                 <Col xs={12} lg={9}>
                     <Accordion>
@@ -155,11 +138,11 @@ const UserProfileInfo = () => {
                             {/* CV */}
                                 <div className='d-flex align-items-center justify-content-between'>
                                     <div className='pe-2'>
-                                        <h2 className='form-label fw-bold'>{session?.user?.cv ? 'CV uploaded successfully' : 'No matching CV'}</h2>
+                                        <h2 className='form-label fw-bold'>{session?.user?.cv ? 'קורות חיים הועלו בהצלחה' : 'לא קיים קו"ח במערכת'}</h2>
                                     </div>
                                     {
                                         !session?.user?.cv  &&
-                                        <Link href="uploadcv" className='form-label fw-bold'><Button>Upload CV</Button></Link>
+                                        <Link href="uploadcv" className='form-label fw-bold'><Button>העלה קו"ח</Button></Link>
                                     }
                                     {
                                         session?.user?.cv  &&
@@ -173,9 +156,11 @@ const UserProfileInfo = () => {
                                         <div className="border-bottom pb-3 mb-3"></div>
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <div className='pe-2'>
-                                            <Link href="uploadcv" className='form-label fw-bold'><Button>Download CV</Button></Link>
+                                            <Link href="api/cv" className='form-label fw-bold'><Button>הורד קו"ח</Button></Link>
                                             </div>
-                                            <Link href="uploadcv" className='form-label fw-bold'><Button>Reupload CV</Button></Link>
+                                            <div className='pe-2'>
+                                            <Link href="uploadcv" className='form-label fw-bold'><Button>העלה מחדש</Button></Link>
+                                            </div>
                                         </div>
                                         </>
                                     }
