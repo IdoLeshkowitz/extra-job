@@ -6,19 +6,20 @@ interface FetcherParams {
 }
 
 export const fetcher = async ({url, method, json, body}: FetcherParams) : Promise<unknown> => {
-    const res = await fetch(url, {
-        method : method || 'GET',
-        body   : body && JSON.stringify(body),
-        headers: {
-            Accept        : 'application/json',
-            'Content-Type': 'application/json'
-        }
-    })
-    if (!res.ok) {
-        return Promise.reject(await res.json())
-    }
-    if (!json) {
-        return res
-    }
-    return await res.json()
+    // const res = await fetch(url, {
+    //     method : method || 'GET',
+    //     body   : body && JSON.stringify(body),
+    //     headers: {
+    //         Accept        : 'application/json',
+    //         'Content-Type': 'application/json'
+    //     }
+    // })
+    // if (!res.ok) {
+    //     return Promise.reject(await res.json())
+    // }
+    // if (!json) {
+    //     return res
+    // }
+    // return await res.json()
+    return Promise.reject('did not fetch')
 }

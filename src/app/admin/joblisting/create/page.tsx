@@ -2,11 +2,16 @@
 import {Card, Col, Container, Dropdown, Form, Row, SSRProvider} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
-import {Area, PositionScope, Profession} from "@prisma/client";
-import {notFound} from "next/navigation";
+import {Area, JobListing, PositionScope, Prisma, Profession} from "@prisma/client";
+import {notFound, useRouter} from "next/navigation";
 import {array, number, object, string} from 'yup';
 import {useFormik} from "formik";
 import PillButton from "@/components/buttons/pillButtons";
+import {fetcher} from "@/lib/api/fetcher";
+import ToastDismissible from "@/components/toasts/toastDismissible";
+import {CustomError} from "../../../../../types/error";
+import {JobListingErrorCodes} from "@/services/jobListingService";
+import JobListingUncheckedCreateInput = Prisma.JobListingUncheckedCreateInput;
 
 const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
     const res = await fetch('/api/area?active=true', {cache: "force-cache"})
@@ -46,12 +51,13 @@ interface formDynamicValues {
 }
 
 export default function CreateJobListingPage() {
+    const router = useRouter()
     const [formDynamicValues, setFormDynamicValues] = useState<formDynamicValues>({areas: [], professions: [], positionScopes: []})
     const [loading, setLoading] = useState<boolean>(false)
+    const [errors, setErrors] = useState<string[]>([])
     useEffect(() => {
         Promise.all([getAreas(), getProfessions(), getPositionScopes()])
             .then(([{data: {areas}}, {data: {professions}}, {data: {positionScopes}}]) => {
-                console.log(professions)
                 setFormDynamicValues({areas, professions, positionScopes})
                 setLoading(false)
             })
@@ -72,19 +78,29 @@ export default function CreateJobListingPage() {
         },
         validationSchema,
         onSubmit     : async (values) => {
-            console.log(values)
+            const jobListingCreateInput: JobListingUncheckedCreateInput = {
+                name           : values.name,
+                description    : values.description,
+                serialNumber   : values.serialNumber,
+                areaId         : values.areaId,
+                professionId   : values.professionId,
+                positionScopeId: values.positionScopeId,
+                jobRequirements: values.requirements
+            }
+            setLoading(true)
             try {
-                // setLoading(true)
-                // const {data: {jobListing}} = await fetcher({
-                //     url   : '/api/joblisting',
-                //     method: 'POST',
-                //     body  : {...values},
-                //     json  : true,
-                // }) as { data: { jobListing: JobListing } }
-                // setLoading(false)
-                // router.push(`/joblisting/${jobListing.id}`)
-            } catch (e) {
-                console.log(e)
+                const {data: {jobListing}} = await fetcher({
+                    url   : '/api/joblisting',
+                    method: 'POST',
+                    body  : jobListingCreateInput,
+                    json  : true,
+                }) as { data: { jobListing: JobListing } }
+                router.push(`/joblisting/${jobListing.id}`)
+            } catch (e: unknown) {
+                // const error = e as CustomError
+                // if (error.code === JobListingErrorCodes.SERIAL_NUMBER_ALREADY_EXISTS) {
+                //     setErrors([e.message])
+                // }
             }
         }
     })
@@ -99,6 +115,13 @@ export default function CreateJobListingPage() {
     }
     return (
         <SSRProvider>
+            {
+                errors.length > 0 && errors.map((error, index) => {
+                    return (
+                        <ToastDismissible key={index} text={error} title='שגיאה'/>
+                    )
+                })
+            }
             <Container className='mb-md-4 '>
                 <Row>
                     <form onSubmit={formik.handleSubmit} style={{direction: 'rtl'}}>

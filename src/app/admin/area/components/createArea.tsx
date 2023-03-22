@@ -5,7 +5,7 @@ import {useRouter} from "next/navigation";
 import {FormControl, FormGroup} from "react-bootstrap";
 import PillButton from "@/components/buttons/pillButtons";
 import ListItemForm from "@/components/forms/ListItemForm";
-import {Area, Prisma} from "@prisma/client";
+import {Prisma} from "@prisma/client";
 import {fetcher} from "@/lib/api/fetcher";
 
 
@@ -23,13 +23,13 @@ export default function CreateArea() {
 
         /*            send the request        */
         const areaCreateInput: Prisma.AreaCreateInput = {name: nameRef.current?.value}
-        const {data: {area}} = await fetcher(
+        const res = await fetcher(
             {
                 url   : '/api/area',
                 method: 'POST',
                 body  : {...areaCreateInput},
                 json  : true,
-            }) as { data: { area: Area } }
+            })
 
         /*            update the UI        */
         router.refresh()
@@ -40,7 +40,7 @@ export default function CreateArea() {
 
     return (
         <ListItemForm onSubmit={onSubmit}>
-            <FormGroup className="w-50">
+            <FormGroup className="w-50 p-3">
                 <FormControl
                     required={true}
                     ref={nameRef}

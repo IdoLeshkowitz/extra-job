@@ -4,7 +4,7 @@ import {notFound} from "next/navigation";
 import {cache} from "react";
 
 
-export const createArea = async (areaToCreate: Prisma.AreaCreateInput): Promise<{ data: { area: Area } }> => {
+export const createArea = async (areaToCreate: Prisma.AreaCreateInput) => {
     try {
         /*
         if area with the same name exists, updates its status to active
@@ -16,9 +16,11 @@ export const createArea = async (areaToCreate: Prisma.AreaCreateInput): Promise<
             create: areaToCreate
         });
         return {data: {area}};
-    } catch (e) {
-        console.error(e);
-        return notFound();
+    } catch (e: any) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+            return {error: {message: "קיים אזור עם שם זהה"}};
+        }
+        return {error: {message: e.toString()}};
     }
 }
 
@@ -51,15 +53,15 @@ export const getAreas = cache(async ({skip, take, active}: { skip: number | unde
 })
 
 
-export const updateArea = async (id: string, areaToUpdate: Prisma.AreaUpdateInput): Promise<{ data: { area: Area } }> => {
+export const updateArea = async (id: string, areaToUpdate: Prisma.AreaUpdateInput) => {
     try {
         const area = await prisma.area.update({
             where: {id},
             data : areaToUpdate
         });
         return {data: {area}};
-    } catch (e) {
+    } catch (e: any) {
         console.error(e);
-        return notFound();
+        return {error: {message: e.toString()}};
     }
 }

@@ -23,7 +23,7 @@ export default async function JobListingCardAdmin({jobListingId}: JobListingCard
 
     return (
         <div
-            className="card card-light card-hover col-md-12 col-sm-12 mb-2"
+            className="card card-hover bg-faded-dark col-md-12 col-sm-12 mb-2 shadow-lg"
         >
             <div className='card-body'>
                 <div className='d-flex justify-content-between'>

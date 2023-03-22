@@ -21,7 +21,7 @@ export default async function AreaPage({searchParams}: { searchParams: { skip?: 
             <h1 className='h2'>איזורים</h1>
             <div className="row pt-2">
                 <div className="col-sm-12 col-md-12 col-lg-11">
-                        <ul className="list-group">
+                        <ul className="list-group gap-1">
                             <CreateArea/>
                             {areas.map((area) => (
                                 <AreaRow key={area.id} name={area.name} id={area.id}/>
@@ -41,7 +41,7 @@ interface AreaRowProps {
 
 const AreaRow: FC<AreaRowProps> = ({name, id}) => {
     return (
-        <li className="list-group-item-text bg-faded-light rounded border-light d-flex flex-row-reverse justify-content-between h-25 align-items-center p-2">
+        <li className="list-group-item bg-faded-dark shadow-sm rounded border-light d-flex justify-content-between  align-items-center p-3" style={{direction:'rtl'}}>
             {name}
             <DeactivateArea id={id}/>
         </li>

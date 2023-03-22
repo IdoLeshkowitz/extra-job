@@ -12,6 +12,7 @@ interface PillButtonProps {
 const PillButton: FC<PillButtonProps> = ({text, type, onClick, icon}) => {
     return (
         <button
+            dir='ltr'
             onClick={onClick ? onClick : () => {}}
             type={type ? type : 'button'}
             className="icon-box card card-light flex-row align-items-center card-hover rounded-pill py-2 ps-2 pe-4"
