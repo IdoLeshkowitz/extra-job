@@ -22,7 +22,7 @@ const UserProfileInfo = () => {
     const {data: session, status} = useSession()
 
     // Name field state
-    const [name, setName] = useState<string>('')
+    const [name, setName] = useState<any>('')
 
     // Gender field state
     const [gender, setGender] = useState<string>('')
@@ -55,79 +55,12 @@ const UserProfileInfo = () => {
         console.log(session?.user)
     }
 
+
+
     return (
 
         <>
             {/* Personal details */}
-            <Row className='pt-4 mt-3'>
-                <Col xs={12} lg={3}>
-                    <h2 className='h4'>פרטים אישיים</h2>
-                </Col>
-                <Col xs={12} lg={9}>
-                    <Accordion>
-                        <div className='border rounded-3 p-3'>
-
-                            {/* Name */}
-                            <div className='border-bottom pb-3 mb-3'>
-                                <div className='d-flex align-items-center justify-content-between'>
-                                    <div className='pe-2'>
-                                        <h2 className='form-label fw-bold'>שם מלא</h2>
-                                        <p className='mb-0'>{session?.user?.name ? session?.user?.name : 'לא הוגדר'}</p>
-                                    </div>
-                                    <CustomToggle eventKey='name'/>
-                                </div>
-                                <Accordion.Collapse eventKey='name'>
-                                    <FormControl
-                                        className='mt-3'
-                                        value={name}
-                                        onChange={handleNameChange}
-                                        placeholder='השם המלא שלך'
-                                    />
-                                </Accordion.Collapse>
-                            </div>
-
-                            {/* Gender */}
-                            <div className='border-bottom pb-3 mb-3'>
-                                <div className='d-flex align-items-center justify-content-between'>
-                                    <div className='pe-2'>
-                                        <h2 className='form-label fw-bold'>מין</h2>
-                                        <p className='mb-0'>{session?.user?.gender ? session?.user?.gender : 'לא הוגדר'}</p>
-                                    </div>
-                                    <CustomToggle eventKey='gender'/>
-                                </div>
-                                <Accordion.Collapse eventKey='gender'>
-                                    <FormSelect className='mt-3' value={gender} onChange={handleGenderChange} >
-                                        <option value='Not specified'>בחר מין</option>
-                                        <option value='Male'>זכר</option>
-                                        <option value='Female'>נקבה</option>
-                                    </FormSelect>
-                                </Accordion.Collapse>
-                            </div>
-
-                            {/* Phone number */}
-                            {/* <div className='border-bottom pb-3 mb-3'> */}
-                            <div className='d-flex align-items-center justify-content-between'>
-                                <div className='pe-2'>
-                                    <h2 className='form-label fw-bold'>מספר פלאפון</h2>
-                                    <p className='mb-0'>{session?.user?.phone ? session?.user?.phone : 'לא הוגדר'}</p>
-                                </div>
-                                <CustomToggle eventKey='phone'/>
-                            </div>
-                            <Accordion.Collapse eventKey='phone'>
-                                <FormControl
-                                    type='tel'
-                                    className='mt-3'
-                                    value={phone}
-                                    onChange={handlePhoneChange}
-                                    placeholder='הזן את מספר הפלאפון שלך'
-                                />
-                            </Accordion.Collapse>
-                        </div>
-
-                        {/* </div> */}
-                    </Accordion>
-                </Col>
-            </Row>
             <Row className='pt-4 mt-3'>
                 <Col xs={12} lg={3}>
                     <h2 className='h4'>קורות חיים</h2>
