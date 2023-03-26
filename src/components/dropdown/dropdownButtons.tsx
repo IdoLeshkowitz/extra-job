@@ -10,7 +10,7 @@ interface DropDownButtonsProps {
 const DropDownButtons: FC<DropDownButtonsProps> = ({light, children}) => {
     return (
         <SSRProvider>
-            <Dropdown className='position-relative zindex-10'>
+            <Dropdown className='zindex-10 w-auto'>
                 <Dropdown.Toggle
                     variant={`${light ? 'translucent-light' : 'light shadow-sm'} btn-icon btn-xs rounded-circle`}>
                     <i className='fi-dots-vertical'></i>

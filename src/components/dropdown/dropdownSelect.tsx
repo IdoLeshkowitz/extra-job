@@ -20,7 +20,7 @@ interface DropdownSelectProps {
 
 const DropdownSelect: FC<DropdownSelectProps> = ({instructions, options, icon, variant, chosenIdRef, darkMenu, ...props}) => {
     const [selected, setSelected] = useState<Option | null>(null)
-    const iconEl = icon ? <i className={`${icon} me-2`}></i> : ''
+    const iconEl = icon ? <i className={`${icon} `}></i> : ''
     const handleSelect = (eventKey: string | null) => {
         const chosenOption = options?.find((option) => option.id === eventKey) ?? null
         setSelected(chosenOption)
@@ -31,18 +31,20 @@ const DropdownSelect: FC<DropdownSelectProps> = ({instructions, options, icon, v
 
     return (
         <Dropdown {...props} onSelect={handleSelect}>
-            <Dropdown.Toggle variant={variant ? variant : 'link'}>
-                {iconEl}
+            <Dropdown.Toggle
+                variant={variant ? variant : 'link'} style={{direction: 'rtl'}}
+                className="gap-3 d-flex align-content-center text-start">
+                <i className="d-flex justify-content-center align-items-center">{iconEl}</i>
                 {selected ? selected.text : instructions}
             </Dropdown.Toggle>
             <Dropdown.Menu variant={darkMenu ? 'dark' : ''}>
-                <Dropdown.Item key={-1} eventKey={undefined}>
+                <Dropdown.Item key={-1} eventKey={undefined} style={{direction: 'rtl'}} className="text-end">
                     {iconEl}
-                    {instructions}
+                    <span className="me-2">{instructions}</span>
                 </Dropdown.Item>
                 {options ? options.map((option, indx) =>
-                    <Dropdown.Item key={indx} eventKey={option.id}>
-                        {option.icon && <i className={`${option.icon} fs-lg opacity-60 me-2`}></i>}
+                    <Dropdown.Item key={indx} eventKey={option.id} style={{direction: 'rtl'}} className="text-end">
+                        {option.icon && <i className={`${option.icon} fs-lg opacity-60 ms-2`}></i>}
                         {option.text}
                     </Dropdown.Item>) : ''}
             </Dropdown.Menu>

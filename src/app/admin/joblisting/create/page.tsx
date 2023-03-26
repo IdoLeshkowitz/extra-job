@@ -2,37 +2,63 @@
 import {Card, Col, Container, Dropdown, Form, Row, SSRProvider} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
-import {Area, JobListing, PositionScope, Prisma, Profession} from "@prisma/client";
-import {notFound, useRouter} from "next/navigation";
+import {Area, PositionScope, Prisma, Profession} from "@prisma/client";
+import {useRouter} from "next/navigation";
 import {array, number, object, string} from 'yup';
 import {useFormik} from "formik";
 import PillButton from "@/components/buttons/pillButtons";
-import {fetcher} from "@/lib/api/fetcher";
+import {fetcher} from "../../../../../libs/api/fetcher";
 import ToastDismissible from "@/components/toasts/toastDismissible";
-import {CustomError} from "../../../../../types/error";
-import {JobListingErrorCodes} from "@/services/jobListingService";
-import JobListingUncheckedCreateInput = Prisma.JobListingUncheckedCreateInput;
+import {CustomError} from "@/types/error";
 
-const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
-    const res = await fetch('/api/area?active=true', {cache: "force-cache"})
-    if (!res.ok) {
-        return Promise.reject(await res.json())
+const getAreas = async () => {
+    const areaFindManyArgs: Prisma.AreaFindManyArgs = {
+        where: {active: true},
     }
-    return await res.json()
+    try {
+        const {data} = await fetcher({
+            url   : `/api/area?areaFindManyArgs=${JSON.stringify(areaFindManyArgs)}`,
+            method: 'GET',
+            json  : true,
+        })
+        return data.areas
+    } catch (e) {
+        console.log(e)
+        return Promise.reject(e)
+    }
 }
-const getProfessions = async (): Promise<{ data: { professions: Profession[] } }> => {
-    const res = await fetch('/api/profession', {cache: "force-cache"})
-    if (!res.ok) {
-        return Promise.reject(await res.json())
+const getProfessions = async () => {
+    const professionFindManyArgs: Prisma.ProfessionFindManyArgs = {
+        where: {active: true},
     }
-    return await res.json()
+    try {
+        const {data} = await fetcher({
+            url   : `/api/profession?professionFindManyArgs=${JSON.stringify(professionFindManyArgs)}`,
+            method: 'GET',
+            json  : true,
+        })
+        return data.professions
+    } catch (e) {
+        console.log(e)
+        return Promise.reject(e)
+    }
 }
-const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionScope[] } }> => {
-    const res = await fetch('/api/positionscope', {cache: "force-cache"})
-    if (!res.ok) {
-        return Promise.reject(await res.json())
+
+const getPositionScopes = async () => {
+    const positionScopeFindManyArgs: Prisma.PositionScopeFindManyArgs = {
+        where: {active: true},
     }
-    return await res.json()
+    try {
+        const {data} = await fetcher({
+            url   : `/api/positionscope?positionScopeFindManyArgs=${JSON.stringify(positionScopeFindManyArgs)}`,
+            method: 'GET',
+            json  : true,
+        })
+        return data.positionScopes
+    } catch (e) {
+        console.log(e)
+        return Promise.reject(e)
+    }
 }
 const validationSchema = object({
     name           : string().required('שדה חובה').max(50, 'שם יכול להכיל עד 50 תווים'),
@@ -56,15 +82,16 @@ export default function CreateJobListingPage() {
     const [loading, setLoading] = useState<boolean>(false)
     const [errors, setErrors] = useState<string[]>([])
     useEffect(() => {
-        Promise.all([getAreas(), getProfessions(), getPositionScopes()])
-            .then(([{data: {areas}}, {data: {professions}}, {data: {positionScopes}}]) => {
+        const getFormDynamicValues = async () => {
+            try {
+                const [areas, professions, positionScopes] = await Promise.all([getAreas(), getProfessions(), getPositionScopes()])
                 setFormDynamicValues({areas, professions, positionScopes})
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.error(err)
-                notFound()
-            })
+            } catch (e: any) {
+                console.log(e)
+                setErrors([e.message])
+            }
+        }
+        getFormDynamicValues()
     }, [])
     const formik = useFormik({
         initialValues: {
@@ -78,29 +105,37 @@ export default function CreateJobListingPage() {
         },
         validationSchema,
         onSubmit     : async (values) => {
-            const jobListingCreateInput: JobListingUncheckedCreateInput = {
-                name           : values.name,
-                description    : values.description,
-                serialNumber   : values.serialNumber,
-                areaId         : values.areaId,
-                professionId   : values.professionId,
-                positionScopeId: values.positionScopeId,
-                jobRequirements: values.requirements
+            const jobListingCreateArgs = {
+                data: {
+                    name           : values.name,
+                    description    : values.description,
+                    serialNumber   : values.serialNumber,
+                    jobRequirements: values.requirements,
+                    area           : {
+                        connect: {id: values.areaId}
+                    },
+                    profession     : {
+                        connect: {id: values.professionId}
+                    },
+                    positionScope  : {
+                        connect: {id: values.positionScopeId}
+                    },
+                }
             }
             setLoading(true)
             try {
                 const {data: {jobListing}} = await fetcher({
                     url   : '/api/joblisting',
                     method: 'POST',
-                    body  : jobListingCreateInput,
+                    body  : {jobListingCreateArgs},
                     json  : true,
-                }) as { data: { jobListing: JobListing } }
+                })
                 router.push(`/joblisting/${jobListing.id}`)
-            } catch (e: unknown) {
-                // const error = e as CustomError
-                // if (error.code === JobListingErrorCodes.SERIAL_NUMBER_ALREADY_EXISTS) {
-                //     setErrors([e.message])
-                // }
+                setLoading(false)
+            } catch (e: any) {
+                const error = e.error as CustomError
+                setLoading(false)
+                setErrors([error.message])
             }
         }
     })

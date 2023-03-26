@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import {notFound, usePathname, useRouter} from "next/navigation";
 import {signIn, useSession} from "next-auth/react";
 import {User} from "next-auth";
-import {fetcher} from "@/lib/api/fetcher";
+import {fetcher} from "../../../../libs/api/fetcher";
 
 interface ApplyButtonProps {
     jobListingId: string

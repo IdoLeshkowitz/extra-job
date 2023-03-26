@@ -4,7 +4,7 @@ import fs from "fs";
 import {Prisma} from ".prisma/client";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import prisma from "@/lib/prisma";
+import prisma from "../../../../libs/prisma";
 import CvCreateInput = Prisma.CvCreateInput;
 
 export const config = {

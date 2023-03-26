@@ -1,16 +1,25 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {updatePositionScope} from "@/services/positionScopeService";
+import {object, string} from "yup";
 
+const positionScopeUpdateArgsSchema = object({
+    where: object({id: string().required()}),
+    data : object({active: string().required()})
+})
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "PUT") {
-        const {id} = req.query as { id: string };
-        const {name, active} = req.body;
+        const {positionScopeUpdateArgs} = req.body;
+        //validate positionScopeUpdateArgs
         try {
-            const updatedPositionScope = await updatePositionScope(id, {name, active});
-            res.status(200).json(updatedPositionScope)
-        } catch (e) {
-            console.error(e);
-            res.status(404).json({error: "Not Found"})
+            await positionScopeUpdateArgsSchema.validate(positionScopeUpdateArgs)
+        } catch (e: any) {
+            return res.status(400).json({error: {message: e.message}})
         }
+        //update positionScope
+        const {data, error} = await updatePositionScope(positionScopeUpdateArgs)
+        if (error) {
+            return res.status(500).json({error})
+        }
+        res.json(data)
     }
 }

@@ -61,7 +61,6 @@ model User {
   appliedFor          JobApplication[]
   emailVerified       Boolean?         @default(false)
   cv                  Cv[]
-  likedJobListings    JobListing[]     @relation(fields: [likedJobListingsIds], references: [id])
 }
 
 model JobApplication {
@@ -98,9 +97,7 @@ model JobListing {
   areaId          String   @db.ObjectId
   positionScopeId String   @db.ObjectId
   createdAt       DateTime @default(now()) @db.Date
-  likedByIds      String[] @default([]) @db.ObjectId
 
-  likedBy         User[]           @relation(fields: [likedByIds], references: [id])
   active          Boolean          @default(true)
   area            Area             @relation(fields: [areaId], references: [id])
   profession      Profession       @relation(fields: [professionId], references: [id])

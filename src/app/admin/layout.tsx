@@ -7,11 +7,11 @@ export default async function AdminLayout({children}: { children: React.ReactNod
     // }
     return (
         <div className='container pt-5 pb-lg-4 mt-5 mb-sm-2'>
-            <div className="row justify-content-sm-center">
+            <div className="row justify-content-evenly">
                 {/*SIDE BAR*/}
                 <AdminPageSideBar/>
                 {/* Page content */}
-                <div className='col-md-7 col-lg-8 mb-5 col-sm-11'>
+                <div className='col-md-9 mb-5 col-sm-11'>
                     {children}
                 </div>
             </div>

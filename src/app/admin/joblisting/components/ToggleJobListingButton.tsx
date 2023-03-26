@@ -1,42 +1,40 @@
 'use client'
 import Dropdown from "react-bootstrap/Dropdown";
-import {fetcher} from "@/lib/api/fetcher";
+import {fetcher} from "../../../../../libs/api/fetcher";
 import {FC} from "react";
-import {notFound, useRouter} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {Prisma} from ".prisma/client";
 import JobListingUpdateInput = Prisma.JobListingUpdateInput;
+import JobListingUpdateArgs = Prisma.JobListingUpdateArgs;
 
 interface DeactivateJobListingButtonProps {
-    isActive: boolean
+    active: boolean
     jobListingId: string
 }
 
-const ToggleJobListingButton: FC<DeactivateJobListingButtonProps> = ({isActive, jobListingId: id}) => {
+const ToggleJobListingButton: FC<DeactivateJobListingButtonProps> = ({active, jobListingId: id}) => {
     const router = useRouter()
-
     async function onToggle() {
         try {
-            const jobListingUpdateInput: JobListingUpdateInput = {
-                active: !isActive
+            const jobListingUpdateArgs: JobListingUpdateArgs = {
+                where: {id},
+                data : {active: !active} as JobListingUpdateInput
             }
-            const res = await fetcher(
-                {
-                    method: 'PUT',
-                    url   : `/api/joblisting/${id}`,
-                    body  : jobListingUpdateInput,
-                    json  : true
-                })
+            await fetcher({
+                url   : `/api/joblisting/${id}`,
+                method: 'PUT',
+                body  : {jobListingUpdateArgs}
+            })
             router.refresh()
         } catch (e) {
             console.error(e)
-            notFound()
         }
     }
 
     return (
-        <Dropdown.Item onClick={onToggle}>
-            <i className="opacity-60 me-2 fi-minus-circle"></i>
-            {isActive ? 'הפסק פרסום' : 'הפעל פרסום'}
+        <Dropdown.Item onClick={onToggle} direction="rtl" className="d-flex justify-content-between align-items-center">
+            <p className="m-auto my-0">{active ? 'הפסק פרסום' : 'הפעל פרסום'}</p>
+            <i className="opacity-60 fi-minus-circle fs-sm m-auto"></i>
         </Dropdown.Item>
     )
 }

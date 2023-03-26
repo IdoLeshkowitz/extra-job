@@ -1,44 +1,55 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {createProfession, getProfessions} from "@/services/professionService";
+import {boolean, number, object, string} from "yup";
+import {getProfessions, upsertProfession} from "@/services/professionService";
 
+const professionFindManyArgsSchema = object({
+    where: object({
+        active: boolean().required()
+    }),
+    skip : number(),
+    take : number()
+})
+const professionUpsertArgsSchema = object({
+    where : object({
+        name: string().required()
+    }),
+    create: object({
+        name: string().required(),
+    }),
+    update: object({
+        active: boolean().required()
+    })
+})
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
         //todo : add admin check
-        /*
-        Required body params:
-        {name : string}
-        if an area with the same name already exists, it is reactivated and returned
-        else a new area is created and returned
-        */
-        const {name} = req.body;
-        if (!name) {
-            return res.status(400).json({error: {message: "name is required"}})
-        }
+        const {professionUpsertArgs} = req.body;
+        //validate professionUpsertArgs
         try {
-            const profession = await createProfession({name})
-            res.json(profession)
-        } catch (e) {
-            console.error(e)
-            res.status(500).json({error: {message: "unable to create profession"}})
+            await professionUpsertArgsSchema.validate(professionUpsertArgs)
+        } catch (e: any) {
+            return res.status(400).json({error: {message: e.message}})
         }
+        //upsert profession
+        const {data, error} = await upsertProfession(professionUpsertArgs)
+        if (error) {
+            return res.status(500).json({error})
+        }
+        res.json(data)
     }
     if (req.method === "GET") {
-        /*
-        Optional query params:
-        {skip: number, take: number, active: boolean}
-        If skip and take are specified, the professions are returned in the range of skip to skip + take
-        If active is specified, only active or inactive professions are returned
-        else all professions are returned
-         */
-        const skip = req.query.skip ? Number(req.query.skip) : undefined;
-        const take = req.query.take ? Number(req.query.take) : undefined;
-        const active = req.query.active ? Boolean(req.query.active) : undefined;
+        const professionFindManyArgs = JSON.parse(req.query.professionFindManyArgs as string);
+        //validate professionFindManyArgs
         try {
-            const professions = await getProfessions({skip, take, active})
-            res.json(professions)
-        } catch (e) {
-            console.error(e)
-            res.status(500).json({error: {message: "unable to get professions"}})
+            await professionFindManyArgsSchema.validate(professionFindManyArgs)
+        } catch (e: any) {
+            return res.status(400).json({error: {message: e.message}})
         }
+        //get professions
+        const {data, error} = await getProfessions(professionFindManyArgs)
+        if (error) {
+            return res.status(500).json({error})
+        }
+        res.json({data})
     }
 }

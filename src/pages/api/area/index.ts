@@ -1,38 +1,58 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {createArea, getAreas} from "@/services/areaService";
+import {getAreas, upsertArea} from "@/services/areaService";
+import {Prisma} from ".prisma/client";
+import {boolean, number, object, string} from "yup";
+import AreaUpsertArgs = Prisma.AreaUpsertArgs;
+
+const areaUpsertArgsSchema = object({
+    where : object({
+        name: string().required()
+    }),
+    create: object({
+        name: string().required(),
+    }),
+    update: object({
+        active: boolean().required()
+    })
+})
+const areaFindManyArgsSchema = object({
+    where: object({
+        active: boolean().required()
+    }),
+    skip : number(),
+    take : number()
+})
 
 export default async function index(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         //todo : add admin check
-        const {name} = req.body;
-        if (!name) {
-            res.status(400).json({error: {message: "name is required"}})
-        }
+        const {areaUpsertArgs}: { areaUpsertArgs: AreaUpsertArgs } = req.body;
+        //validate areaUpsertArgs
         try {
-            const area = await createArea({name})
-            res.json(area)
-        } catch (e) {
-            console.error(e)
-            res.status(500).json({error: {message: "unable to create area"}})
+            await areaUpsertArgsSchema.validate(areaUpsertArgs)
+        } catch (e: any) {
+            return res.status(400).json({error: {message: e.message}})
         }
+        //upsert area
+        const {data, error} = await upsertArea(areaUpsertArgs)
+        if (error) {
+            return res.status(500).json({error})
+        }
+        res.json(data)
     }
     if (req.method === 'GET') {
-        /*
-        Optional query params:
-        {skip: number, take: number, active: boolean}
-        If skip and take are specified, the areas are returned in the range of skip to skip + take
-        If active is specified, only active or inactive areas are returned
-        else all areas are returned
-         */
-        const skip = req.query.skip ? Number(req.query.skip) : undefined;
-        const take = req.query.take ? Number(req.query.take) : undefined;
-        const active = req.query.active ? Boolean(req.query.active) : undefined;
+        const areaFindManyArgs = JSON.parse(req.query.areaFindManyArgs as string);
+        //validate areaFindManyArgs
         try {
-            const areas = await getAreas({skip, take, active})
-            res.json(areas)
-        } catch (e) {
-            console.error(e)
-            res.status(500).json({error: {message: "unable to get areas"}})
+            await areaFindManyArgsSchema.validate(areaFindManyArgs)
+        } catch (e: any) {
+            return res.status(400).json({error: {message: e.message}})
         }
+        //get areas
+        const {data, error} = await getAreas(areaFindManyArgs)
+        if (error) {
+            return res.status(500).json({error})
+        }
+        res.json({data})
     }
 }

@@ -1,5 +1,5 @@
 import {Prisma} from ".prisma/client";
-import prisma from "../lib/prisma";
+import prisma from "../libs/prisma";
 import AreaCreateInput = Prisma.AreaCreateInput;
 import ProfessionCreateInput = Prisma.ProfessionCreateInput;
 import PositionScopeCreateInput = Prisma.PositionScopeCreateInput;

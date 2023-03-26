@@ -1,46 +1,54 @@
-import prisma from "@/lib/prisma";
 import JobListingSearchBar from "@/app/components/JobListingSearchBar";
-import {User} from "next-auth";
-import {getJobListingIds} from "@/services/jobListingService";
-import JobListingCard from "@/app/joblisting/components/JobListingCard";
 import CustomPagination from "@/components/pagination/customPagination";
 import {Fragment} from "react";
+import {countJobListings, getJobListingIds} from "@/services/jobListingService";
+import ToastDismissible from "@/components/toasts/toastDismissible";
 
-async function getUserJobApplications(user: User | undefined) {
-    if (!user) return []
-    return prisma.jobApplication.findMany({
-        where: {
-            appliedById : user.id,
-            jobListingId: {}
-        }
-    })
-}
-
-function countJobListings({positionScopeId, areaId, professionId}: SearchParams) {
-    return prisma.jobListing.count({
-        where: {
-            active         : true,
-            areaId         : areaId,
-            positionScopeId: positionScopeId,
-            professionId   : professionId
-        }
-    })
-}
-
-interface SearchParams {
+interface JobListingsSearchParams {
+    skip?: string,
+    take?: string,
+    serialNumber?: string,
+    areaId?: string,
     positionScopeId?: string,
     professionId?: string,
-    areaId?: string,
-    skip?: string,
-    take?: string
 }
 
-export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
-    const [skip, take] = [searchParams.skip ?? '0', searchParams.take ?? '10']
-    const [{data: {jobListingIds}}, count] = await Promise.all([
-        getJobListingIds({...searchParams, active: true, skip, take}),
-        countJobListings(searchParams)
+export default async function JobListingPage({searchParams}: { searchParams: JobListingsSearchParams }) {
+
+    const [skip, take] = [parseInt(searchParams.skip ?? '0'), parseInt(searchParams.take ?? '10')];
+    const [{data: jobListingData, error: jobListingsIdsError}, {data: countData, error: countError}] = await Promise.all([
+        getJobListingIds({
+            skip,
+            take,
+            where  : {
+                serialNumber   : searchParams.serialNumber ? searchParams.serialNumber : undefined,
+                areaId         : searchParams.areaId ? searchParams.areaId : undefined,
+                positionScopeId: searchParams.positionScopeId ? searchParams.positionScopeId : undefined,
+                professionId   : searchParams.professionId ? searchParams.professionId : undefined,
+            },
+            orderBy: {createdAt: 'desc'},
+        }),
+        countJobListings({
+            where: {
+                serialNumber   : searchParams.serialNumber ? searchParams.serialNumber : undefined,
+                areaId         : searchParams.areaId ? searchParams.areaId : undefined,
+                positionScopeId: searchParams.positionScopeId ? searchParams.positionScopeId : undefined,
+                professionId   : searchParams.professionId ? searchParams.professionId : undefined,
+            },
+        }),
     ])
+    const jobListings = jobListingData?.jobListings ?? []
+    const count = countData?.count ?? 0
+    console.log({jobListings, count})
+    if (jobListingsIdsError || countError) {
+        if (jobListingsIdsError) {
+            return <ToastDismissible text="error in getJobListingIds" title="error"/>
+        }
+        if (countError) {
+            return <ToastDismissible text="error in countJobListings" title="error"/>
+        }
+        return <ToastDismissible text="unknown error" title="error"/>
+    }
     return (
         <>
             <div className="row justify-content-center pb-3">
@@ -51,31 +59,17 @@ export default async function JobListingPage({searchParams}: { searchParams: Sea
                     <JobListingSearchBar/>
                 </div>
             </div>
-            <div className="row align-items-stretch">
-                {jobListingIds.map((jobListingId, index) => {
+            <div className="row gap-1 justify-content-center">
+                {jobListings.map((jobListing, index) => {
                         // const applied = !!jobApplications.find((jobApplication) => jobApplication.jobListingId === jobListing.id)
                         return (
                             <Fragment key={index}>
-                                {/* @ts-expect-error Async Server Component */}
-                                <JobListingCard
-                                    key={index}
-                                    jobListingId={jobListingId}
-                                    className="col-md-4"
-                                >
-                                    {/*<ApplyButton*/}
-                                    {/*    key={`${index}_apply_button`}*/}
-                                    {/*    jobListingId={jobListing.id}*/}
-                                    {/*    applied={applied}*/}
-                                    {/*    LoggedIn={!!user}*/}
-                                    {/*    MissingCV={!user?.cv}*/}
-                                    {/*/>*/}
-                                </JobListingCard>
                             </Fragment>
                         )
                     }
                 )}
             </div>
-            <CustomPagination count={count} take={parseInt(take)} skip={parseInt(skip)}/>
+            <CustomPagination count={count} take={take} skip={skip}/>
         </>
     )
 }

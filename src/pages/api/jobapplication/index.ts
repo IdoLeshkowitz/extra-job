@@ -2,7 +2,7 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {Prisma} from ".prisma/client";
-import prisma from "@/lib/prisma";
+import prisma from "../../../../libs/prisma";
 import JobApplicationCreateInput = Prisma.JobApplicationCreateInput;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
