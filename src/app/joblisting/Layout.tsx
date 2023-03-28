@@ -15,20 +15,7 @@ export default function Layout({children}: { children: ReactNode }) {
                     {/* Filters sidebar (Offcanvas on screens < 992px) */}
                     <JobListingSideBar show={show} handleClose={handleClose}/>
                     {/* Content */}
-                    <Col
-                        lg={8}
-                        xl={9}
-                        className='position-relative overflow-hidden pb-5 pt-4 me-5'
-                    >
-                        {/* Breadcrumb */}
-                        {/*<Breadcrumb className='mb-3 pt-md-2'>*/}
-                        {/*    <Breadcrumb.Item linkAs={Link} href='/real-estate'>Home</Breadcrumb.Item>*/}
-                        {/*    <Breadcrumb.Item active>Property*/}
-                        {/*        for {categoryParam === 'sale' ? 'sale' : 'rent'}</Breadcrumb.Item>*/}
-                        {/*</Breadcrumb>*/}
-
-                            {/*{children}*/}
-                    </Col>
+                   
                 </Row>
             </Container>
 
