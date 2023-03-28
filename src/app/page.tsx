@@ -27,7 +27,6 @@ export default function HomePage() {
                             <p className='fs-lg text-white'>חפש עבודה לפי איזור ומקצוע</p>
                         </div>
                         <div className='mx-auto px-0 col-xl-8 col-lg-9 col-md-11'>
-
                             {/* Search form */}
                             <JobListingSearchBar />
                         </div>
