@@ -37,6 +37,7 @@ async function getJobApplication(jobListingId: string, appliedById: string) {
             url   : `/api/jobapplication/first?jobApplicationFindFirstArgs=${JSON.stringify(jobApplicationFindFirstArgs)}`,
             method: 'GET',
             json  : true,
+            cache : 'no-cache',
         })
         return data?.jobApplication ?? null
     } catch (e) {
@@ -51,6 +52,7 @@ async function countCv(userId: string) {
             url   : `/api/cv/count`,
             method: 'GET',
             json  : true,
+            cache : 'no-cache',
         })
         return data?.cvCount ?? 0
     } catch (e) {
