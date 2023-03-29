@@ -7,41 +7,27 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import JobBoardPostResumeLayout from '../components/ResumeLayout'
   
-import { Document, Page, Text, View, StyleSheet, pdf, PDFDownloadLink } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, pdf, PDFDownloadLink,Font } from '@react-pdf/renderer';
 
+Font.register({ family : 'Arial', src: 'https://fonts.gstatic.com/s/opensans/v18/mem8YaGs126MiZpBA-UFVZ0bf8pkAp6a.woff2' });
 const styles = StyleSheet.create({
     page: {
       flexDirection: 'column',
       backgroundColor: '#fff',
       padding: 20,
-      fontFamily: 'Helvetica',
     },
     section: {
       margin: 10,
       padding: 10,
       flexGrow: 1,
     },
-    heading: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 10,
-    },
-    label: {
-      fontSize: 14,
-      fontWeight: 'bold',
-      marginBottom: 5,
-    },
-    value: {
-      fontSize: 14,
-      marginBottom: 10,
-    },
 });
 
 const PostResumePDF = () => (
-  <Document>
+  <Document >
     <Page size='A4' style={styles.page}>
       <View>
-        <Text> Hello Leshko </Text>
+        <Text>אחת שתיים שלוש</Text>
       </View>
     </Page>
   </Document>
@@ -61,7 +47,6 @@ const Resume = () => {
         phone: event.target.elements['pr-phone'].value,
       };
 
-      console.log(data)
       setFormData(data);
       setBlob(true);
     };
@@ -123,7 +108,7 @@ const Resume = () => {
         </Button> */}
         {blob && (
           <PDFDownloadLink
-            document={<PostResumePDF />}
+            document={<PostResumePDF/>}
             fileName="somename.pdf"
             className="btn btn-lg btn-outline-primary rounded-pill ms-3 mt-3 mt-sm-0"
           >

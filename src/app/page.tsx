@@ -21,8 +21,8 @@ export default function HomePage() {
                     <div className='mt-5 mb-md-5 py-5'>
                         <div className='col-xl-6 col-lg-8 col-md-10 mx-auto mb-sm-5 mb-4  text-center'>
                             <h1 className='display-5 text-light d-flex flex-wrap align-items-center justify-content-center mt-sm-5 mt-4 my-3'>
-                                <span className='me-2 text-primary'>משרות</span>
                                 <span>חיפוש</span>
+                                <span className='me-2 text-primary'>משרות</span>
                             </h1>
                             <p className='fs-lg text-white'>חפש עבודה לפי איזור ומקצוע</p>
                         </div>

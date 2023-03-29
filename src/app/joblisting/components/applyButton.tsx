@@ -37,7 +37,7 @@ async function getJobApplication(jobListingId: string, appliedById: string) {
             url   : `/api/jobapplication/first?jobApplicationFindFirstArgs=${JSON.stringify(jobApplicationFindFirstArgs)}`,
             method: 'GET',
             json  : true,
-            cache : 'no-cache',
+            cache : 'force-cache',
         })
         return data?.jobApplication ?? null
     } catch (e) {
@@ -66,6 +66,7 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
     const router = useRouter()
     const pathname = usePathname()
     const session = useSession()
+    console.log('hello')
     useEffect(() => {
         if (state === State.ERROR) {
             return
@@ -107,7 +108,7 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
                 return
             }
         })
-    }, [jobListingId, session?.data?.user, session?.data?.user?.cv, session.status, state])
+    }, [session?.data?.user, session.status])
     if (state === State.ERROR) {
         return (
             <div
