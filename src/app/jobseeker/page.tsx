@@ -1,9 +1,9 @@
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import UserAuthorization from "@/components/userPage/UserAuthorization";
-import UserProfileInfo from "@/components/userPage/UserProfileInfo";
-import UserAccountSettings from "@/components/userPage/UserAccountSettings";
-import HeaderMenu from "@/components/userPage/HeaderMenu";
+import UserAuthorization from "./components/UserAuthorization";
+import UserProfileInfo from "./components/UserProfileInfo";
+import UserAccountSettings from "./components/UserAccountSettings";
+import HeaderMenu from "./components/HeaderMenu";
 
 export default async function JobSeekerPage() {
     const {user} = await getServerSession(authOptions) ?? {}
