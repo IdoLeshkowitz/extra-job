@@ -1,32 +1,26 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {Prisma} from ".prisma/client";
-import prisma from "@/lib/prisma";
-import JobApplicationCreateInput = Prisma.JobApplicationCreateInput;
+import {createJobApplication, findManyJobApplications} from "@/services/jobApplicationService";
+import JobApplicationFindManyArgs = Prisma.JobApplicationFindManyArgs;
+import {log} from "next/dist/server/typescript/utils";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
-        //get the user from session
-        const {user} = await getServerSession(req, res, authOptions) ?? {};
-        if (!user) return res.status(401).json({message: "Unauthorized"});
-        //get the job listing id from the request body
-        const {jobListingId} = req.body;
-        //create the job application
-        const jobApplicationCreateInput: JobApplicationCreateInput = {
-            joblisting: {connect: {id: jobListingId}},
-            appliedBy : {connect: {id: user.id}},
-        }
-        try {
-            const createdJobApplication = await prisma.jobApplication.create({data: jobApplicationCreateInput})
-            return res.status(200).json(createdJobApplication)
-        } catch (e) {
-            console.error(e)
+        const jobApplicationCreateArgs: Prisma.JobApplicationCreateArgs = req.body.jobApplicationCreateArgs
+        console.log("jobApplicationCreateArgs", jobApplicationCreateArgs)
+        const {data, error} = await createJobApplication(jobApplicationCreateArgs)
+        console.log("data", data)
+        if (error) {
             return res.status(500).json({error: {message: "unable to create job application"}})
         }
+        return res.status(200).json({data})
     }
     if (req.method === "GET") {
-        //get the user from session
-        const {user} = await getServerSession(req, res, authOptions) ?? {};
+        const jobApplicationFindManyArgs: JobApplicationFindManyArgs = JSON.parse(req.query.jobApplicationFindManyArgs as string)
+        const {data, error} = await findManyJobApplications(jobApplicationFindManyArgs)
+        if (error) {
+            return res.status(500).json({error: {message: "unable to get job applications"}})
+        }
+        return res.status(200).json({data})
     }
 }

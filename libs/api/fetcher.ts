@@ -5,14 +5,15 @@ interface FetcherParams {
     json?: boolean
 }
 
-export const fetcher = async ({url, method, json, body}: FetcherParams) : Promise<unknown> => {
+export const fetcher = async ({url, method, json, body}: FetcherParams) => {
     const res = await fetch(url, {
         method : method || 'GET',
         body   : body && JSON.stringify(body),
         headers: {
             Accept        : 'application/json',
             'Content-Type': 'application/json'
-        }
+        },
+        cache  : 'force-cache',
     })
     if (!res.ok) {
         return Promise.reject(await res.json())

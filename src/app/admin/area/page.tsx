@@ -1,52 +1,50 @@
 import CustomPagination from "@/components/pagination/customPagination";
 import CreateArea from "@/app/admin/area/components/createArea";
 import {countAreas, getAreas} from "@/services/areaService";
-import {Area} from "@prisma/client";
-import {FC} from "react";
 import DeactivateArea from "@/app/admin/area/components/deactivateArea";
-
-const getActiveAreasByRange = ({skip, take}: { skip: number, take: number }): Promise<{ data: { areas: Area[] } }> => {
-    return getAreas({active: true, skip: skip, take: take})
-}
-const countAllActiveAreas = (): Promise<{ data: { count: number } }> => {
-    return countAreas({active: true})
-}
-
+import ToastDismissible from "@/components/toasts/toastDismissible";
 
 export default async function AreaPage({searchParams}: { searchParams: { skip?: string, take?: string } }) {
-    const [skip, take]: number[] = [searchParams.skip ?? '0', searchParams.take ?? '5'].map((param) => parseInt(param))
-    const [{data: {areas}}, {data: {count}}] = await Promise.all([getActiveAreasByRange({skip, take}), countAllActiveAreas()])
+    const [skip, take] = [searchParams.skip ?? '0', searchParams.take ?? '5'].map((param) => parseInt(param))
+    const [{data: areasData, error: AreaError}, {data: countData, error: countError}] = await Promise.all([
+        getAreas({skip, take, where: {active: true}}),
+        countAreas({where: {active: true}})
+    ])
+    const areas = areasData?.areas
+    const count = countData?.count
+    if (areas === undefined || count === undefined) {
+        if (AreaError) {
+            return <ToastDismissible text='error in getAreas' title='שגיאה'/>
+        }
+        if (countError) {
+            return <ToastDismissible text='error in countAreas' title='שגיאה'/>
+        }
+        return <ToastDismissible text='unkown error' title='שגיאה'/>
+    }
     return (
         <>
-            <h1 className='h2 text-light'>איזורים</h1>
-            <div className="row pt-2 bg-dark">
-                <div className="col-sm-12 col-md-12 col-lg-11 bg-dark">
-                    <div className="card bg-dark">
-                        <ul className="list-group list-group-flush">
-                            <CreateArea/>
-                            {areas.map((area) => (
-                                <AreaRow key={area.id} name={area.name} id={area.id}/>
-                            ))}
-                        </ul>
-                    </div>
+            <h1 className='h2'>איזורים</h1>
+            <div className="row pt-2">
+                <div className="col-sm-12 col-md-12 col-lg-11">
+                    <ul className="list-group gap-1">
+                        <CreateArea/>
+                        {areas.map(area => (
+                            <li
+                                key={area.id}
+                                style={{direction: 'rtl'}}
+                                className="list-group-item bg-faded-dark shadow-sm rounded border-light d-flex justify-content-between  align-items-center p-3"
+                            >
+                                {area.name}
+                                <DeactivateArea id={area.id}/>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
-            <div className="row pt-2 bg-dark"><CustomPagination count={count} skip={skip} take={take}/></div>
+            <div className="row pt-2"><CustomPagination count={count} skip={skip} take={take}/></div>
         </>
     )
 }
 
-interface AreaRowProps {
-    name: string
-    id: string
-}
-
-const AreaRow: FC<AreaRowProps> = ({name, id}) => {
-    return (
-        <li className="list-group-item bg-dark border-bottom border-light text-white d-flex flex-row-reverse justify-content-between h-25 align-items-center">
-            {name}
-            <DeactivateArea id={id}/>
-        </li>
-    )
-}
+export const revalidate = 0;
 

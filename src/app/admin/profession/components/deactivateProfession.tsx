@@ -1,11 +1,10 @@
 'use client';
-import {FC, MouseEventHandler} from "react";
-import {fetcher} from "@/lib/api/fetcher";
+import {FC, MouseEventHandler, useState} from "react";
+import {fetcher} from "../../../../../libs/api/fetcher";
 import {Prisma} from ".prisma/client";
-import {Profession} from "@prisma/client";
 import {useRouter} from "next/navigation";
 import PillButton from "@/components/buttons/pillButtons";
-import ProfessionUpdateInput = Prisma.ProfessionUpdateInput;
+import ProfessionUpdateArgs = Prisma.ProfessionUpdateArgs;
 
 interface DeactivateProfessionButtonProps {
     id: string
@@ -13,29 +12,51 @@ interface DeactivateProfessionButtonProps {
 
 const DeactivateProfession: FC<DeactivateProfessionButtonProps> = ({id}) => {
     const router = useRouter()
+    const [loading, setLoading] = useState<boolean>(false)
+    const [error, setError] = useState<boolean>(false)
     const onDeactivation: MouseEventHandler<HTMLButtonElement> = async (e) => {
         e.preventDefault()
+        const professionUpdateArgs: ProfessionUpdateArgs = {
+            data : {active: false},
+            where: {id}
+        }
+        try {
+            setLoading(true)
+            const {data} = await fetcher(
+                {
+                    url   : `/api/profession/${id}`,
+                    method: 'PUT',
+                    body  : {professionUpdateArgs},
+                    json  : true,
+                })
 
-        const professionUpdateInput: ProfessionUpdateInput = {active: false}
-
-        /*            send the request        */
-        const {data: {profession}} = await fetcher(
-            {
-                url   : `/api/profession/${id}`,
-                method: 'PUT',
-                body  : {...professionUpdateInput},
-                json  : true,
-            }) as { data: { profession: Profession } }
-
-        /*            update the UI        */
-        router.refresh()
+            router.refresh()
+            setLoading(false)
+        } catch (e: any) {
+            console.log(e)
+            setLoading(false)
+            setError(true)
+        }
     }
+
     return (
-        <PillButton
-            onClick={onDeactivation}
-            icon="fi-trash"
-            text="מחק"
-        />
+        <>
+            {error ?
+                <PillButton
+                    loading={loading}
+                    disabled={true}
+                    icon="fi-alert-circle"
+                    text="שגיאה"
+                />
+                :
+                <PillButton
+                    loading={loading}
+                    onClick={onDeactivation}
+                    icon="fi-trash"
+                    text="מחק"
+                />
+            }
+        </>
     )
 }
 

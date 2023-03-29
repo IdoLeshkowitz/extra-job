@@ -5,14 +5,12 @@ import RouteBackButton from "@/components/buttons/routeBackButton";
 const UploadCvPage = () => {
     return (
         <>
-            {/* Page wrapper */}
-            <div className='container pt-5 pb-lg-4 mt-5 mb-sm-2'>
-                {/* Sign in card */}
+            <div className='container pb-lg-4 mb-sm-2 h-100 justify-content-center align-items-center d-flex'>
                 <div className='card card-light card-body'>
                     <RouteBackButton/>
                     <div className='row mx-0 align-items-center'>
-                        <div className='col-md-6 border-end-md border-light p-2 p-sm-5'>
-                            <h2 className='h3 text-light mb-4 mb-sm-5' style={{direction:'rtl'}}>
+                        <div className='col-md-6 p-2 p-sm-5 border-start border-light'>
+                            <h2 className='h3 text-light mb-4 mb-sm-5'>
                                 בכדי להמשיך ולהגיש מועמדות <br/>יש להעלות קורות חיים
                             </h2>
                             <div className='d-flex justify-content-center'>

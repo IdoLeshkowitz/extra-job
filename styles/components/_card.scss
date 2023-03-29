@@ -30,7 +30,7 @@
   &[class*=' bg-']:hover,
   &[class*=' bg-'].active,
   &[class*=' bg-'].show {
-    background-color: $card-bg !important;
+    background-color: rgba($dark,.5) !important;
   }
 }
 .dropdown.show .card-hover {

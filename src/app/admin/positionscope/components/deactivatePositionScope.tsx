@@ -1,9 +1,10 @@
 'use client'
-import {FC, MouseEventHandler} from "react";
+import {FC, MouseEventHandler, useState} from "react";
 import {useRouter} from "next/navigation";
-import {Area, Prisma} from "@prisma/client";
-import {fetcher} from "@/lib/api/fetcher";
+import {Prisma} from "@prisma/client";
+import {fetcher} from "../../../../../libs/api/fetcher";
 import PillButton from "@/components/buttons/pillButtons";
+import PositionScopeUpdateArgs = Prisma.PositionScopeUpdateArgs;
 
 interface DeactivatePositionScope {
     id: string
@@ -11,27 +12,51 @@ interface DeactivatePositionScope {
 
 const DeactivatePositionScope: FC<DeactivatePositionScope> = ({id}) => {
     const router = useRouter()
+    const [loading, setLoading] = useState<boolean>(false)
+    const [error, setError] = useState<boolean>(false)
     const onDeactivate: MouseEventHandler<HTMLButtonElement> = async (e) => {
         e.preventDefault()
-        const positionScopeUpdateInput :Prisma.PositionScopeUpdateInput = {active: false}
+        const positionScopeUpdateArgs: PositionScopeUpdateArgs = {
+            where: {id},
+            data : {active: false},
+        }
+        try {
+            setLoading(true)
+            const {data} = await fetcher(
+                {
+                    url   : `/api/positionscope/${id}`,
+                    method: 'PUT',
+                    body  : {positionScopeUpdateArgs},
+                    json  : true,
+                })
 
-        /* send the request */
-        const {data: {area}} = await fetcher(
-            {
-                url: `/api/positionscope/${id}`,
-                method : "PUT",
-                body : {...positionScopeUpdateInput},
-                json: true,
-            })as {data :{area:Area}}
-        router.refresh()
+            router.refresh()
+            setLoading(false)
+        } catch (e: any) {
+            console.log(e)
+            setLoading(false)
+            setError(true)
+        }
     }
 
     return (
-        <PillButton
-            onClick={onDeactivate}
-            icon ='fi-trash'
-            text="מחק"
+        <>
+            {error ?
+                <PillButton
+                    loading={loading}
+                    disabled={true}
+                    icon="fi-alert-circle"
+                    text="שגיאה"
                 />
+                :
+                <PillButton
+                    loading={loading}
+                    onClick={onDeactivate}
+                    icon="fi-trash"
+                    text="מחק"
+                />
+            }
+        </>
     )
 }
 export default DeactivatePositionScope

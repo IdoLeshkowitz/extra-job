@@ -14,21 +14,19 @@ function delay(ms: number) {
 }
 
 export default function UploadCvButton() {
-    const [file, setFile] = useState(null)
     const router = useRouter()
     registerPlugin(
         FilePondPluginFileValidateType,
         FilePondPluginFileValidateSize,
         FilePondPluginImagePreview,
     )
-
     return (
         <SSRProvider>
             <FilePond
                 server="/api/cv"
                 allowMultiple={false}
                 name='cv'
-                labelIdle='<i class="d-inline-block fi-camera-plus fs-2 text-light mb-2"></i><br><span class="fw-bold text-light opacity-70">שלח קורות חיים</span>'
+                labelIdle={`<i class="d-inline-block fi-camera-plus fs-2 text-light mb-2"></i><br><span class="fw-bold text-light opacity-70">שלח קורות חיים</span>`}
                 acceptedFileTypes={['application/pdf']}
                 stylePanelLayout='compact'
                 className='file-uploader border-light bg-faded-light'
@@ -43,6 +41,8 @@ export default function UploadCvButton() {
                 labelFileProcessingError='הקובץ לא נשלח'
                 labelFileProcessing='מעלה קובץ...'
                 labelTapToCancel='לחץ לביטול'
+                maxFileSize='16MB'
+                allowDrop={true}
             />
         </SSRProvider>
     )

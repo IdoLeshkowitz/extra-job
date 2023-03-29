@@ -40,7 +40,7 @@ export default function AdminPageSideBar() {
     const accountPageTitle = 'title'
     return (
         <SSRProvider>
-            <Col md={5} lg={4} className='pe-xl-4 mb-5'>
+            <Col md={3} className='pe-xl-4 mb-5'>
                 <div className='card card-body card-light border-0 shadow-sm pb-1 me-lg-1'>
                     {/*ACCOUNT DETAILS */}
                     <AccountDetails/>
