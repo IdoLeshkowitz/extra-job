@@ -43,11 +43,11 @@ const JobBoardPostResumeLayout = ({
 
           {/* Page title */}
           <div className='text-center pb-4 mb-3'>
-            <h1 className='h2 mb-4'>Create online resume</h1>
-            <p className='mb-4'>Save time by uploading a resume to prefill some of the fields below. Please, use PDF format.</p>
+            <h1 className='h2 mb-4'>צור קורות חיים אונליין</h1>
+            <p className='mb-4'>במידה וכבר קיים ברשותכם קורות חיים בפורמט, חסכו זמן והעלו אותו לאתר בפורמט PDF</p>
             <Button size='lg' variant='primary rounded-pill'>
               <i className='fi-upload me-2'></i>
-              Upload existing resume
+              &nbsp;&nbsp;העלה קורות חיים קיימים
             </Button>
           </div>
           
