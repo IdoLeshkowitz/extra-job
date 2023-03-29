@@ -71,9 +71,8 @@ model JobApplication {
   status       JobApplicationStatus @default(PENDING)
 
   appliedBy  User       @relation(fields: [appliedById], references: [id])
-  joblisting JobListing @relation(fields: [jobListingId], references: [id])
+  jobListing JobListing @relation(fields: [jobListingId], references: [id])
 
-  @@unique([appliedById, jobListingId, status])
   @@fulltext([appliedById, jobListingId, createdAt(sort: Desc)])
 }
 

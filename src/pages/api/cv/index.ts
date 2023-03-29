@@ -4,8 +4,7 @@ import fs from "fs";
 import {Prisma} from ".prisma/client";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import prisma from "../../../../libs/prisma";
-import CvCreateInput = Prisma.CvCreateInput;
+import {createCv} from "@/services/cvService";
 import CvCreateArgs = Prisma.CvCreateArgs;
 
 export const config = {
@@ -34,12 +33,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         }
                     }
                 }
-                try {
-
-                } catch (e) {
-                    console.log(e)
-                    res.status(500).json({message: "Internal server error"})
+                const {data, error} = await createCv(cvCreateArgs)
+                if (error) {
+                    res.status(500).json({error})
                 }
+                res.status(200).json({data})
             }
         )
     }

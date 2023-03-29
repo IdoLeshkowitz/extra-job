@@ -33,7 +33,7 @@ const JobListingCard = async ({jobListingId}: { jobListingId: string }) => {
     return (
         <div className="col-auto">
             <div
-                className="card card-light card-hover h-100"
+                className="card bg-faded-light shadow-lg border-dark card-hover h-100 mx-md-3"
             >
                 <div className='card-body position-relative pb-3 d-flex justify-content-between flex-column'>
                     <h3 className='h6 mb-2 fs-base'>

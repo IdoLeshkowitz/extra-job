@@ -12,7 +12,7 @@ function RootLayout({children}: { children: ReactNode }) {
             <html>
                 <body >
                     <AuthProvider>
-                        <main className="page-wrapper bg-gradient">
+                        <main className="page-wrapper bg-gradient" style={{direction:'rtl'}}>
                             <MainLayoutNavBar/>
                             {children}
                         </main>

@@ -1,4 +1,5 @@
-import {Button, Col, Form, Offcanvas} from "react-bootstrap";
+'use client'
+import {Button, Col, Form, Offcanvas, SSRProvider} from "react-bootstrap";
 import SimpleBar from "simplebar-react";
 import {FC, MouseEventHandler, useEffect, useState} from "react";
 import {Prisma} from ".prisma/client";
@@ -6,11 +7,6 @@ import {fetcher} from "@/lib/api/fetcher";
 import {Area, PositionScope, Profession} from "@prisma/client";
 import {notFound, usePathname, useRouter, useSearchParams} from "next/navigation";
 import AreaFindManyArgs = Prisma.AreaFindManyArgs;
-
-interface JobListingSideBarProps {
-    show: boolean;
-    handleClose: () => void;
-}
 
 async function getAreas() {
     const areaFindManyArgs: AreaFindManyArgs = {
@@ -63,7 +59,7 @@ async function getPositionScopes() {
     }
 }
 
-const JobListingSideBar: FC<JobListingSideBarProps> = ({show, handleClose}) => {
+const JobListingSideBar = () => {
     const [areas, setAreas] = useState<Area[]>([])
     const [professions, setProfessions] = useState<Profession[]>([])
     const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
@@ -73,6 +69,9 @@ const JobListingSideBar: FC<JobListingSideBarProps> = ({show, handleClose}) => {
     const searchParams = useSearchParams()
     const url = usePathname()
     const router = useRouter()
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     useEffect(() => {
         Promise.all([getAreas(), getProfessions(), getPositionScopes()])
             .then(([areas, professions, positionScopes]) => {
@@ -119,7 +118,7 @@ const JobListingSideBar: FC<JobListingSideBarProps> = ({show, handleClose}) => {
     }
 
     return (
-        <>
+        <SSRProvider>
             <Col
                 as='aside'
                 lg={3}
@@ -249,7 +248,11 @@ const JobListingSideBar: FC<JobListingSideBarProps> = ({show, handleClose}) => {
                     </Offcanvas.Body>
                 </Offcanvas>
             </Col>
-        </>
+            <Button size='sm' className='w-100 rounded-0 fixed-bottom d-lg-none' onClick={handleShow}>
+                <i className='fi-filter me-2'></i>
+                Filters
+            </Button>
+        </SSRProvider>
     )
 }
 export default JobListingSideBar

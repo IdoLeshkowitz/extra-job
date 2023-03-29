@@ -24,3 +24,13 @@ export async function findFirstJobApplication(jobApplicationFindFirstArgs: JobAp
         return {error: {message: e.message}}
     }
 }
+
+export async function createJobApplication(jobApplicationCreateArgs: Prisma.JobApplicationCreateArgs) {
+    try {
+        const jobApplication = await prisma.jobApplication.create(jobApplicationCreateArgs)
+        return {data: {jobApplication}}
+    } catch (e: any) {
+        console.error(e)
+        return {error: {message: e.message}}
+    }
+}
