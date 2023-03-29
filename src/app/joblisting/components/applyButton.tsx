@@ -179,7 +179,7 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
                         },
                         jobListing: {
                             connect: {
-                                id: jobListingId,
+                                id: jobListingId
                             }
                         }
                     }
@@ -191,6 +191,7 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
                     json  : true,
                     body  : {jobApplicationCreateArgs},
                 })
+                console.log(data)
                 //set state to applied
                 setState(State.APPLIED)
             } catch (e) {
