@@ -5,7 +5,7 @@ import CustomPagination from "@/components/pagination/customPagination";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {getServerSession, User} from "next-auth";
 import ApplyButton from "@/app/joblisting/components/ApplyButton";
-import {Fragment} from "react";
+import {Fragment, Key} from "react";
 
 function getJobListings({positionScopeId, areaId, professionId, skip, take}: SearchParams) {
     return prisma.jobListing.findMany({

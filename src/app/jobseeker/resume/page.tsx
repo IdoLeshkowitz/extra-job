@@ -8,6 +8,9 @@ import Form from 'react-bootstrap/Form'
 import JobBoardPostResumeLayout from '../components/ResumeLayout'
   
 import { Document, Page, Text, View, StyleSheet, pdf, PDFDownloadLink, Font, PDFViewer } from '@react-pdf/renderer';
+import styles from './componenets/styles';
+import {ProfileContainer}  from './componenets/ProfileContainer';
+import { EmploymentHistoryItem } from './componenets/EmpolymentHistoryItem';
 
 // font register a font that supports Hebrew
 Font.register({
@@ -17,90 +20,90 @@ Font.register({
   ],
 });
 
-
-const styles = StyleSheet.create({
-    page: {
-      direction: 'rtl',
-      display: 'flex',
-      flexDirection: 'column',
-      fontFamily: 'Rubik',
-    },
-    section__top: {
-      flexGrow: 1,
-      backgroundColor: '#084c41',
-      height: '100%',
-    },
-    section__right: {
-      margin: 10,
-      padding: 10,
-      paddingTop: 20,
-      width: '75%',
-    },
-    section__left: {
-      width: '25%',
-      backgroundColor: '#084c41',
-    },
-    name_text: {
-      paddingTop: '10px',
-      paddingBottom: '5px',
-      fontSize: '14px',
-      color: 'white',
-    },
-    profession_text: {
-      // fontFamily: 'Roboto',
-      color: '#d1d5db',
-      fontSize: '11px',
-    },
-    heading__text: {
-      fontSize: '14',
-    },
-    main__text: {
-      fontSize: '11',
-    },
-    left__section__heading: {
-      fontSize: '12',
-    },
-    items__container: {
-      marginLeft: '15',
-      marginRight: '15',
-      fontSize: '11',
-    },
-    skill__item__container: {
-      paddingTop: '3px',
-    },
-    skill__item: {
+const Divider = () => (
+  <View
+    style={{
+      height: '1px',
+      marginTop: '13px',
+      marginBottom: '12px',
       width: '100%',
-      height: '5px',
-      marginTop: '5px',
-      backgroundColor: '#518179',
-    },
-    skill__item__fill: {
-      width: '30%',
-      height: '51px',
-      backgroundColor: '#FFF',
-    },
-    skill__item__text: {
-      color: '#FFF',
-      fontSize: '9',
-    },
-    socials__container: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      paddingTop: '20',
-    },
-    
-});
+      backgroundColor: '#084c41',
+    }}
+  ></View>
+)
+
+const Wrapper = ({ heading, ...props } : any) => {
+  return (
+    <View style={{ marginTop: '25', marginLeft: '15', marginRight: '15' }}>
+      <Text
+        style={{
+          color: '#FFF',
+          fontSize: '15',
+          paddingBottom: '10',
+        }}
+      >
+        {heading}
+      </Text>
+      {props.children}
+    </View>
+  )
+}
 
 const PostResumePDF = (props: any) => (
   console.log(props),
-  // make a styled PDF for a CV
   <Document>
     <Page size="A4" style={styles.page}>
-      <View style={styles.section__top}>
-        <View style={styles.section__right}>
-          <Text style={styles.name_text}>שם מלא</Text>
-          <Text style={styles.profession_text}>תפקיד</Text>
+      <View style={styles.section__left}>
+        <ProfileContainer
+          name={props.value.firstName + ' ' + props.value.lastName}
+          profession={props.value.title}
+          url={'https://i.imgur.com/oU0RCge.png'}
+          display={true}
+        />
+        <View>
+            <Wrapper heading={'יצירת קשר'}>
+              {[props.value.email, props.value.phone].map((item, index) => (
+                <Text
+                  key={index}
+                  style={{ color: '#fff', fontSize: '12', marginBottom: '8px' }}
+                >
+                  {item}
+                </Text>
+              ))}
+            </Wrapper>
+        </View>
+      </View>
+      <View style={styles.section__right}>
+        <View>
+          <Text
+            style={{
+            color: '#000',
+            fontSize: '15',
+            }}>   
+          תיאור מקצועי
+          </Text>
+          <Divider />
+          <Text style={styles.main__text}>{props.value.about}</Text>
+        </View>
+        <View style={{ paddingTop: '20px' }}>
+          <Text
+            style={{
+              color: '#000',
+              fontSize: '15',
+            }}
+          >
+          ניסיון תעסוקתי
+          </Text>
+          <Divider />
+          <EmploymentHistoryItem
+            title={props.value.jobTitle}
+            company={props.value.company}
+            monthStart={props.value.monthStart}
+            yearStart={props.value.yearStart}
+            monthEnd={props.value.monthEnd}
+            yearEnd={props.value.yearEnd}
+            description={props.value.description}
+          />
         </View>
       </View>
     </Page>
@@ -120,7 +123,15 @@ const Resume = () => {
         lastName: event.target.elements['pr-sn'].value,
         email: event.target.elements['pr-email'].value,
         phone: event.target.elements['pr-phone'].value,
-        
+        about: event.target.elements['pr-about'].value,
+        title: event.target.elements['pr-title'].value,
+        jobTitle: event.target.elements['pr-job-title'].value,
+        company: event.target.elements['pr-company'].value,
+        monthStart: event.target.elements['pr-month-start'].value,
+        yearStart: event.target.elements['pr-year-start'].value,
+        monthEnd: event.target.elements['pr-month-end'].value,
+        yearEnd: event.target.elements['pr-year-end'].value,
+        description: event.target.elements['pr-description'].value,
       };
 
       console.log(data)
@@ -149,14 +160,14 @@ const Resume = () => {
               שם פרטי
               <span className='text-danger'>&nbsp;*</span>
             </Form.Label>
-            <Form.Control size='lg' placeholder='Enter your first name' defaultValue='Annette' required/>
+            <Form.Control size='lg' placeholder='Enter your first name' defaultValue='שחר' required/>
           </Col>
           <Col as={Form.Group} controlId='pr-sn'>
             <Form.Label>
               שם משפחה
               <span className='text-danger'>&nbsp;*</span>
             </Form.Label>
-            <Form.Control size='lg' placeholder='Enter your second name' defaultValue='Black' required/>
+            <Form.Control size='lg' placeholder='Enter your second name' defaultValue='משולם' required/>
           </Col>
           <Col as={Form.Group} controlId='pr-email'>
             <Form.Label>
@@ -168,10 +179,25 @@ const Resume = () => {
           <Col as={Form.Group} controlId='pr-phone'>
             <Form.Label>
               פלאפון
+              <span className='text-danger'>&nbsp;*</span>
             </Form.Label>
-            <Form.Control  size='lg' type='tel' placeholder='Enter your phone number' defaultValue='(302) 555-0107' />
+            <Form.Control  size='lg' type='tel' placeholder='Enter your phone number' defaultValue='(302) 555-0107' required/>
           </Col>
-          {/* <h2 className='h4 mb-4'>
+          <Col as={Form.Group} controlId='pr-about'>
+            <Form.Label>
+              ספר על עצמך
+              <span className='text-danger'>&nbsp;*</span>
+            </Form.Label>
+            <Form.Control as='textarea' size='lg' rows={5} placeholder='Describe your position and any significant accomplishments' required/>
+            <div className='form-text pt-1'>8,000 characters left</div>
+          </Col>
+          <Col as={Form.Group} controlId='pr-title'>
+            <Form.Label>
+              תפקיד \ טייטל מקצועי
+            </Form.Label>
+            <Form.Control size='lg' placeholder='Enter your first name' defaultValue='מתכנת'/>
+          </Col>
+          <h2 className='h4 mb-4'>
           <i className='fi-briefcase text-primary mt-n1 me-2'></i>
           &nbsp;&nbsp;ניסיון תעסוקתי
           </h2>
@@ -196,7 +222,7 @@ const Resume = () => {
             <span className='text-danger'>&nbsp;*</span>
           </Form.Label>
           <Row className='gx-2 gx-sm-3'>
-            <Col xs={7} sm={8}>
+            <Col xs={7} sm={8} as={Form.Group} controlId='pr-month-start'>
               <Form.Select size='lg' defaultValue='default' required>
                 <option value='default' disabled>Month</option>
                 <option value='January'>January</option>
@@ -213,7 +239,7 @@ const Resume = () => {
                 <option value='December'>December</option>
               </Form.Select>
             </Col>
-            <Col xs={5} sm={4}>
+            <Col xs={5} sm={4} as={Form.Group} controlId='pr-year-start'>
               <Form.Select size='lg' defaultValue='default' required>
                 <option value='default' disabled>Year</option>
                 <option value='2021'>2021</option>
@@ -238,7 +264,7 @@ const Resume = () => {
             <span className='text-danger'>&nbsp;*</span>
           </Form.Label>
           <Row className='gx-2 gx-sm-3'>
-            <Col xs={7} sm={8}>
+            <Col xs={7} sm={8} as={Form.Group} controlId='pr-month-end'>
               <Form.Select size='lg' defaultValue='default' required>
                 <option value='default' disabled>Month</option>
                 <option value='January'>January</option>
@@ -255,7 +281,7 @@ const Resume = () => {
                 <option value='December'>December</option>
               </Form.Select>
             </Col>
-            <Col xs={5} sm={4}>
+            <Col xs={5} sm={4} as={Form.Group} controlId='pr-year-end'>
               <Form.Select size='lg' defaultValue='default' required>
                 <option value='default' disabled>Year</option>
                 <option value='2021'>2021</option>
@@ -274,13 +300,23 @@ const Resume = () => {
             </Col>
           </Row>
         </Col>
+        <Row className='gy-4' style={{width: '100%'}}>
+        <Col as={Form.Group} controlId='pr-description'>
+              <Form.Label>
+                תיאור התפקיד
+                <span className='text-danger'>&nbsp;*</span>
+              </Form.Label>
+              <Form.Control as='textarea' size='lg' rows={5} placeholder='Describe your position and any significant accomplishments' required/>
+                <div className='form-text pt-1'>8,000 characters left</div>
+        </Col>
+        </Row>
         <Col xs={12} className="h4 mb-4">
           <Button variant='link text-primary' className='px-0'>
             <i className='fi-plus me-2'></i>
-            הוסף מקום עבודה נוסף
+            &nbsp;הוסף מקום עבודה נוסף
           </Button>
         </Col>
-        <br/>
+        { /* <br/>
         <h2 className='h4 mb-4'>
         <i className='fi-education text-primary mt-n1 me-2'></i>
         &nbsp;&nbsp;השכלה
