@@ -79,7 +79,7 @@ const JobListingSideBar = () => {
                 setProfessions(professions)
                 setPositionScopes(positionScopes)
             })
-    }, [])
+    }, [areas, professions, positionScopes])
     useEffect(() => {
         const areaIds = searchParams?.get('areaIds')
         const professionIds = searchParams?.get('professionIds')
