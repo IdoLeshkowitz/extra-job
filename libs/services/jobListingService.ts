@@ -2,7 +2,7 @@ import prisma from "../prisma";
 import {Prisma} from "@prisma/client";
 import {CustomError} from "@/types/error";
 import JobListingCountArgs = Prisma.JobListingCountArgs;
-import JobListingFindManyArgs = Prisma.JobListingCountArgs;
+import JobListingFindManyArgs = Prisma.JobListingFindManyArgs
 import JobListingFindUniqueArgs = Prisma.JobListingFindUniqueArgs;
 import JobListingUpdateArgs = Prisma.JobListingUpdateArgs;
 import JobListingCreateArgs = Prisma.JobListingCreateArgs;
@@ -11,7 +11,7 @@ export enum JobListingErrorCodes {
     SERIAL_NUMBER_ALREADY_EXISTS = "P2002",
 }
 
-export const getJobListingIds = async (jobListingFindManyArgs: JobListingFindManyArgs) => {
+export const findManyJobListings = async (jobListingFindManyArgs: JobListingFindManyArgs) => {
     try {
         const jobListings = await prisma.jobListing.findMany({...jobListingFindManyArgs, select: {id: true}})
         return {data: {jobListings}}
@@ -45,7 +45,7 @@ export const createJobListing = async (jobListingToCreate: JobListingCreateArgs)
     }
 }
 
-export const countJobListings = async (jobListingCountArgs: JobListingCountArgs) => {
+export const countJobListing = async (jobListingCountArgs: JobListingCountArgs) => {
     try {
         const count = await prisma.jobListing.count(jobListingCountArgs)
         return {data: {count}}

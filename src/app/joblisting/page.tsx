@@ -1,8 +1,12 @@
-import {countJobListings, getJobListingIds} from "@/services/jobListingService";
+import {countJobListing, findManyJobListings} from "@/services/jobListingService";
 import ToastDismissible from "@/components/toasts/toastDismissible";
 import JobListingCard from "./components/jobListingCard";
 import CustomPagination from "@/components/pagination/customPagination";
 import JobListingSideBar from "@/app/joblisting/components/JobListingSideBar";
+import {cache} from "react";
+import {Prisma} from ".prisma/client";
+import JobListingFindManyArgs = Prisma.JobListingFindManyArgs;
+import JobListingCountArgs = Prisma.JobListingCountArgs;
 
 interface JobListingsSearchParams {
     skip?: string,
@@ -12,6 +16,15 @@ interface JobListingsSearchParams {
     positionScopeIds?: string,
     professionIds?: string,
 }
+
+
+const getJobListingIds = cache(async (jobListingFindManyArgs: JobListingFindManyArgs) => {
+    return await findManyJobListings(jobListingFindManyArgs)
+})
+
+const countAllJobListings = cache(async (jobListingCountArgs: JobListingCountArgs) => {
+    return await countJobListing(jobListingCountArgs)
+})
 
 export default async function JobListingPage({searchParams}: { searchParams: JobListingsSearchParams }) {
     const [skip, take] = [parseInt(searchParams.skip ?? '0'), parseInt(searchParams.take ?? '9')];
@@ -27,7 +40,7 @@ export default async function JobListingPage({searchParams}: { searchParams: Job
             },
             orderBy: {createdAt: 'desc'},
         }),
-        countJobListings({
+        countJobListing({
             where: {
                 serialNumber : searchParams.serialNumber ? searchParams.serialNumber : undefined,
                 area         : {OR: searchParams.areaIds ? searchParams.areaIds.split(',').map(areaId => ({id: areaId})) : undefined},
@@ -68,5 +81,3 @@ export default async function JobListingPage({searchParams}: { searchParams: Job
         </div>
     )
 }
-
-export const dynamic = "force-dynamic"

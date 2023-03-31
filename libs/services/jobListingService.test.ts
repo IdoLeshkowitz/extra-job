@@ -1,6 +1,6 @@
 import {describe, expect, test, vi} from "vitest";
 import prisma from "../__mocks__/prisma";
-import {countJobListings, createJobListing, getUniqueJobListing, updateJobListing} from "./jobListingService";
+import {countJobListing, createJobListing, getUniqueJobListing, updateJobListing} from "./jobListingService";
 import {Prisma} from "@prisma/client";
 import JobListingUpdateArgs = Prisma.JobListingUpdateArgs;
 
@@ -10,12 +10,12 @@ vi.mock('../prisma')
 describe('professionService', () => {
     test('countJobListings', async () => {
         prisma.jobListing.count.mockResolvedValueOnce(1)
-        const count = await countJobListings({where: {active: true}});
+        const count = await countJobListing({where: {active: true}});
         expect(count).toMatchObject({data: {count: 1}});
     })
     test('countJobListings error', async () => {
         prisma.jobListing.count.mockRejectedValueOnce(new Error("error"))
-        const count = await countJobListings({where: {active: true}});
+        const count = await countJobListing({where: {active: true}});
         expect(count).toMatchObject({error: {message: "error"}});
     })
     test('createJobListing', async () => {

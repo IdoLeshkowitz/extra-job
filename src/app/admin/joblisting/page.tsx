@@ -1,4 +1,4 @@
-import {countJobListings, getJobListingIds} from "@/services/jobListingService";
+import {countJobListing, findManyJobListings} from "@/services/jobListingService";
 import ToastDismissible from "@/components/toasts/toastDismissible";
 import JobListingCardAdmin from "@/app/admin/joblisting/components/JobListingCardAdmin";
 import CustomPagination from "@/components/pagination/customPagination";
@@ -19,7 +19,7 @@ interface JobListingsSearchParams {
 export default async function JobListingAdminPage({searchParams}: { searchParams: JobListingsSearchParams }) {
     const [skip, take] = [parseInt(searchParams.skip ?? '0'), parseInt(searchParams.take ?? '10')];
     const [{data: jobListingData, error: jobListingsIdsError}, {data: countData, error: countError}] = await Promise.all([
-        getJobListingIds({
+        findManyJobListings({
             skip,
             take,
             where  : {
@@ -31,7 +31,7 @@ export default async function JobListingAdminPage({searchParams}: { searchParams
             },
             orderBy: {createdAt: 'desc'},
         }),
-        countJobListings({
+        countJobListing({
             where: {
                 active         : searchParams.active ? searchParams.active === 'true' : undefined,
                 serialNumber   : searchParams.serialNumber ? searchParams.serialNumber : undefined,
