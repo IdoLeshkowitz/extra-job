@@ -81,3 +81,5 @@ export default async function JobListingPage({searchParams}: { searchParams: Job
         </div>
     )
 }
+
+export const dynamic = "force-dynamic"
