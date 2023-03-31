@@ -23,181 +23,79 @@ enum State {
     ERROR
 }
 
-async function getUserJobApplications(jobListingId: string, appliedById: string) {
-    try {
-        const {data} = await fetcher({
-            url   : `/api/jobapplication/${appliedById}`,
-            method: 'GET',
-            json  : true,
-            cache : 'force-cache',
-        })
-        return data?.jobApplications ?? []
-    } catch (e) {
-        console.error(e)
-        notFound()
-    }
-}
-
-async function countCv(userId: string) {
-    try {
-        const {data} = await fetcher({
-            url   : `/api/cv/count`,
-            method: 'GET',
-            json  : true,
-            cache : 'force-cache',
-        })
-        return data?.cvCount ?? 0
-    } catch (e) {
-        console.error(e)
-        notFound()
-    }
-}
-
 const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
-    const [state, setState] = useState<State>(State.LOADING)
-    const router = useRouter()
-    const pathname = usePathname()
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
     const session = useSession()
-    useEffect(() => {
-        if (state === State.ERROR) {
-            return
-        }
-        //loading
-        if (session.status === 'loading') {
-            setState(State.LOADING)
-            return
-        }
-        //user not logged in
-        if (!session?.data?.user) {
-            setState(State.NOT_LOGGED_IN)
-            return
-        }
-        //check if user has cv
-        countCv(session.data.user.id).then((count: number) => {
-            if (count === 0) {
-                setState(State.MISSING_CV)
-                return
-            }
-        })
-        //fetch job applications
-        setState(State.LOADING)
-        getUserJobApplications(jobListingId, session.data.user.id).then((jobApplications: JobApplication[]) => {
-            const applied = jobApplications.find((jobApplication: JobApplication) => jobApplication.jobListingId === jobListingId)
-            if (applied) {
-                setState(State.APPLIED)
-                return
-            }
-            setState(State.NOT_APPLIED)
-        })
-    }, [session?.data?.user, session.status])
-    if (state === State.ERROR) {
-        return (
-            <div
-                className="icon-box-media text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
-                <i className="fi-x"/>
-            </div>
-        )
-    }
-
-    if (state === State.MISSING_CV) {
-        return (
-            <Link
-                href="/uploadcv"
-                className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-1 d-flex justify-content-start zindex-10 border-0 align-self-center"
-            >
-                <div
-                    className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
-                    <i className="fi-lock"/>
-                </div>
-                <h3 className="icon-box-title fs-sm text-light text-end pe-2 ps-1 pt-1">הוסף קורות חיים כדי להמשיך</h3>
-            </Link>
-        )
-    }
-    if (state === State.NOT_LOGGED_IN) {
-        return (
-            <Link
-                href="/api/auth/signin"
-                className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-1 d-flex justify-content-start zindex-10 border-0 align-self-center"
-            >
-                <div
-                    className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
-                    <i className="fi-arrow-right"/>
-                </div>
-                <h3 className="icon-box-title fs-sm text-light text-end pe-2 ps-1 pt-1">עליך להתחבר בכדי להמשיך</h3>
-            </Link>
-        )
-    }
-    if (state === State.LOADING) {
-        return (
-            <div
-                className="icon-box-media text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
-                <div className="spinner-grow" role="status">
-                </div>
-            </div>
-        )
-    }
-    if (state === State.APPLIED) {
-        return (
-            <div
-                className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-1 d-flex justify-content-start zindex-10 border-0 align-self-center"
-            >
-                <div
-                    className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
-                    <i className="fi-check"/>
-                </div>
-                <h3 className="icon-box-title fs-sm text-light text-end pe-2 ps-1 pt-1">הבקשה התקבלה</h3>
-            </div>
-        )
-    }
-    if (state === State.NOT_APPLIED) {
-        async function onClick() {
-            //set state to loading
-            setState(State.LOADING)
-            try {
-                const jobApplicationCreateArgs: JobApplicationCreateArgs = {
-                    data: {
-                        appliedBy : {
-                            connect: {
-                                id: session!.data!.user!.id
-                            }
-                        },
-                        jobListing: {
-                            connect: {
-                                id: jobListingId
-                            }
+    // return (
+    //     <Link
+    //         href="/uploadcv"
+    //         className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-1 d-flex justify-content-start zindex-10 border-0 align-self-center"
+    //     >
+    //         <div
+    //             className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
+    //             <i className="fi-lock"/>
+    //         </div>
+    //         <h3 className="icon-box-title fs-sm text-light text-end pe-2 ps-1 pt-1">הוסף קורות חיים כדי להמשיך</h3>
+    //     </Link>
+    // )
+    async function onClick() {
+        //set state to loading
+        setLoading(true)
+        try {
+            const jobApplicationCreateArgs: JobApplicationCreateArgs = {
+                data: {
+                    appliedBy : {
+                        connect: {
+                            id: session!.data!.user!.id
+                        }
+                    },
+                    jobListing: {
+                        connect: {
+                            id: jobListingId
                         }
                     }
                 }
-                //create job application
-                const {data} = await fetcher({
-                    url   : `/api/jobapplication`,
-                    method: 'POST',
-                    json  : true,
-                    body  : {jobApplicationCreateArgs},
-                })
-                //set state to applied
-                setState(State.APPLIED)
-            } catch (e) {
-                console.error(e)
-                setState(State.ERROR)
             }
+            //create job application
+            const {data} = await fetcher({
+                url   : `/api/jobapplication`,
+                method: 'POST',
+                json  : true,
+                body  : {jobApplicationCreateArgs},
+            })
+            setLoading(false)
+        } catch (e) {
+            console.error(e)
+            setLoading(false)
+            setError(true)
         }
-
-        return (
-            <Button
-                onClick={onClick}
-                className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-2 d-flex justify-content-start zindex-10 border-0 align-self-center"
-            >
-                <div
-                    className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
-                    <i className="fi-arrow-right"/>
-                </div>
-                <h3 className="icon-box-title fs-sm text-light text-end pe-2 ps-1 pt-1">הגש בקשה</h3>
-            </Button>
-        )
     }
 
-    return null
+    if (loading) return (
+        <div className="placeholder-glow">
+            <div className="placeholder col-12 rounded-pill" style={{minHeight: '4rem'}}>
+            </div>
+        </div>
+    )
+    if (error) return (
+        <div
+            className="icon-box-media text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
+            <i className="fi-x"/>
+        </div>
+    )
+    return (
+        <Button
+            onClick={onClick}
+            className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-2 d-flex justify-content-start zindex-10 border-0 align-self-center"
+        >
+            <div
+                className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
+                <i className="fi-arrow-right"/>
+            </div>
+            <h3 className="icon-box-title fs-sm text-light text-end pe-2 ps-1 pt-1">הגש בקשה</h3>
+        </Button>
+    )
 }
 
 export default ApplyButton

@@ -38,26 +38,21 @@ const JobListingCard = async ({jobListingId}: { jobListingId: string }) => {
                         </Link>
                     </h3>
                     <p className={`mb-2 fs-sm text-black-50 opacity-50' `}>{getHebrewDate(createdAt)}</p>
-                    <ApplyButton jobListingId={jobListingId}/>
-                    {/*{price && <div className='fw-bold'>*/}
-                    {/*    <i className={`fi-cash mt-n1 me-2 lead align-middle${light ? ' opacity-50' : ' opacity-70'}`}></i>*/}
-                    {/*    <span className={light ? 'opacity-70' : ''}>{price}</span>*/}
-                    {/*</div>}*/}
                 </div>
                 <>
                     <div
-                        className='card-footer d-flex align-items-center justify-content-center mx-3 pt-3 text-nowrap flex-wrap gap-2'>
-                        <span className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2'>
+                        className='card-footer d-flex align-items-center justify-content-center pt-3 text-nowrap flex-wrap gap-2 px-1'>
+                        <span className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 fs-xs'>
                             <i className={`fi-map-pin ms-1 mt-n1 fs-lg text-black-50`}></i>
                             {area.name}
                         </span>
                         {/*POSITION SCOPE*/}
-                        <span className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2'>
+                        <span className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 fs-xs'>
                             <i className={`fi-pie-chart ms-1 mt-n1 fs-lg text-black-50`}></i>
                             {positionScope.name}
                         </span>
                         {/*PROFESSION*/}
-                        <span className='d-inline-block fs-sm text-black-50 bg-faded-dark rounded-2 p-2'>
+                        <span className='d-inline-block fs-sm text-black-50 bg-faded-dark rounded-2 p-2 fs-xs'>
                             <i className={`fi-briefcase ms-1 mt-n1 fs-lg text-black-50`}></i>
                             {profession.name}
                         </span>

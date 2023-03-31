@@ -3,10 +3,10 @@ interface FetcherParams {
     method?: string;
     body?: Record<string, any>
     json?: boolean
-    cache?: RequestCache
+    revalidate?: number | false
 }
 
-export const fetcher = async ({url, method, json, body, cache}: FetcherParams) => {
+export const fetcher = async ({url, method, json, body, revalidate}: FetcherParams) => {
     const res = await fetch(url, {
         method : method || 'GET',
         body   : body && JSON.stringify(body),
@@ -14,7 +14,9 @@ export const fetcher = async ({url, method, json, body, cache}: FetcherParams) =
             Accept        : 'application/json',
             'Content-Type': 'application/json'
         },
-        cache : cache || 'force-cache',
+        next   : {
+            revalidate
+        }
     },)
     if (!res.ok) {
         return Promise.reject(await res.json())
