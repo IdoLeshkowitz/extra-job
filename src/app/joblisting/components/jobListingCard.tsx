@@ -2,14 +2,8 @@ import {getUniqueJobListing} from "@/services/jobListingService";
 import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
 import Link from 'next/link'
 import ApplyButton from "@/app/joblisting/components/applyButton";
+import getHebrewDate from "@/lib/util/getHebrewDate";
 
-function getDateString(date: Date) {
-    const d = new Date(date)
-    const year = d.toLocaleString('he-IL', {year: 'numeric'})
-    const month = d.toLocaleString('he-IL', {month: 'long'})
-    const day = d.toLocaleString('he-IL', {day: 'numeric'})
-    return `${year} ${month} ${day}`.split(' ').reverse().join(' ')
-}
 
 const JobListingCard = async ({jobListingId}: { jobListingId: string }) => {
     const {data, error} = await getUniqueJobListing({
@@ -29,9 +23,9 @@ const JobListingCard = async ({jobListingId}: { jobListingId: string }) => {
     const {serialNumber, name, description, area, profession, createdAt, positionScope} = data?.jobListing as JobListing & (JobListing & { area: Area, positionScope: PositionScope, profession: Profession })
     const horizontal = false
     const light = true;
-    const href = `/joblisting`
+    const href = `/joblisting/${jobListingId}`
     return (
-        <div className="col-auto">
+        <div className="col-auto" tabIndex={0}>
             <div
                 className="card bg-faded-light shadow-lg border-dark card-hover h-100 mx-md-3"
             >
@@ -43,8 +37,8 @@ const JobListingCard = async ({jobListingId}: { jobListingId: string }) => {
                             {name}
                         </Link>
                     </h3>
-                    <p className={`mb-2 fs-sm text-black-50 opacity-50' `}>{getDateString(createdAt)}</p>
-                        <ApplyButton jobListingId={jobListingId}/>
+                    <p className={`mb-2 fs-sm text-black-50 opacity-50' `}>{getHebrewDate(createdAt)}</p>
+                    <ApplyButton jobListingId={jobListingId}/>
                     {/*{price && <div className='fw-bold'>*/}
                     {/*    <i className={`fi-cash mt-n1 me-2 lead align-middle${light ? ' opacity-50' : ' opacity-70'}`}></i>*/}
                     {/*    <span className={light ? 'opacity-70' : ''}>{price}</span>*/}

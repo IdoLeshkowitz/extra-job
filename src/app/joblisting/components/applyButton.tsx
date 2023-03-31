@@ -23,23 +23,15 @@ enum State {
     ERROR
 }
 
-async function getJobApplication(jobListingId: string, appliedById: string) {
-    const jobApplicationFindFirstArgs: JobApplicationFindFirstArgs = {
-        where     : {
-            jobListingId,
-            appliedById,
-        }, orderBy: {
-            createdAt: 'desc'
-        },
-    }
+async function getUserJobApplications(jobListingId: string, appliedById: string) {
     try {
         const {data} = await fetcher({
-            url   : `/api/jobapplication/first?jobApplicationFindFirstArgs=${JSON.stringify(jobApplicationFindFirstArgs)}`,
+            url   : `/api/jobapplication/${appliedById}`,
             method: 'GET',
             json  : true,
             cache : 'force-cache',
         })
-        return data?.jobApplication ?? null
+        return data?.jobApplications ?? []
     } catch (e) {
         console.error(e)
         notFound()
@@ -66,7 +58,6 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
     const router = useRouter()
     const pathname = usePathname()
     const session = useSession()
-    console.log('hello')
     useEffect(() => {
         if (state === State.ERROR) {
             return
@@ -88,25 +79,15 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
                 return
             }
         })
-        //fetch job application
-        const jobApplication = getJobApplication(jobListingId, session.data.user.id).then((jobApplication: JobApplication | null) => {
-            //user already applied
-            if (jobApplication) {
-                //check job application status
-                if (jobApplication.status === JobApplicationStatus.PENDING) {
-                    //if status is pending - show applied
-                    setState(State.APPLIED)
-                    return
-                }
-                //if status is not pending - show not applied
-                setState(State.NOT_APPLIED)
+        //fetch job applications
+        setState(State.LOADING)
+        getUserJobApplications(jobListingId, session.data.user.id).then((jobApplications: JobApplication[]) => {
+            const applied = jobApplications.find((jobApplication: JobApplication) => jobApplication.jobListingId === jobListingId)
+            if (applied) {
+                setState(State.APPLIED)
                 return
             }
-            //user didnt apply
-            else {
-                setState(State.NOT_APPLIED)
-                return
-            }
+            setState(State.NOT_APPLIED)
         })
     }, [session?.data?.user, session.status])
     if (state === State.ERROR) {
@@ -194,7 +175,6 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
                     json  : true,
                     body  : {jobApplicationCreateArgs},
                 })
-                console.log(data)
                 //set state to applied
                 setState(State.APPLIED)
             } catch (e) {
@@ -206,7 +186,7 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
         return (
             <Button
                 onClick={onClick}
-                className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-1 d-flex justify-content-start zindex-10 border-0 align-self-center"
+                className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-2 d-flex justify-content-start zindex-10 border-0 align-self-center"
             >
                 <div
                     className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center w-auto">

@@ -24,11 +24,11 @@ const CardNavItem: FC<CardNavItemProps> = ({href, icon, children, active, classN
     <>
         {href ? <Link href={href} {...props}
                       className={`card-nav-link${className ? ` ${className}` : ''}${active ? ' active' : ''}`}>
-                {icon ? <i className={`${icon} me-2`}></i> : ''}
+                {icon ? <i className={`${icon} ms-2`}></i> : ''}
                 {children}
             </Link> :
             <div {...props} className={`card-nav-link${className ? ` ${className}` : ''}${active ? ' active' : ''}`}>
-                {icon ? <i className={`${icon} me-2`}></i> : ''}
+                {icon ? <i className={`${icon} ms-2`}></i> : ''}
                 {children}
             </div>}
     </>

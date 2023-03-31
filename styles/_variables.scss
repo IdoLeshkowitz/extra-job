@@ -87,7 +87,7 @@ $container-max-widths                        : (
         xxl: 1320px
 ) !default;
 // Body
-$body-color                                  : $gray-700 !default;
+$body-color                                  : black !default;
 $body-bg                                     : $white !default;
 $text-muted                                  : $gray-600 !default;
 // Links
@@ -127,7 +127,7 @@ $zindex-lightbox-content                     : 1110 !default;
 // Font, line-height, and color for body text, headings, and more.
 $path-to-fonts                               : "https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" !default;
 $font-family-sans-serif                      : "Noto Sans", sans-serif !default;
-$headings-color                              : $gray-900 !default;
+$headings-color                              : black !default;
 $font-size-base                              : 1rem !default;
 $font-size-lg                                : ($font-size-base * 1.125) !default;
 $font-size-sm                                : ($font-size-base * .875) !default;
@@ -400,9 +400,9 @@ background-color .25s ease-in-out,
 box-shadow .25s ease-in-out,
 border-color .25s ease-in-out !default;
 $nav-link-font-weight                        : bold !default;
-$nav-link-color                              : $gray-800 !default;
-$nav-link-hover-color                        : $primary !default;
-$nav-link-active-color                       : $primary !default;
+$nav-link-color                              : $dark !default;
+$nav-link-hover-color                        : $light !default;
+$nav-link-active-color                       : $secondary !default;
 $nav-link-disabled-color                     : $gray-600 !default;
 $nav-link-light-color                        : rgba($white, .65) !default;
 $nav-link-light-hover-color                  : $white !default;
@@ -490,7 +490,7 @@ $breadcrumb-bg                               : transparent !default;
 $breadcrumb-item-padding-x                   : .625rem !default;
 $breadcrumb-divider                          : quote("\e952") !default;
 $breadcrumb-divider-flipped                  : quote("\e951") !default;
-$breadcrumb-color                            : $gray-600 !default;
+$breadcrumb-color                            : $gray-900 !default;
 $breadcrumb-hover-color                      : $gray-800 !default;
 $breadcrumb-active-color                     : $primary !default;
 $breadcrumb-divider-color                    : $gray-600 !default;

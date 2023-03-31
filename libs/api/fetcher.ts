@@ -14,7 +14,7 @@ export const fetcher = async ({url, method, json, body, cache}: FetcherParams) =
             Accept        : 'application/json',
             'Content-Type': 'application/json'
         },
-        cache,
+        cache : cache || 'force-cache',
     },)
     if (!res.ok) {
         return Promise.reject(await res.json())

@@ -2,6 +2,7 @@ import {countJobListings, getJobListingIds} from "@/services/jobListingService";
 import ToastDismissible from "@/components/toasts/toastDismissible";
 import JobListingCard from "./components/jobListingCard";
 import CustomPagination from "@/components/pagination/customPagination";
+import JobListingSideBar from "@/app/joblisting/components/JobListingSideBar";
 
 interface JobListingsSearchParams {
     skip?: string,
@@ -47,18 +48,23 @@ export default async function JobListingPage({searchParams}: { searchParams: Job
         return <ToastDismissible text="unknown error" title="error"/>
     }
     return (
-        <>
-            <div className="row g-4 py-4 row-cols-md-1 row-cols-lg-3 row-cols-xl-3">
-                {
-                    jobListings.map((jobListing, indx) => {
-                        {/* @ts-expect-error server comonent */}
-                        return <JobListingCard jobListingId={jobListing.id} key={indx}/>
-                    })
-                }
+        <div className='mt-5 pt-5 p-0 container-fluid'>
+            <div className='row mt-n3'>
+                <JobListingSideBar/>
+                <div className='pb-5 pt-4 me-lg-5 col-lg-8 col-xl-9 col'>
+                    <div className="row g-4 py-4 row-cols-md-1 row-cols-lg-3 row-cols-xl-3">
+                        {
+                            jobListings.map((jobListing, indx) => {
+                                {/* @ts-expect-error server comonent */}
+                                return <JobListingCard jobListingId={jobListing.id} key={indx}/>
+                            })
+                        }
+                    </div>
+                    <div className="row mt-3">
+                        <CustomPagination count={count} take={take} skip={skip}/>
+                    </div>
+                </div>
             </div>
-            <div className="row mt-3">
-                <CustomPagination count={count} take={take} skip={skip}/>
-            </div>
-        </>
+        </div>
     )
 }

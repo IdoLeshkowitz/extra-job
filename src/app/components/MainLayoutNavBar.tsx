@@ -15,6 +15,7 @@ import Avatar from "@/components/avatar/Avatar";
 import {SSRProvider} from "react-bootstrap";
 import {Shalimar} from "@next/font/google";
 import UploadCvButton from "@/app/uploadcv/components/uploadCvButton";
+import {usePathname} from "next/navigation";
 
 const SIGNIN_URL = '/api/auth/signin'
 const SIGNOUT_URL = '/api/auth/signout'
@@ -23,6 +24,7 @@ const DEFAULT_AVATAR_URL = '/images/avatars/38.png'
 const JOB_LISTING_URL = '/joblisting'
 export default function MainLayoutNavBar() {
     const {data} = useSession()
+    const pathName = usePathname()
     const {user} = data ?? {}
     const avatarUrl = user?.image ?? DEFAULT_AVATAR_URL
     return (
@@ -36,12 +38,10 @@ export default function MainLayoutNavBar() {
                     {/*HOME BUTTON*/}
                     <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
                         {/*<ImageLoader src='/images/extra-job-svg.svg' alt='extra job' width={100} height={32} />*/}
-                        <Image width={100} height={32} src='/images/extra-job-svg.svg' alt='extra job'
-                               style={{height: '32px', objectFit: 'contain'}}/>
+                        <i className="fi-grid"/>
                     </Navbar.Brand>
 
 
-                    {/* AVATAR */}
                     {/*DESKTOP AVATAR*/}
                     <DesktopAvatar avatarUrl={avatarUrl}/>
 
@@ -49,8 +49,9 @@ export default function MainLayoutNavBar() {
                     <Navbar.Collapse id='navbarNav' className='order-md-2'>
                         <Nav navbarScroll style={{maxHeight: '35rem'}}>
                             <Nav.Item as={Nav.Link} href={JOB_LISTING_URL}>
-                                <Nav.Link active={false} href={JOB_LISTING_URL} className="text-light">כל
-                                    המשרות</Nav.Link>
+                                <Nav.Link active={pathName === "/joblisting"} href={JOB_LISTING_URL} >
+                                    כל המשרות
+                                </Nav.Link>
                             </Nav.Item>
                             <MobileAvatar avatarUrl={avatarUrl}/>
                         </Nav>
@@ -134,7 +135,7 @@ function DesktopAvatar({avatarUrl}: { avatarUrl: string }) {
                     {/*USER CARD*/}
                     <Dropdown.Menu
                         variant='dark'
-                        renderOnMount align='end'
+                        renderOnMount align='start'
                     >
                         <div
                             className='d-flex align-items-start border-bottom border-light px-3 py-1 mb-2'
