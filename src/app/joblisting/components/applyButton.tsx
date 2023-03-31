@@ -44,7 +44,7 @@ async function countCv(userId: string) {
             url   : `/api/cv/count`,
             method: 'GET',
             json  : true,
-            cache : 'no-cache',
+            cache : 'force-cache',
         })
         return data?.cvCount ?? 0
     } catch (e) {
