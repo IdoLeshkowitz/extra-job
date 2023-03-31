@@ -34,6 +34,7 @@ export default function UploadCvButton() {
                 onprocessfile={async () => {
                     await delay(1000)
                     router.back()
+                    router.refresh()
                 }}
                 iconProcess="<i class='fi-check'></i>"
                 labelFileProcessingComplete='הקובץ נשלח בהצלחה'
