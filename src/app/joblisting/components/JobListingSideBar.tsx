@@ -79,7 +79,7 @@ const JobListingSideBar = () => {
                 setProfessions(professions)
                 setPositionScopes(positionScopes)
             })
-    }, [areas, professions, positionScopes,searchParams])
+    }, [areas, professions, positionScopes])
     useEffect(() => {
         const areaIds = searchParams?.get('areaIds')
         const professionIds = searchParams?.get('professionIds')
@@ -100,7 +100,7 @@ const JobListingSideBar = () => {
             const selectedPositionScopes = positionScopes.filter(positionScope => positionScopeIdsArray.includes(positionScope.id.toString()))
             setSelectedPositionScopes(selectedPositionScopes)
         }
-    }, [])
+    }, [areas, positionScopes, professions, searchParams])
     const onSubmit: MouseEventHandler = (e) => {
         const newSearchParams = new URLSearchParams()
         if (selectedAreas.length > 0) {
