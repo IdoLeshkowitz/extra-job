@@ -26,6 +26,7 @@ export default function UploadCvButton({redirectTo}: UploadCvButtonProps) {
         FilePondPluginFileValidateSize,
         FilePondPluginImagePreview,
     )
+    console.log('redirectTo', redirectTo)
     return (
         <SSRProvider>
             <FilePond
@@ -38,9 +39,9 @@ export default function UploadCvButton({redirectTo}: UploadCvButtonProps) {
                 className='file-uploader border-light bg-faded-light'
                 allowProcess={true}
                 onprocessfile={async () => {
-                    router.prefetch('/')
+                    router.prefetch(redirectTo)
                     await delay(1000)
-                    router.push('/')
+                    router.push(redirectTo)
                 }}
                 iconProcess="<i class='fi-check'></i>"
                 labelFileProcessingComplete='הקובץ נשלח בהצלחה'
