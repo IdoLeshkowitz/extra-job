@@ -2,7 +2,7 @@ import ImageLoader from '@/components/Image/ImageLoader'
 import UploadCvButton from "@/app/uploadcv/components/uploadCvButton";
 import RouteBackButton from "@/components/buttons/routeBackButton";
 
-const UploadCvPage = ({searchParams}: { searchParams: { redirectTo: string } }) => {
+const UploadCvPage = () => {
     return (
         <>
             <div className='container pb-lg-4 mb-sm-2 h-100 justify-content-center align-items-center d-flex'>
@@ -23,7 +23,7 @@ const UploadCvPage = ({searchParams}: { searchParams: { redirectTo: string } }) 
                             </div>
                         </div>
                         <div className='col-md-6 px-2 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5'>
-                            <UploadCvButton redirectTo={searchParams.redirectTo}/>
+                            <UploadCvButton/>
                         </div>
                     </div>
                 </div>
