@@ -28,9 +28,6 @@ export default function UploadCvButton({redirectTo}: UploadCvButtonProps) {
     )
     return (
         <SSRProvider>
-            <Link href={redirectTo}>
-                link
-            </Link>
             <FilePond
                 server="/api/cv"
                 allowMultiple={false}
