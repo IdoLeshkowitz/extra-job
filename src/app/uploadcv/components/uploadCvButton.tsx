@@ -7,13 +7,19 @@ import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 import {SSRProvider} from "react-bootstrap";
-import {useRouter} from 'next/navigation'
+import {redirect, useRouter} from 'next/navigation'
+import PillLink from "@/components/links/pillLinks";
+import Link from "next/link";
 
 function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export default function UploadCvButton() {
+interface UploadCvButtonProps {
+    redirectTo: string
+}
+
+export default function UploadCvButton({redirectTo}: UploadCvButtonProps) {
     const router = useRouter()
     registerPlugin(
         FilePondPluginFileValidateType,
@@ -22,6 +28,9 @@ export default function UploadCvButton() {
     )
     return (
         <SSRProvider>
+            <Link href={redirectTo}>
+                link
+            </Link>
             <FilePond
                 server="/api/cv"
                 allowMultiple={false}
@@ -32,9 +41,9 @@ export default function UploadCvButton() {
                 className='file-uploader border-light bg-faded-light'
                 allowProcess={true}
                 onprocessfile={async () => {
+                    await router.prefetch(redirectTo)
                     await delay(1000)
-                    router.back()
-                    router.refresh()
+                    router.push(redirectTo)
                 }}
                 iconProcess="<i class='fi-check'></i>"
                 labelFileProcessingComplete='הקובץ נשלח בהצלחה'

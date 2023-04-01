@@ -11,7 +11,6 @@ import {findManyJobApplications} from "@/services/jobApplicationService";
 import JobApplicationFindFirstArgs = Prisma.JobApplicationFindFirstArgs;
 
 
-
 export default async function Page({params}: { params: { id: string } }) {
     const {id} = params
     const {data, error} = await getUniqueJobListing({
@@ -111,6 +110,7 @@ export default async function Page({params}: { params: { id: string } }) {
         </section>
     )
 }
+
 async function ApplicationButton({jobListingId}: { jobListingId: string }) {
     const session = await getServerSession(authOptions)
     //user is not logged in
@@ -135,7 +135,7 @@ async function ApplicationButton({jobListingId}: { jobListingId: string }) {
     if (!session.user.cv) {
         return (
             <Link
-                href="/uploadcv"
+                href={`/uploadcv?redirectTo=/joblisting/${jobListingId}`}
                 className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-1 d-flex justify-content-start zindex-10 border-0 align-self-center"
             >
                 <div
