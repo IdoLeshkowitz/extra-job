@@ -38,9 +38,9 @@ export default function UploadCvButton({redirectTo}: UploadCvButtonProps) {
                 className='file-uploader border-light bg-faded-light'
                 allowProcess={true}
                 onprocessfile={async () => {
-                    router.prefetch(redirectTo)
+                    router.prefetch('/')
                     await delay(1000)
-                    router.push(redirectTo)
+                    router.push('/')
                 }}
                 iconProcess="<i class='fi-check'></i>"
                 labelFileProcessingComplete='הקובץ נשלח בהצלחה'
