@@ -67,7 +67,7 @@ export default function JobListingSearchBar() {
     const router = useRouter()
     const queries = useQueries({
             queries: [
-                {queryFn: getAreas},
+                {queryFn: getAreas,staleTime: 1000 * 60 * 60 * 24 * 7,refetchOnMount: false,refetchOnWindowFocus: false},
                 {queryFn: getProfessions},
                 {queryFn: getPositionScopes},
             ]
