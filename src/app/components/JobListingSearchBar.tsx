@@ -1,17 +1,16 @@
 'use client'
-
-
-import DropdownSelect from "@/components/dropdown/dropdownSelect";
 import {Col, Row, SSRProvider} from "react-bootstrap";
 import {Area, PositionScope, Prisma, Profession} from "@prisma/client";
-import {SyntheticEvent, useEffect, useRef, useState} from "react";
+import {SyntheticEvent, useCallback, useRef} from "react";
 import {useRouter} from "next/navigation";
 import {fetcher} from "@/lib/api/fetcher";
+import {useQueries} from "@tanstack/react-query";
 import IconBox from "@/components/buttons/IconBox";
-import AreaFindManyArgs = Prisma.AreaFindManyArgs;
+import DropdownSelect from "@/components/dropdown/dropdownSelect";
 
 async function getAreas() {
-    const areaFindManyArgs: AreaFindManyArgs = {
+    console.log('im here ')
+    const areaFindManyArgs: Prisma.AreaFindManyArgs = {
         where: {active: true},
     }
     try {
@@ -20,7 +19,7 @@ async function getAreas() {
             method: 'GET',
             json  : true,
         })
-        return data.areas
+        return data.areas as Area[]
     } catch (e) {
         console.log(e)
         return Promise.reject(e)
@@ -37,13 +36,12 @@ async function getProfessions() {
             method: 'GET',
             json  : true,
         })
-        return data.professions
+        return data.professions as Profession[]
     } catch (e) {
         console.log(e)
         return Promise.reject(e)
     }
 }
-
 
 async function getPositionScopes() {
     const positionScopeFindManyArgs: Prisma.PositionScopeFindManyArgs = {
@@ -55,7 +53,7 @@ async function getPositionScopes() {
             method: 'GET',
             json  : true,
         })
-        return data.positionScopes
+        return data.positionScopes as PositionScope[]
     } catch (e) {
         console.log(e)
         return Promise.reject(e)
@@ -66,20 +64,16 @@ export default function JobListingSearchBar() {
     const areaIdRef = useRef<string | null>(null)
     const professionIdRef = useRef<string | null>(null)
     const positionScopeIdRef = useRef<string | null>(null)
-    const [areas, setAreas] = useState<Area[]>([])
-    const [professions, setProfessions] = useState<Profession[]>([])
-    const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
     const router = useRouter()
-    useEffect(() => {
-        Promise.all([getAreas(), getProfessions(), getPositionScopes()]).then(([areas, professions, positionScopes]) => {
-            setAreas(areas)
-            setProfessions(professions)
-            setPositionScopes(positionScopes)
-        })
-
-    }, [])
-
-    const handleSubmit = (e: SyntheticEvent<HTMLButtonElement>) => {
+    const queries = useQueries({
+            queries: [
+                {queryFn: getAreas},
+                {queryFn: getProfessions},
+                {queryFn: getPositionScopes},
+            ]
+        },
+    )
+    const handleSubmit = useCallback((e: SyntheticEvent<HTMLButtonElement>) => {
         const areaId = areaIdRef.current
         const professionId = professionIdRef.current
         const positionScopeId = positionScopeIdRef.current
@@ -95,8 +89,10 @@ export default function JobListingSearchBar() {
         }
         const url = `/joblisting?${query.toString()}`
         router.push(url)
-    };
-
+    }, [router])
+    const allAreas = queries[0].data ?? []
+    const allProfessions = queries[1].data ?? []
+    const allPositionScopes = queries[2].data ?? []
 
     return (
         <SSRProvider>
@@ -108,7 +104,7 @@ export default function JobListingSearchBar() {
                             instructions='בחר אזור'
                             icon='fi-geo'
                             chosenIdRef={areaIdRef}
-                            options={areas.map((area) => {
+                            options={allAreas.map((area) => {
                                 return {id: area.id, text: area.name, icon: 'fi-chevron-left'}
                             })}
                             variant='link btn-lg ps-2 ps-sm-3'
@@ -120,7 +116,7 @@ export default function JobListingSearchBar() {
                             instructions='בחר מקצוע'
                             icon='fi-briefcase'
                             chosenIdRef={professionIdRef}
-                            options={professions.map((profession) => {
+                            options={allProfessions.map((profession) => {
                                 return {id: profession.id, text: profession.name, icon: 'fi-chevron-left'}
                             })}
                             variant='link btn-lg ps-2 ps-sm-3'
@@ -132,7 +128,7 @@ export default function JobListingSearchBar() {
                             instructions='בחר היקף משרה'
                             icon='fi-briefcase'
                             chosenIdRef={positionScopeIdRef}
-                            options={positionScopes.map(positionScope => {
+                            options={allPositionScopes.map(positionScope => {
                                 return {id: positionScope.id, text: positionScope.name, icon: 'fi-chevron-left'}
                             })}
                             variant="link btn-lg ps-2 ps-sm-3"

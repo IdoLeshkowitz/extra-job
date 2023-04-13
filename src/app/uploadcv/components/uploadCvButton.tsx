@@ -21,8 +21,6 @@ export default function UploadCvButton() {
         FilePondPluginFileValidateSize,
         FilePondPluginImagePreview,
     )
-    console.log('test')
-    console.log('redirectTo', redirectTo)
     return (
             <SSRProvider>
                 <FilePond

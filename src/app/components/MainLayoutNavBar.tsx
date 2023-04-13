@@ -31,7 +31,7 @@ export default function MainLayoutNavBar() {
         <SSRProvider>
             <Navbar as={StickyNavbar}
                     expand='lg'
-                    className='fixed-top navbar-expand-lg navbar-stuck p-0'
+                    className='fixed-top navbar-expand-lg navbar-stuck p-0 sticky-top'
                     style={{background: "none"}}
             >
                 <Container>
