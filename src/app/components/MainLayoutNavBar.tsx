@@ -3,18 +3,11 @@ import StickyNavbar from "@/components/navbar/StickyNavbar";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Link from "next/link";
-import ImageLoader from "@/components/Image/ImageLoader";
 import Dropdown from "react-bootstrap/Dropdown";
-import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
-import {HTMLAttributes} from "react";
-import Image from 'next/image'
-import {signIn, signOut, useSession} from "next-auth/react";
-import {Session} from "next-auth";
+import {signOut, useSession} from "next-auth/react";
 import Avatar from "@/components/avatar/Avatar";
 import {SSRProvider} from "react-bootstrap";
-import {Shalimar} from "@next/font/google";
-import UploadCvButton from "@/app/uploadcv/components/uploadCvButton";
 import {usePathname} from "next/navigation";
 
 const SIGNIN_URL = '/api/auth/signin'
@@ -48,10 +41,13 @@ export default function MainLayoutNavBar() {
                     {/*<UploadCvButton/>*/}
                     <Navbar.Collapse id='navbarNav' className='order-md-2'>
                         <Nav navbarScroll style={{maxHeight: '35rem'}}>
-                            <Nav.Item as={Nav.Link} href={JOB_LISTING_URL}>
-                                <Nav.Link active={pathName === "/joblisting"} href={JOB_LISTING_URL} >
+                            <Nav.Item as={Link} href={JOB_LISTING_URL}>
+                                {/*<Nav.Link active={pathName === "/joblisting"} href={JOB_LISTING_URL}>*/}
+                                {/*    כל המשרות*/}
+                                {/*</Nav.Link>*/}
+                                <Link href={JOB_LISTING_URL}>
                                     כל המשרות
-                                </Nav.Link>
+                                </Link>
                             </Nav.Item>
                             <MobileAvatar avatarUrl={avatarUrl}/>
                         </Nav>
