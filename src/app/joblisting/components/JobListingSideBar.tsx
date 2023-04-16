@@ -62,6 +62,13 @@ async function getPositionScopes() {
     }
 }
 
+function commaSeparatedStringToArray(str: string) {
+    if (str === '') {
+        return []
+    }
+    return str.split(',')
+}
+
 function useSideBar() {
     const queries = useQueries(
         {
@@ -90,25 +97,25 @@ function useSideBar() {
             ]
         }
     )
-    const [selectedAreasIds, setSelectedAreasIds] = useState<string[]>([])
-    const [selectedProfessions, setSelectedProfessions] = useState<Profession[]>([])
-    const [selectedPositionScopes, setSelectedPositionScopes] = useState<PositionScope[]>([])
+    const [selectedAreaIds, setSelectedAreaIds] = useState<string[]>([])
+    const [selectedProfessionIds, setSelectedProfessionIds] = useState<string[]>([])
+    const [selectedPositionScopeIds, setSelectedPositionScopeIds] = useState<string[]>([])
+    const [show, setShow] = useState(false);
     const searchParams = useSearchParams()
     const router = useRouter()
-    const [show, setShow] = useState(false);
     const url = usePathname()
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const onSubmit = (e: SyntheticEvent<HTMLButtonElement>) => {
         const newSearchParams = new URLSearchParams()
-        if (selectedAreasIds.length > 0) {
-            newSearchParams.set('areaIds', selectedAreasIds.map(area => area.id.toString()).join(','))
+        if (selectedAreaIds.length > 0) {
+            newSearchParams.set('areaIds', selectedAreaIds.join(','))
         }
-        if (selectedProfessions.length > 0) {
-            newSearchParams.set('professionIds', selectedProfessions.map(profession => profession.id.toString()).join(','))
+        if (selectedProfessionIds.length > 0) {
+            newSearchParams.set('professionIds', selectedProfessionIds.join(','))
         }
-        if (selectedPositionScopes.length > 0) {
-            newSearchParams.set('positionScopeIds', selectedPositionScopes.map(positionScope => positionScope.id.toString()).join(','))
+        if (selectedPositionScopeIds.length > 0) {
+            newSearchParams.set('positionScopeIds', selectedPositionScopeIds.join(','))
         }
         const urlToGo = `${url}?${newSearchParams.toString()}`
         router.push(urlToGo)
@@ -118,17 +125,46 @@ function useSideBar() {
     const allProfessions: Profession[] = useMemo(() => queries[1].data ?? [], [queries])
     const allPositionScopes: PositionScope[] = useMemo(() => queries[2].data ?? [], [queries])
     useEffect(() => {
-        const areaIds = searchParams?.get('areaIds')
-        if (areaIds) {
-            const areaIdsArray = areaIds.split(',')
-            setSelectedAreasIds(areaIdsArray)
-        }
-    }, [])
-    return {allAreas, allProfessions, allPositionScopes, selectedAreasIds, setSelectedAreasIds, show, handleShow, handleClose, onSubmit}
+        const areaIds = commaSeparatedStringToArray(searchParams?.get('areaIds') ?? '')
+        const professionIds = commaSeparatedStringToArray(searchParams?.get('professionIds') ?? '')
+        const positionScopeIds = commaSeparatedStringToArray(searchParams?.get('positionScopeIds') ?? '')
+        setSelectedAreaIds(areaIds)
+        setSelectedProfessionIds(professionIds)
+        setSelectedPositionScopeIds(positionScopeIds)
+    }, [searchParams])
+    return {
+        allAreas,
+        allProfessions,
+        allPositionScopes,
+        selectedAreaIds,
+        setSelectedAreaIds,
+        selectedPositionScopeIds,
+        setSelectedPositionScopeIds,
+        show,
+        handleShow,
+        handleClose,
+        onSubmit,
+        selectedProfessionIds,
+        setSelectedProfessionIds,
+    }
 }
 
 const JobListingSideBar = () => {
-    const {allAreas, allProfessions, allPositionScopes, show, handleShow, handleClose, onSubmit} = useSideBar()
+    const {
+        allAreas,
+        allProfessions,
+        allPositionScopes,
+        show,
+        handleShow,
+        handleClose,
+        onSubmit,
+        selectedAreaIds,
+        selectedPositionScopeIds,
+        setSelectedPositionScopeIds,
+        setSelectedAreaIds,
+        setSelectedProfessionIds,
+        selectedProfessionIds,
+    } = useSideBar()
     return (
         <SSRProvider>
             <Col
@@ -160,8 +196,15 @@ const JobListingSideBar = () => {
                                         >
                                             <Form.Check.Input
                                                 type='checkbox'
-                                                checked={selectedA}
+                                                checked={selectedAreaIds.includes(area.id)}
                                                 className="border-dark"
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedAreaIds([...selectedAreaIds, area.id])
+                                                    } else {
+                                                        setSelectedAreaIds(selectedAreaIds.filter(id => id !== area.id))
+                                                    }
+                                                }}
                                             />
                                             <Form.Check.Label>
                                                 <span className='fs-sm text-dark'>{area.name}</span>
@@ -189,9 +232,9 @@ const JobListingSideBar = () => {
                                                 className="border-dark"
                                                 onChange={e => {
                                                     if (e.target.checked) {
-                                                        setSelectedProfessions([...selectedProfessions, profession])
+                                                        setSelectedProfessionIds([...selectedProfessionIds, profession.id])
                                                     } else {
-                                                        setSelectedProfessions(selectedProfessions.filter(p => p.id !== profession.id))
+                                                        setSelectedProfessionIds(selectedProfessionIds.filter(selectedProfessionId => selectedProfessionId !== profession.id))
                                                     }
                                                 }}
                                             />
@@ -219,11 +262,12 @@ const JobListingSideBar = () => {
                                             <Form.Check.Input
                                                 type='checkbox'
                                                 className="border-dark"
+                                                checked={selectedPositionScopeIds.includes(positionScope.id)}
                                                 onChange={e => {
                                                     if (e.target.checked) {
-                                                        setSelectedPositionScopes([...selectedPositionScopes, positionScope])
+                                                        setSelectedPositionScopeIds([...selectedPositionScopeIds, positionScope.id])
                                                     } else {
-                                                        setSelectedPositionScopes(selectedPositionScopes.filter(p => p.id !== positionScope.id))
+                                                        setSelectedPositionScopeIds(selectedPositionScopeIds.filter(selectedPositionScopeId => selectedPositionScopeId !== positionScope.id))
                                                     }
                                                 }}
                                             />
