@@ -9,7 +9,6 @@ import IconBox from "@/components/buttons/IconBox";
 import DropdownSelect from "@/components/dropdown/dropdownSelect";
 
 async function getAreas() {
-    console.log('im here ')
     const areaFindManyArgs: Prisma.AreaFindManyArgs = {
         where: {active: true},
     }
@@ -67,9 +66,27 @@ export default function JobListingSearchBar() {
     const router = useRouter()
     const queries = useQueries({
             queries: [
-                {queryFn: getAreas,staleTime: 1000 * 60 * 60 * 24 * 7,refetchOnMount: false,refetchOnWindowFocus: false},
-                {queryFn: getProfessions},
-                {queryFn: getPositionScopes},
+                {
+                    queryKey            : ['areas'],
+                    queryFn             : getAreas,
+                    staleTime           : 1000 * 60 * 60 * 24 * 7,
+                    refetchOnMount      : false,
+                    refetchOnWindowFocus: false
+                },
+                {
+                    queryKey            : ['professions'],
+                    queryFn             : getProfessions,
+                    staleTime           : 1000 * 60 * 60 * 24 * 7,
+                    refetchOnMount      : false,
+                    refetchOnWindowFocus: false
+                },
+                {
+                    queryKey            : ['positionScopes'],
+                    queryFn             : getPositionScopes,
+                    staleTime           : 1000 * 60 * 60 * 24 * 7,
+                    refetchOnMount      : false,
+                    refetchOnWindowFocus: false
+                },
             ]
         },
     )

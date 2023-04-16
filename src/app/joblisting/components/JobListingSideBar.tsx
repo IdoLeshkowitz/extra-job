@@ -1,14 +1,17 @@
 'use client'
 import {Button, Col, Form, Offcanvas, SSRProvider} from "react-bootstrap";
 import SimpleBar from "simplebar-react";
-import {FC, MouseEventHandler, useEffect, useState} from "react";
+import {SyntheticEvent, useEffect, useMemo, useState} from "react";
 import {Prisma} from ".prisma/client";
 import {fetcher} from "@/lib/api/fetcher";
 import {Area, PositionScope, Profession} from "@prisma/client";
 import {notFound, usePathname, useRouter, useSearchParams} from "next/navigation";
+import {useQueries} from "@tanstack/react-query";
+import IconBox from "@/components/buttons/IconBox";
 import AreaFindManyArgs = Prisma.AreaFindManyArgs;
 
 async function getAreas() {
+    console.log('getAreas')
     const areaFindManyArgs: AreaFindManyArgs = {
         where: {active: true},
     }
@@ -59,52 +62,47 @@ async function getPositionScopes() {
     }
 }
 
-const JobListingSideBar = () => {
-    const [areas, setAreas] = useState<Area[]>([])
-    const [professions, setProfessions] = useState<Profession[]>([])
-    const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
-    const [selectedAreas, setSelectedAreas] = useState<Area[]>([])
+function useSideBar() {
+    const queries = useQueries(
+        {
+            queries: [
+                {
+                    queryKey            : ['areas'],
+                    queryFn             : getAreas,
+                    staleTime           : 1000 * 60 * 60 * 24,
+                    refetchOnMount      : false,
+                    refetchOnWindowFocus: false,
+                },
+                {
+                    queryKey            : ['professions'],
+                    queryFn             : getProfessions,
+                    staleTime           : 1000 * 60 * 60 * 24,
+                    refetchOnMount      : false,
+                    refetchOnWindowFocus: false,
+                },
+                {
+                    queryKey            : ['positionScopes'],
+                    queryFn             : getPositionScopes,
+                    staleTime           : 1000 * 60 * 60 * 24,
+                    refetchOnMount      : false,
+                    refetchOnWindowFocus: false,
+                }
+            ]
+        }
+    )
+    const [selectedAreasIds, setSelectedAreasIds] = useState<string[]>([])
     const [selectedProfessions, setSelectedProfessions] = useState<Profession[]>([])
     const [selectedPositionScopes, setSelectedPositionScopes] = useState<PositionScope[]>([])
     const searchParams = useSearchParams()
-    const url = usePathname()
     const router = useRouter()
     const [show, setShow] = useState(false);
+    const url = usePathname()
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    useEffect(() => {
-        Promise.all([getAreas(), getProfessions(), getPositionScopes()])
-            .then(([areas, professions, positionScopes]) => {
-                setAreas(areas)
-                setProfessions(professions)
-                setPositionScopes(positionScopes)
-            })
-    }, [areas, professions, positionScopes])
-    useEffect(() => {
-        const areaIds = searchParams?.get('areaIds')
-        const professionIds = searchParams?.get('professionIds')
-        const positionScopeIds = searchParams?.get('positionScopeIds')
-        if (areaIds) {
-            const areaIdsArray = areaIds.split(',')
-            console.log(areaIds)
-            const selectedAreas = areas.filter(area => areaIdsArray.includes(area.id.toString()))
-            setSelectedAreas(selectedAreas)
-        }
-        if (professionIds) {
-            const professionIdsArray = professionIds.split(',')
-            const selectedProfessions = professions.filter(profession => professionIdsArray.includes(profession.id.toString()))
-            setSelectedProfessions(selectedProfessions)
-        }
-        if (positionScopeIds) {
-            const positionScopeIdsArray = positionScopeIds.split(',')
-            const selectedPositionScopes = positionScopes.filter(positionScope => positionScopeIdsArray.includes(positionScope.id.toString()))
-            setSelectedPositionScopes(selectedPositionScopes)
-        }
-    }, [areas, positionScopes, professions, searchParams])
-    const onSubmit: MouseEventHandler = (e) => {
+    const onSubmit = (e: SyntheticEvent<HTMLButtonElement>) => {
         const newSearchParams = new URLSearchParams()
-        if (selectedAreas.length > 0) {
-            newSearchParams.set('areaIds', selectedAreas.map(area => area.id.toString()).join(','))
+        if (selectedAreasIds.length > 0) {
+            newSearchParams.set('areaIds', selectedAreasIds.map(area => area.id.toString()).join(','))
         }
         if (selectedProfessions.length > 0) {
             newSearchParams.set('professionIds', selectedProfessions.map(profession => profession.id.toString()).join(','))
@@ -114,9 +112,23 @@ const JobListingSideBar = () => {
         }
         const urlToGo = `${url}?${newSearchParams.toString()}`
         router.push(urlToGo)
-        router.refresh()
+        handleClose()
     }
+    const allAreas: Area[] = useMemo(() => queries[0].data ?? [], [queries])
+    const allProfessions: Profession[] = useMemo(() => queries[1].data ?? [], [queries])
+    const allPositionScopes: PositionScope[] = useMemo(() => queries[2].data ?? [], [queries])
+    useEffect(() => {
+        const areaIds = searchParams?.get('areaIds')
+        if (areaIds) {
+            const areaIdsArray = areaIds.split(',')
+            setSelectedAreasIds(areaIdsArray)
+        }
+    }, [])
+    return {allAreas, allProfessions, allPositionScopes, selectedAreasIds, setSelectedAreasIds, show, handleShow, handleClose, onSubmit}
+}
 
+const JobListingSideBar = () => {
+    const {allAreas, allProfessions, allPositionScopes, show, handleShow, handleClose, onSubmit} = useSideBar()
     return (
         <SSRProvider>
             <Col
@@ -141,24 +153,15 @@ const JobListingSideBar = () => {
                             <SimpleBar autoHide={false} className='simplebar-no-autohide'
                                        style={{maxHeight: '11rem'}}>
                                 {
-                                    areas.map((area, indx) => (
+                                    allAreas.map((area, indx) => (
                                         <Form.Check
                                             key={indx}
                                             id={`area-${indx}`}
                                         >
                                             <Form.Check.Input
                                                 type='checkbox'
-                                                checked={(() => {
-                                                    return selectedAreas.some(a => a.id === area.id)
-                                                })()}
+                                                checked={selectedA}
                                                 className="border-dark"
-                                                onChange={e => {
-                                                    if (e.target.checked) {
-                                                        setSelectedAreas([...selectedAreas, area])
-                                                    } else {
-                                                        setSelectedAreas(selectedAreas.filter(a => a.id !== area.id))
-                                                    }
-                                                }}
                                             />
                                             <Form.Check.Label>
                                                 <span className='fs-sm text-dark'>{area.name}</span>
@@ -176,7 +179,7 @@ const JobListingSideBar = () => {
                                 style={{maxHeight: '11rem'}}
                             >
                                 {
-                                    professions.map((profession, indx) => (
+                                    allProfessions.map((profession, indx) => (
                                         <Form.Check
                                             key={indx}
                                             id={profession.id}
@@ -208,7 +211,7 @@ const JobListingSideBar = () => {
                                 style={{maxHeight: '11rem'}}
                             >
                                 {
-                                    positionScopes.map((positionScope, indx) => (
+                                    allPositionScopes.map((positionScope, indx) => (
                                         <Form.Check
                                             key={indx}
                                             id={positionScope.id}
@@ -233,17 +236,24 @@ const JobListingSideBar = () => {
                             </SimpleBar>
                         </div>
                         <div className='border-top py-4'>
-                            <Button variant='outline-primary'>
-                                <i className='fi-rotate-right me-2'></i>
-                                <span>איפוס</span>
-                            </Button>
-                        </div>
-                        {/*Submit Button*/}
-                        <div className='border-top py-4'>
-                            <Button variant='primary' onClick={onSubmit}>
-                                <span>חפש</span>
-                                <i className='fi-arrow-right ms-2'></i>
-                            </Button>
+                            {/*Reset Button*/}
+                            <IconBox
+                                media='fi-rotate-right'
+                                title='אפס'
+                                type='pill'
+                                button={true}
+                                onClick={onSubmit}
+                                className='bg-secondary border-0 d-flex flex-row-reverse me-auto shadow mx-auto my-3'
+                            />
+                            {/*Submit Button*/}
+                            <IconBox
+                                media='fi-search'
+                                title='חפש'
+                                type='pill'
+                                button={true}
+                                onClick={onSubmit}
+                                className='bg-secondary border-0 d-flex flex-row-reverse me-auto shadow mx-auto my-3'
+                            />
                         </div>
                     </Offcanvas.Body>
                 </Offcanvas>
