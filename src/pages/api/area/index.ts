@@ -41,6 +41,7 @@ export default async function index(req: NextApiRequest, res: NextApiResponse) {
         res.json(data)
     }
     if (req.method === 'GET') {
+        console.log('im here')
         const areaFindManyArgs = JSON.parse(req.query.areaFindManyArgs as string);
         //validate areaFindManyArgs
         try {

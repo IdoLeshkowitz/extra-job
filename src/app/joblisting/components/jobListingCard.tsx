@@ -25,9 +25,9 @@ const JobListingCard = async ({jobListingId}: { jobListingId: string }) => {
     const light = true;
     const href = `/joblisting/${jobListingId}`
     return (
-        <div className="col-auto" tabIndex={0}>
+        <div className="col" tabIndex={0}>
             <div
-                className="card bg-faded-light shadow-lg border-dark card-hover h-100 mx-md-3"
+                className="card bg-none shadow-lg card-hover h-100 mx-md-3 border-0 rounded-5"
             >
                 <div className='card-body position-relative pb-3 d-flex justify-content-between flex-column'>
                     <h3 className='h6 mb-2 fs-base'>
@@ -37,11 +37,11 @@ const JobListingCard = async ({jobListingId}: { jobListingId: string }) => {
                             {name}
                         </Link>
                     </h3>
-                    <p className={`mb-2 fs-sm text-black-50 opacity-50' `}>{getHebrewDate(createdAt)}</p>
+                    <p className={`mb-0 fs-sm text-black-50 opacity-50' `}>{getHebrewDate(createdAt)}</p>
                 </div>
                 <>
                     <div
-                        className='card-footer d-flex align-items-center justify-content-center pt-3 text-nowrap flex-wrap gap-2 px-1'>
+                        className='d-flex card-footer align-items-center justify-content-center text-nowrap flex-wrap px-1 border-0 gap-2 py-1 mb-1'>
                         <span className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 fs-xs'>
                             <i className={`fi-map-pin ms-1 mt-n1 fs-lg text-black-50`}></i>
                             {area.name}

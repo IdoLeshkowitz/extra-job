@@ -18,18 +18,18 @@ interface JobListingsSearchParams {
 }
 
 
-const getJobListingIds = cache(async (jobListingFindManyArgs: JobListingFindManyArgs) => {
+const cachedFindManyJobListings = cache(async (jobListingFindManyArgs: JobListingFindManyArgs) => {
     return await findManyJobListings(jobListingFindManyArgs)
 })
 
-const countAllJobListings = cache(async (jobListingCountArgs: JobListingCountArgs) => {
+const cachedCountJobListings = cache(async (jobListingCountArgs: JobListingCountArgs) => {
     return await countJobListing(jobListingCountArgs)
 })
 
 export default async function JobListingPage({searchParams}: { searchParams: JobListingsSearchParams }) {
     const [skip, take] = [parseInt(searchParams.skip ?? '0'), parseInt(searchParams.take ?? '9')];
     const [{data: jobListingData, error: jobListingsIdsError}, {data: countData, error: countError}] = await Promise.all([
-        getJobListingIds({
+        cachedFindManyJobListings({
             skip,
             take,
             where  : {
@@ -39,6 +39,7 @@ export default async function JobListingPage({searchParams}: { searchParams: Job
                 profession   : {OR: searchParams.professionIds ? searchParams.professionIds.split(',').map(professionId => ({id: professionId})) : undefined},
             },
             orderBy: {createdAt: 'desc'},
+            select : {id: true},
         }),
         countJobListing({
             where: {
@@ -61,11 +62,11 @@ export default async function JobListingPage({searchParams}: { searchParams: Job
         return <ToastDismissible text="unknown error" title="error"/>
     }
     return (
-        <div className='mt-5 pt-5 p-0 container-fluid'>
+        <div className='my-lg-5 pt-5 p-0 container-fluid'>
             <div className='row mt-n3'>
                 <JobListingSideBar/>
-                <div className='pb-5 pt-4 me-lg-5 col-lg-8 col-xl-9 col'>
-                    <div className="row g-4 py-4 row-cols-md-1 row-cols-lg-3 row-cols-xl-3">
+                <div className='pb-5 pt-lg-4 me-lg-5 col-lg-8 col-xl-9 col'>
+                    <div className="row g-4 py-4 row-cols-md-1 row-cols-sm-1 row-cols-xl-3 row-cols-1">
                         {
                             jobListings.map((jobListing, indx) => {
                                 {/* @ts-expect-error server comonent */}
@@ -81,5 +82,3 @@ export default async function JobListingPage({searchParams}: { searchParams: Job
         </div>
     )
 }
-
-export const dynamic = "force-dynamic"

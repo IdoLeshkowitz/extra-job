@@ -6,7 +6,7 @@ interface FetcherParams {
     revalidate?: number | false
 }
 
-export const fetcher = async ({url, method, json, body, revalidate}: FetcherParams) => {
+export const fetcher = async <T>({url, method, json, body, revalidate}: FetcherParams) => {
     const res = await fetch(url, {
         method : method || 'GET',
         body   : body && JSON.stringify(body),
@@ -14,15 +14,12 @@ export const fetcher = async ({url, method, json, body, revalidate}: FetcherPara
             Accept        : 'application/json',
             'Content-Type': 'application/json'
         },
-        next   : {
-            revalidate
-        }
     },)
     if (!res.ok) {
         return Promise.reject(await res.json())
     }
     if (!json) {
-        return res
+        return res as unknown as T
     }
-    return await res.json()
+    return await res.json() as T
 }

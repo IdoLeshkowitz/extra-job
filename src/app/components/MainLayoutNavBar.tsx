@@ -31,30 +31,29 @@ export default function MainLayoutNavBar() {
                     {/*HOME BUTTON*/}
                     <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
                         {/*<ImageLoader src='/images/extra-job-svg.svg' alt='extra job' width={100} height={32} />*/}
-                        <i className="fi-grid"/>
+                        <i className="fi-home text-dark fs-5 rounded-circle shadow-lg px-1 bg-faded-dark"/>
                     </Navbar.Brand>
-
 
                     {/*DESKTOP AVATAR*/}
                     <DesktopAvatar avatarUrl={avatarUrl}/>
 
                     {/*<UploadCvButton/>*/}
+                    <Navbar.Toggle aria-controls='navbarNav' className='me-auto ms-0'/>
                     <Navbar.Collapse id='navbarNav' className='order-md-2'>
                         <Nav navbarScroll style={{maxHeight: '35rem'}}>
-                            <Nav.Item as={Link} href={JOB_LISTING_URL}>
-                                {/*<Nav.Link active={pathName === "/joblisting"} href={JOB_LISTING_URL}>*/}
-                                {/*    כל המשרות*/}
-                                {/*</Nav.Link>*/}
-                                <Link href={JOB_LISTING_URL}>
-                                    כל המשרות
-                                </Link>
-                            </Nav.Item>
+                            <Link
+                                href={JOB_LISTING_URL}
+                                prefetch={true}
+                                className="card-hover bg-faded-dark rounded text-dark text-decoration-none nav-item me-lg-5 border-0 px-2  my-1"
+                            >
+                                <i className="fi-briefcase ms-2 mb-1 fs-6 text-dark"/>
+                                כל המשרות
+                            </Link>
                             <MobileAvatar avatarUrl={avatarUrl}/>
                         </Nav>
                     </Navbar.Collapse>
 
                     {/*NAVBAR TOGGLE BUTTON FOR MOBILE*/}
-                    <Navbar.Toggle aria-controls='navbarNav' className='ms-auto'/>
                 </Container>
             </Navbar>
         </SSRProvider>
@@ -68,26 +67,26 @@ function MobileAvatar({avatarUrl}: { avatarUrl: string }) {
         <>
             {status === 'authenticated'
                 ?
-                <Nav.Item as={Dropdown} className='d-lg-none'>
+                <Nav.Item as={Dropdown} className='d-lg-none border-0 bg-faded-dark shadow-sm'>
                     {/*DROPDOWN TOGGLE BUTTON*/}
                     <Dropdown.Toggle as={Nav.Link} className='d-flex align-items-center'>
                         <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={30} height={30}/>
-                        <span className='ms-2'>{user?.name}</span>
+                        <span className='mx-2'>{user?.name}</span>
                     </Dropdown.Toggle>
                     {/*USER CARD*/}
-                    <Dropdown.Menu variant='dark'>
-                        <div className='fs-xs ps-3 py-2'>
+                    <Dropdown.Menu variant="dark border-0">
+                        <div className='fs-xs pe-1 py-2 text-end'>
                             {user?.email}
                         </div>
                         {/*PROFILE LINK*/}
-                        <Dropdown.Item as={Link} href={ME_URL}>
-                            <i className='fi-settings me-2'/>
+                        <Dropdown.Item as={Link} href={ME_URL} className="text-end text-dark">
+                            <i className='fi-settings ms-2'/>
                             החשבון שלי
                         </Dropdown.Item>
                         <Dropdown.Divider as='div'/>
                         {/*SIGN OUT LINK*/}
-                        <Dropdown.Item href={SIGNOUT_URL}>
-                            <i className='fi-logout me-2'/>
+                        <Dropdown.Item href={SIGNOUT_URL} className="text-dark text-end">
+                            <i className='fi-logout ms-2'/>
                             התנתק
                         </Dropdown.Item>
                     </Dropdown.Menu>
@@ -121,7 +120,7 @@ function DesktopAvatar({avatarUrl}: { avatarUrl: string }) {
                     <Dropdown.Toggle
                         as={Link}
                         href={ME_URL}
-                        className='nav-link dropdown-toggle-flush d-flex py-1 px-0'
+                        className='nav-link dropdown-toggle-flush d-flex py-1 px-1'
                         style={{width: '40px'}}
                     >
                         {/*AVATAR IMAGE*/}
@@ -134,10 +133,11 @@ function DesktopAvatar({avatarUrl}: { avatarUrl: string }) {
                         renderOnMount align='start'
                     >
                         <div
-                            className='d-flex align-items-start border-bottom border-light px-3 py-1 mb-2'
-                            style={{width: '16rem'}}>
+                            className='d-flex align-items-center border-bottom border-light px-3 py-2 py-1 mb-2'
+                            style={{width: '16rem'}}
+                        >
                             <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={80} height={80}/>
-                            <div className='ps-2'>
+                            <div className='pe-2'>
                                 <h6 className='fs-base mb-0 text-light'>
                                     {user?.name}
                                 </h6>
@@ -147,7 +147,7 @@ function DesktopAvatar({avatarUrl}: { avatarUrl: string }) {
                             </div>
                         </div>
                         <Dropdown.Item as={Link} href='/api/auth/signout'>
-                            <i className='fi-logout me-2' onClick={() => signOut()}></i>
+                            <i className='fi-logout ms-2' onClick={() => signOut()}></i>
                             התנתק
                         </Dropdown.Item>
                     </Dropdown.Menu>

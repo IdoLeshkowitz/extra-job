@@ -1,5 +1,5 @@
 'use client'
-import {Button, Col, Form, Offcanvas, SSRProvider} from "react-bootstrap";
+import {Button, Col, Form, Offcanvas, Placeholder, SSRProvider} from "react-bootstrap";
 import SimpleBar from "simplebar-react";
 import {SyntheticEvent, useEffect, useMemo, useState} from "react";
 import {Prisma} from ".prisma/client";
@@ -9,24 +9,6 @@ import {notFound, usePathname, useRouter, useSearchParams} from "next/navigation
 import {useQueries} from "@tanstack/react-query";
 import IconBox from "@/components/buttons/IconBox";
 import AreaFindManyArgs = Prisma.AreaFindManyArgs;
-
-async function getAreas() {
-    console.log('getAreas')
-    const areaFindManyArgs: AreaFindManyArgs = {
-        where: {active: true},
-    }
-    try {
-        const {data} = await fetcher({
-            url   : `/api/area?areaFindManyArgs=${JSON.stringify(areaFindManyArgs)}`,
-            method: 'GET',
-            json  : true,
-        })
-        return data.areas
-    } catch (e) {
-        console.log(e)
-        return notFound()
-    }
-}
 
 async function getProfessions() {
     const professionFindManyArgs: Prisma.ProfessionFindManyArgs = {
@@ -39,6 +21,23 @@ async function getProfessions() {
             json  : true,
         })
         return data.professions
+    } catch (e) {
+        console.log(e)
+        return notFound()
+    }
+}
+
+async function getAreas() {
+    const areaFindManyArgs: AreaFindManyArgs = {
+        where: {active: true},
+    }
+    try {
+        const {data} = await fetcher({
+            url   : `/api/area?areaFindManyArgs=${JSON.stringify(areaFindManyArgs)}`,
+            method: 'GET',
+            json  : true,
+        })
+        return data.areas
     } catch (e) {
         console.log(e)
         return notFound()
@@ -100,6 +99,7 @@ function useSideBar() {
     const [selectedAreaIds, setSelectedAreaIds] = useState<string[]>([])
     const [selectedProfessionIds, setSelectedProfessionIds] = useState<string[]>([])
     const [selectedPositionScopeIds, setSelectedPositionScopeIds] = useState<string[]>([])
+    const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle')
     const [show, setShow] = useState(false);
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -132,6 +132,15 @@ function useSideBar() {
         setSelectedProfessionIds(professionIds)
         setSelectedPositionScopeIds(positionScopeIds)
     }, [searchParams])
+    useEffect(() => {
+        if (queries[0].isLoading || queries[1].isLoading || queries[2].isLoading) {
+            setStatus('loading')
+        } else if (queries[0].isError || queries[1].isError || queries[2].isError) {
+            setStatus('error')
+        } else if (queries[0].isSuccess && queries[1].isSuccess && queries[2].isSuccess) {
+            setStatus('success')
+        }
+    }, [queries])
     return {
         allAreas,
         allProfessions,
@@ -146,6 +155,7 @@ function useSideBar() {
         onSubmit,
         selectedProfessionIds,
         setSelectedProfessionIds,
+        status,
     }
 }
 
@@ -164,26 +174,60 @@ const JobListingSideBar = () => {
         setSelectedAreaIds,
         setSelectedProfessionIds,
         selectedProfessionIds,
+        status
     } = useSideBar()
+    if (status === 'loading') {
+        return (
+            <SSRProvider>
+                <Col
+                    as='aside'
+                    lg={3}
+                    xl={2}
+                    className='me-2'
+                    style={{minHeight: '100vh'}}
+                >
+                    <Placeholder as='p' animation='wave' className="h-100 rounded shadow-sm" bg="none">
+                        <Placeholder xs={12} className="h-100 rounded shadow-sm" bg="faded-dark"/>
+                    </Placeholder>
+                </Col>
+            </SSRProvider>
+        )
+    } else if (status === "idle") {
+        return (
+            <SSRProvider>
+                <Col
+                    as='aside'
+                    lg={3}
+                    xl={2}
+                    className='me-2'
+                    style={{minHeight: '100vh'}}
+                >
+                    <Placeholder as='p' animation='wave' className="h-100 rounded shadow-sm" bg="none">
+                        <Placeholder xs={12} className="h-100 rounded shadow-sm" bg="faded-dark"/>
+                    </Placeholder>
+                </Col>
+            </SSRProvider>
+        )
+    }
     return (
         <SSRProvider>
             <Col
                 as='aside'
                 lg={3}
                 xl={2}
-                className='shadow-sm px-3 px-xl-4 px-xxl-5 pt-lg-2 bg-faded-light rounded me-2 mb-3'
+                className='shadow-sm px-5 px-xl-4 px-xxl-5 py-lg-2 rounded justify-content-center d-flex'
             >
                 <Offcanvas
                     show={show}
                     onHide={handleClose}
                     responsive='lg'
                 >
-                    <Offcanvas.Header closeButton>
-                        <Offcanvas.Title as='h5'>Filters</Offcanvas.Title>
+                    <Offcanvas.Header closeButton style={{direction :'rtl'}}>
+                        <Offcanvas.Title as='h5'>סנן לפי</Offcanvas.Title>
                     </Offcanvas.Header>
 
                     {/* Offcanvas body */}
-                    <Offcanvas.Body className='py-lg-4'>
+                    <Offcanvas.Body className='py-lg-4' style={{direction:'rtl'}}>
                         <div className='pb-4 mb-2'>
                             <h3 className='h6'>איזורים</h3>
                             <SimpleBar autoHide={false} className='simplebar-no-autohide'
@@ -308,5 +352,5 @@ const JobListingSideBar = () => {
             </Button>
         </SSRProvider>
     )
-}
-export default JobListingSideBar
+    }
+    export default JobListingSideBar

@@ -87,9 +87,9 @@ $container-max-widths                        : (
         xxl: 1320px
 ) !default;
 // Body
-$body-color                                  : black !default;
+$body-color                                  : $black !default;
 $body-bg                                     : $white !default;
-$text-muted                                  : $gray-600 !default;
+$text-muted                                  : $black !default;
 // Links
 $link-color                                  : $primary !default;
 $link-decoration                             : underline !default;

@@ -1,5 +1,5 @@
 import ToastDismissible from "@/components/toasts/toastDismissible";
-import {getUniqueJobListing} from "@/services/jobListingService";
+import {findManyJobListings, getUniqueJobListing} from "@/services/jobListingService";
 import {Area, JobApplicationStatus, JobListing, PositionScope, Prisma, Profession} from "@prisma/client";
 import ApplyButton from "@/app/joblisting/components/applyButton";
 import getHebrewDate from "@/lib/util/getHebrewDate";
@@ -10,6 +10,17 @@ import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {findManyJobApplications} from "@/services/jobApplicationService";
 import JobApplicationFindFirstArgs = Prisma.JobApplicationFindFirstArgs;
 
+export async function generateStaticParams() {
+    const {data} = await findManyJobListings({
+        select: {
+            id: true,
+        },
+    })
+    const jobListings = data?.jobListings ?? []
+    return jobListings.map(jobListing => ({
+        id: jobListing.id,
+    }))
+}
 
 export default async function Page({params}: { params: { id: string } }) {
     const {id} = params
@@ -26,7 +37,11 @@ export default async function Page({params}: { params: { id: string } }) {
     if (error) {
         return <ToastDismissible text="error in getUniqueJobListing" title="error"/>
     }
-    const jobListing = data?.jobListing as JobListing & (JobListing & { area: Area, positionScope: PositionScope, profession: Profession })
+    const jobListing = data?.jobListing as JobListing & (JobListing & {
+        area: Area,
+        positionScope: PositionScope,
+        profession: Profession
+    })
     if (!jobListing) {
         return <ToastDismissible text="jobListing not found" title="error"/>
     }
