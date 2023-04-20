@@ -27,29 +27,36 @@ export default function MainLayoutNavBar() {
                     className='fixed-top navbar-expand-lg navbar-stuck p-0 sticky-top'
                     style={{background: "none"}}
             >
-                <Container>
+                <Container className="pt-1 gap-4">
                     {/*HOME BUTTON*/}
-                    <Navbar.Brand as={Link} href='/' className='me-3 me-xl-4'>
+                    <Navbar.Brand as={Link} href='/' className='d-flex flex-column'>
                         {/*<ImageLoader src='/images/extra-job-svg.svg' alt='extra job' width={100} height={32} />*/}
-                        <i className="fi-home text-dark fs-5 rounded-circle shadow-lg px-1 bg-faded-dark"/>
+                        <i className="fi-home text-dark fs-5 card-hover bg-faded-dark rounded px-2 mx-auto"/>
+                        <span className="fs-xs text-dark fw-light">דף הבית</span>
                     </Navbar.Brand>
 
                     {/*DESKTOP AVATAR*/}
                     <DesktopAvatar avatarUrl={avatarUrl}/>
 
-                    {/*<UploadCvButton/>*/}
                     <Navbar.Toggle aria-controls='navbarNav' className='me-auto ms-0'/>
                     <Navbar.Collapse id='navbarNav' className='order-md-2'>
                         <Nav navbarScroll style={{maxHeight: '35rem'}}>
+                            {/*MOBILE NAV ITEMS*/}
                             <Link
                                 href={JOB_LISTING_URL}
-                                prefetch={true}
-                                className="card-hover bg-faded-dark rounded text-dark text-decoration-none nav-item me-lg-5 border-0 px-2  my-1"
+                                className="d-lg-none card-hover bg-faded-dark rounded text-dark text-decoration-none nav-item me-lg-5 border-0 px-2  my-1"
                             >
                                 <i className="fi-briefcase ms-2 mb-1 fs-6 text-dark"/>
                                 כל המשרות
                             </Link>
                             <MobileAvatar avatarUrl={avatarUrl}/>
+                            {/*DESKTOP NAV ITEMS*/}
+                            <Link
+                                href={JOB_LISTING_URL}
+                                className="d-none d-lg-flex flex-column text-decoration-none">
+                                <i className="fi-briefcase text-dark fs-5 card-hover bg-faded-dark rounded px-2 mx-auto text-decoration-none"/>
+                                <span className="fs-xs text-dark">כל המשרות</span>
+                            </Link>
                         </Nav>
                     </Navbar.Collapse>
 
