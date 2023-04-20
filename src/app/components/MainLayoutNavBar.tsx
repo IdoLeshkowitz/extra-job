@@ -9,12 +9,16 @@ import {signIn, signOut, useSession} from "next-auth/react";
 import Avatar from "@/components/avatar/Avatar";
 import {SSRProvider} from "react-bootstrap";
 import {Session} from "next-auth";
+import {useState} from "react";
+import {usePathname} from "next/navigation";
 
 const JOB_LISTING_URL = '/joblisting'
 const ME_URL = '/api/me'
 const DEFAULT_AVATAR_URL = '/images/avatars/38.png'
 export default function MainLayoutNavBar() {
+    const [hidden, setHidden] = useState(true);
     const {data, status} = useSession()
+    const url = usePathname()
     const avatarUrl = data?.user?.image ?? DEFAULT_AVATAR_URL
     return (
         <SSRProvider>
@@ -23,7 +27,7 @@ export default function MainLayoutNavBar() {
                     className='fixed-top navbar-expand-lg navbar-stuck p-0 sticky-top'
                     style={{background: "none"}}
             >
-                <Container className="pt-1 gap-4">
+                <Container className="pt-2 gap-4">
                     {/*HOME BUTTON*/}
                     <Navbar.Brand as={Link} href='/' className='d-flex flex-column'>
                         {/*<ImageLoader src='/images/extra-job-svg.svg' alt='extra job' width={100} height={32} />*/}
@@ -33,30 +37,28 @@ export default function MainLayoutNavBar() {
 
                     {/*DESKTOP AVATAR*/}
                     <DesktopAvatar avatarUrl={avatarUrl} status={status} data={data}/>
-
                     <Navbar.Toggle aria-controls='navbarNav' className='me-auto ms-0'/>
-                    <Navbar.Collapse id='navbarNav' className='order-md-2'>
+                    <Navbar.Collapse id='navbarNav' className='order-md-2 pb-3 pb-lg-0 px-lg-0 px-3'>
                         <Nav navbarScroll style={{maxHeight: '35rem'}}>
                             {/*MOBILE NAV ITEMS*/}
                             <Link
                                 href={JOB_LISTING_URL}
-                                className="d-lg-none card-hover bg-faded-dark rounded text-dark text-decoration-none nav-item me-lg-5 border-0 px-2  my-1"
+                                className="d-lg-none bg-faded-dark rounded text-dark text-decoration-none nav-item border-0 px-2 mb-2 py-1"
                             >
-                                <i className="fi-briefcase ms-2 mb-1 fs-6 text-dark"/>
+                                <i className="fi-briefcase ms-2 mb-1 fs-4 text-dark"/>
                                 כל המשרות
                             </Link>
                             <MobileAvatar avatarUrl={avatarUrl} status={status} data={data}/>
                             {/*DESKTOP NAV ITEMS*/}
                             <Link
                                 href={JOB_LISTING_URL}
-                                className="d-none d-lg-flex flex-column text-decoration-none">
+                                className="d-none d-lg-flex flex-column text-decoration-none"
+                            >
                                 <i className="fi-briefcase text-dark fs-5 card-hover bg-faded-dark rounded px-2 mx-auto text-decoration-none"/>
                                 <span className="fs-xs text-dark">כל המשרות</span>
                             </Link>
                         </Nav>
                     </Navbar.Collapse>
-
-                    {/*NAVBAR TOGGLE BUTTON FOR MOBILE*/}
                 </Container>
             </Navbar>
         </SSRProvider>
@@ -66,26 +68,25 @@ export default function MainLayoutNavBar() {
 function MobileAvatar({avatarUrl, data, status}: { avatarUrl: string, data: Session | null, status: string }) {
     const {user} = data ?? {}
     if (status === "loading") {
-        return <div className="d-lg-none spinner-grow text-light" role="status"/>
+        return <Nav.Item className="d-lg-none spinner-border text-dark" role="status"/>
     }
     if (status === "unauthenticated") {
         return (
-            <Nav.Item className='d-lg-none'>
-                <Nav.Item onClick={() => signIn()}>
-                    <i className='fi-user me-2'> התחבר</i>
-                </Nav.Item>
-            </Nav.Item>
+            <button onClick={() => signIn()}
+                    className="d-flex d-lg-none card-hover bg-faded-dark shadow-sm rounded text-dark px-2 my-1 border-0">
+                <i className='fi-user ms-2 mb-1 fs-6 text-dark'/>
+                הכנס
+            </button>
         )
     }
-    return (
-        <>
-            {status === 'authenticated'
-                ?
-                <Nav.Item as={Dropdown} className='d-lg-none border-0 bg-faded-dark shadow-sm'>
+    if (status === "authenticated") {
+        return (
+            <>
+                <Nav.Item as={Dropdown} className='d-lg-none border-0 bg-faded-dark px-2 my-1'>
                     {/*DROPDOWN TOGGLE BUTTON*/}
                     <Dropdown.Toggle as={Nav.Link} className='d-flex align-items-center'>
-                        <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={30} height={30}/>
-                        <span className='mx-2'>{user?.name}</span>
+                        <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={25} height={25}/>
+                        <span className='mx-2 fw-light'>{user?.name}</span>
                     </Dropdown.Toggle>
                     {/*USER CARD*/}
                     <Dropdown.Menu variant="dark border-0">
@@ -105,15 +106,10 @@ function MobileAvatar({avatarUrl, data, status}: { avatarUrl: string, data: Sess
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Nav.Item>
-                :
-                <Nav.Item className='d-lg-none'>
-                    <Nav.Item onClick={() => signIn()}>
-                        <i className='fi-user me-2'> התחבר</i>
-                    </Nav.Item>
-                </Nav.Item>}
-        </>
-    )
-
+            </>
+        )
+    }
+    return null
 }
 
 
@@ -126,7 +122,8 @@ function DesktopAvatar({avatarUrl, data, status}: { avatarUrl: string, data: Ses
         <>
             {status === "unauthenticated" ?
                 /* SIGN IN LINK */
-                <button className='btn btn-link btn-light d-none d-lg-block order-lg-3 btn-sm' onClick={() => signIn()}>
+                <button className='btn btn-link btn-light d-none d-lg-block order-lg-3 btn-sm'
+                        onClick={() => signIn()}>
                     <i className='fi-user me-2'></i>
                     הכנס
                 </button>
