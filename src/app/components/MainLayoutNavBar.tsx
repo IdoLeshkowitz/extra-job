@@ -5,21 +5,17 @@ import Navbar from "react-bootstrap/Navbar";
 import Link from "next/link";
 import Dropdown from "react-bootstrap/Dropdown";
 import Nav from "react-bootstrap/Nav";
-import {signOut, useSession} from "next-auth/react";
+import {signIn, signOut, useSession} from "next-auth/react";
 import Avatar from "@/components/avatar/Avatar";
 import {SSRProvider} from "react-bootstrap";
-import {usePathname} from "next/navigation";
+import {Session} from "next-auth";
 
-const SIGNIN_URL = '/api/auth/signin'
-const SIGNOUT_URL = '/api/auth/signout'
+const JOB_LISTING_URL = '/joblisting'
 const ME_URL = '/api/me'
 const DEFAULT_AVATAR_URL = '/images/avatars/38.png'
-const JOB_LISTING_URL = '/joblisting'
 export default function MainLayoutNavBar() {
-    const {data} = useSession()
-    const pathName = usePathname()
-    const {user} = data ?? {}
-    const avatarUrl = user?.image ?? DEFAULT_AVATAR_URL
+    const {data, status} = useSession()
+    const avatarUrl = data?.user?.image ?? DEFAULT_AVATAR_URL
     return (
         <SSRProvider>
             <Navbar as={StickyNavbar}
@@ -36,7 +32,7 @@ export default function MainLayoutNavBar() {
                     </Navbar.Brand>
 
                     {/*DESKTOP AVATAR*/}
-                    <DesktopAvatar avatarUrl={avatarUrl}/>
+                    <DesktopAvatar avatarUrl={avatarUrl} status={status} data={data}/>
 
                     <Navbar.Toggle aria-controls='navbarNav' className='me-auto ms-0'/>
                     <Navbar.Collapse id='navbarNav' className='order-md-2'>
@@ -49,7 +45,7 @@ export default function MainLayoutNavBar() {
                                 <i className="fi-briefcase ms-2 mb-1 fs-6 text-dark"/>
                                 כל המשרות
                             </Link>
-                            <MobileAvatar avatarUrl={avatarUrl}/>
+                            <MobileAvatar avatarUrl={avatarUrl} status={status} data={data}/>
                             {/*DESKTOP NAV ITEMS*/}
                             <Link
                                 href={JOB_LISTING_URL}
@@ -67,9 +63,20 @@ export default function MainLayoutNavBar() {
     )
 }
 
-function MobileAvatar({avatarUrl}: { avatarUrl: string }) {
-    const {status, data} = useSession()
+function MobileAvatar({avatarUrl, data, status}: { avatarUrl: string, data: Session | null, status: string }) {
     const {user} = data ?? {}
+    if (status === "loading") {
+        return <div className="d-lg-none spinner-grow text-light" role="status"/>
+    }
+    if (status === "unauthenticated") {
+        return (
+            <Nav.Item className='d-lg-none'>
+                <Nav.Item onClick={() => signIn()}>
+                    <i className='fi-user me-2'> התחבר</i>
+                </Nav.Item>
+            </Nav.Item>
+        )
+    }
     return (
         <>
             {status === 'authenticated'
@@ -92,7 +99,7 @@ function MobileAvatar({avatarUrl}: { avatarUrl: string }) {
                         </Dropdown.Item>
                         <Dropdown.Divider as='div'/>
                         {/*SIGN OUT LINK*/}
-                        <Dropdown.Item href={SIGNOUT_URL} className="text-dark text-end">
+                        <Dropdown.Item onClick={() => signOut()} className="text-dark text-end">
                             <i className='fi-logout ms-2'/>
                             התנתק
                         </Dropdown.Item>
@@ -100,9 +107,9 @@ function MobileAvatar({avatarUrl}: { avatarUrl: string }) {
                 </Nav.Item>
                 :
                 <Nav.Item className='d-lg-none'>
-                    <Nav.Link href={SIGNIN_URL}>
+                    <Nav.Item onClick={() => signIn()}>
                         <i className='fi-user me-2'> התחבר</i>
-                    </Nav.Link>
+                    </Nav.Item>
                 </Nav.Item>}
         </>
     )
@@ -110,17 +117,19 @@ function MobileAvatar({avatarUrl}: { avatarUrl: string }) {
 }
 
 
-function DesktopAvatar({avatarUrl}: { avatarUrl: string }) {
-    const {status, data} = useSession()
+function DesktopAvatar({avatarUrl, data, status}: { avatarUrl: string, data: Session | null, status: string }) {
     const {user} = data ?? {}
+    if (status === "loading") {
+        return <div className="spinner-border text-dark d-lg-block order-lg-3" role="status"/>
+    }
     return (
         <>
             {status === "unauthenticated" ?
                 /* SIGN IN LINK */
-                <Link className='btn btn-link btn-light d-none d-lg-block order-lg-3 btn-sm' href={SIGNIN_URL}>
+                <button className='btn btn-link btn-light d-none d-lg-block order-lg-3 btn-sm' onClick={() => signIn()}>
                     <i className='fi-user me-2'></i>
                     הכנס
-                </Link>
+                </button>
                 :
                 <Dropdown className='d-none d-lg-block order-lg-3 my-n2 me-3'>
                     {/*PROFILE LINK*/}

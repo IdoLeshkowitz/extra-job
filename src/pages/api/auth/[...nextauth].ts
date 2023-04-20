@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
             });
             session.user.cv = !!cvByUserId;
             return session
-        }
+        },
     }
 }
 
