@@ -88,4 +88,4 @@ export default async function JobListingAdminPage({searchParams}: { searchParams
         </>
     )
 }
-export const revalidate = 0;
+

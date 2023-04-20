@@ -22,7 +22,7 @@ const DeactivateProfession: FC<DeactivateProfessionButtonProps> = ({id}) => {
         }
         try {
             setLoading(true)
-            const {data} = await fetcher(
+            await fetcher(
                 {
                     url   : `/api/profession/${id}`,
                     method: 'PUT',

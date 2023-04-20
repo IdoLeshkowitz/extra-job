@@ -29,7 +29,7 @@ export default function CreateArea() {
         }
         try {
             setLoading(true)
-            const res = await fetcher(
+            await fetcher(
                 {
                     url   : '/api/area',
                     method: 'POST',
