@@ -14,7 +14,7 @@ const getAreas = async () => {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ areas: Area[] }>({
             url   : `/api/area?areaFindManyArgs=${JSON.stringify(areaFindManyArgs)}`,
             method: 'GET',
             json  : true,
@@ -31,7 +31,7 @@ const getProfessions = async () => {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ professions: Profession[] }>({
             url   : `/api/profession?professionFindManyArgs=${JSON.stringify(professionFindManyArgs)}`,
             method: 'GET',
             json  : true,
@@ -48,7 +48,7 @@ const getPositionScopes = async () => {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ positionScopes: PositionScope[] }>({
             url   : `/api/positionscope?positionScopeFindManyArgs=${JSON.stringify(positionScopeFindManyArgs)}`,
             method: 'GET',
             json  : true,

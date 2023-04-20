@@ -22,14 +22,13 @@ const DeactivatePositionScope: FC<DeactivatePositionScope> = ({id}) => {
         }
         try {
             setLoading(true)
-            const {data} = await fetcher(
+            await fetcher(
                 {
                     url   : `/api/positionscope/${id}`,
                     method: 'PUT',
                     body  : {positionScopeUpdateArgs},
                     json  : true,
                 })
-
             router.refresh()
             setLoading(false)
         } catch (e: any) {

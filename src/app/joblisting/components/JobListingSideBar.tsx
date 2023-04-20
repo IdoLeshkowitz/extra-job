@@ -15,7 +15,7 @@ async function getProfessions() {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ professions: Profession[] }>({
             url   : `/api/profession?professionFindManyArgs=${JSON.stringify(professionFindManyArgs)}`,
             method: 'GET',
             json  : true,
@@ -32,7 +32,7 @@ async function getAreas() {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ areas: Area[] }>({
             url   : `/api/area?areaFindManyArgs=${JSON.stringify(areaFindManyArgs)}`,
             method: 'GET',
             json  : true,
@@ -49,7 +49,7 @@ async function getPositionScopes() {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ positionScopes: PositionScope[] }>({
             url   : `/api/positionscope?positionScopeFindManyArgs=${JSON.stringify(positionScopeFindManyArgs)}`,
             method: 'GET',
             json  : true,
@@ -222,12 +222,12 @@ const JobListingSideBar = () => {
                     onHide={handleClose}
                     responsive='lg'
                 >
-                    <Offcanvas.Header closeButton style={{direction :'rtl'}}>
+                    <Offcanvas.Header closeButton style={{direction: 'rtl'}}>
                         <Offcanvas.Title as='h5'>סנן לפי</Offcanvas.Title>
                     </Offcanvas.Header>
 
                     {/* Offcanvas body */}
-                    <Offcanvas.Body className='py-lg-4' style={{direction:'rtl'}}>
+                    <Offcanvas.Body className='py-lg-4' style={{direction: 'rtl'}}>
                         <div className='pb-4 mb-2'>
                             <h3 className='h6'>איזורים</h3>
                             <SimpleBar autoHide={false} className='simplebar-no-autohide'
@@ -352,5 +352,5 @@ const JobListingSideBar = () => {
             </Button>
         </SSRProvider>
     )
-    }
-    export default JobListingSideBar
+}
+export default JobListingSideBar

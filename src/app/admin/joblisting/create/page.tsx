@@ -16,7 +16,7 @@ const getAreas = async () => {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ areas: Area[] }>({
             url   : `/api/area?areaFindManyArgs=${JSON.stringify(areaFindManyArgs)}`,
             method: 'GET',
             json  : true,
@@ -32,7 +32,7 @@ const getProfessions = async () => {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ professions: Profession[] }>({
             url   : `/api/profession?professionFindManyArgs=${JSON.stringify(professionFindManyArgs)}`,
             method: 'GET',
             json  : true,
@@ -49,7 +49,7 @@ const getPositionScopes = async () => {
         where: {active: true},
     }
     try {
-        const {data} = await fetcher({
+        const {data} = await fetcher<{ positionScopes: PositionScope[] }>({
             url   : `/api/positionscope?positionScopeFindManyArgs=${JSON.stringify(positionScopeFindManyArgs)}`,
             method: 'GET',
             json  : true,
@@ -76,6 +76,11 @@ interface formDynamicValues {
     positionScopes: PositionScope[]
 }
 
+enum Status {
+    Idle = 'idle',
+    Loading = 'loading',
+    Success = 'success',
+}
 export default function CreateJobListingPage() {
     const router = useRouter()
     const [formDynamicValues, setFormDynamicValues] = useState<formDynamicValues>({areas: [], professions: [], positionScopes: []})
@@ -124,13 +129,13 @@ export default function CreateJobListingPage() {
             }
             setLoading(true)
             try {
-                const {data: {jobListing}} = await fetcher({
+                await fetcher({
                     url   : '/api/joblisting',
                     method: 'POST',
                     body  : {jobListingCreateArgs},
                     json  : true,
                 })
-                router.push(`/joblisting/${jobListing.id}`)
+                // router.push(`/joblisting/${jobListing.id}`)
                 setLoading(false)
             } catch (e: any) {
                 const error = e.error as CustomError

@@ -1,17 +1,16 @@
 'use client'
 import {SSRProvider} from "react-bootstrap";
-import {PositionScope, Prisma, Profession} from "@prisma/client";
-import {SyntheticEvent, use, useRef} from "react";
+import {Profession} from "@prisma/client";
+import {SyntheticEvent, useRef} from "react";
 import {useRouter} from "next/navigation";
 import {fetcher} from "@/lib/api/fetcher";
 
 async function getProfessions() {
-    const professions = await fetcher<Profession[]>({
-        url: '/api/profession',
+    return await fetcher<Profession[]>({
+        url   : '/api/profession',
         method: 'GET',
-        json: true,
+        json  : true,
     })
-    return professions
 }
 function useSearchBar(){
     const areaIdRef = useRef<string | null>(null)

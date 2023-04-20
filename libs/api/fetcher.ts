@@ -19,7 +19,7 @@ export const fetcher = async <T>({url, method, json, body, revalidate}: FetcherP
         return Promise.reject(await res.json())
     }
     if (!json) {
-        return res as unknown as T
+        return res as unknown as {data : T}
     }
-    return await res.json() as T
+    return await res.json() as {data : T}
 }

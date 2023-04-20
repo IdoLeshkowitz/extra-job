@@ -22,7 +22,7 @@ const DeactivateArea: FC<DeactivateAreaProps> = ({id}) => {
         }
         try {
             setLoading(true)
-            const {data} = await fetcher(
+            await fetcher(
                 {
                     url   : `/api/area/${id}`,
                     method: 'PUT',
