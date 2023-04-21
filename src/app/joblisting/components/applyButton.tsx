@@ -26,19 +26,7 @@ enum State {
 const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
-    const session = useSession()
-    // return (
-    //     <Link
-    //         href="/uploadcv"
-    //         className="icon-box card bg-faded-dark flex-row align-items-center card-hover rounded-pill p-1 d-flex justify-content-start zindex-10 border-0 align-self-center"
-    //     >
-    //         <div
-    //             className="icon-box-media bg-faded-light text-light rounded-circle d-flex justify-content-center align-items-center w-auto">
-    //             <i className="fi-lock"/>
-    //         </div>
-    //         <h3 className="icon-box-title fs-sm text-light text-end pe-2 ps-1 pt-1">הוסף קורות חיים כדי להמשיך</h3>
-    //     </Link>
-    // )
+    const {update,data } = useSession()
     async function onClick() {
         //set state to loading
         setLoading(true)
@@ -47,7 +35,7 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
                 data: {
                     appliedBy : {
                         connect: {
-                            id: session!.data!.user!.id
+                            id: data?.user.id
                         }
                     },
                     jobListing: {
@@ -58,7 +46,7 @@ const ApplyButton: FC<ApplyButtonProps> = ({jobListingId}) => {
                 }
             }
             //create job application
-            const {data} = await fetcher({
+             await fetcher({
                 url   : `/api/jobapplication`,
                 method: 'POST',
                 json  : true,

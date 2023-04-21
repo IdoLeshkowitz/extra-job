@@ -37,7 +37,7 @@
     "lottie-web": "^5.10.1",
     "moment": "^2.29.4",
     "next": "^13.3.0",
-    "next-auth": "^4.19.2",
+    "next-auth": "^4.22.1",
     "nprogress": "^0.2.0",
     "parallax-js": "^3.1.0",
     "prismjs": "^1.29.0",

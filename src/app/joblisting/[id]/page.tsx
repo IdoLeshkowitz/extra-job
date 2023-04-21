@@ -45,15 +45,14 @@ export default async function Page({params}: { params: { id: string } }) {
         <section className="container mt-5 mb-lg-5 mb-4 pt-5 pb-lg-5" style={{direction: 'rtl'}}>
             <Breadcrumbs/>
             <div className="row justify-content-evenly mt-2">
-                <div className="col-lg-7 pt-lg-2 mb-5 mb-lg-0">
+                <div className="col-xl-7 pt-lg-2 mb-5 mb-lg-0">
                     {/*Job Listing Name */}
                     <h1 className='h2 mb-2'>{name}</h1>
                     {/*Description*/}
                     <p className='mb-2 pb-1 '>{description}</p>
                 </div>
-                <div className="col-lg-5">
+                <div className="col-xl-5">
                     <div className="row my-3 w-auto mx-0">
-                        {/*@ts-expect-error server component*/}
                         <ApplicationButton jobListingId={id}/>
                     </div>
                     {/*Requirements*/}
@@ -78,7 +77,7 @@ export default async function Page({params}: { params: { id: string } }) {
                         <div className="card-body">
                             <h5 className="mb-0 pb-3">פרטי המשרה</h5>
                             <div className="row mt-2">
-                                <div className="col-4">
+                                <div className="col-md-4 col-12">
                                      <span
                                          className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 w-100 text-center'
                                      >
@@ -86,7 +85,7 @@ export default async function Page({params}: { params: { id: string } }) {
                                          {area.name}
                                      </span>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-md-4 col-12 mt-md-0 mt-1">
                                         <span
                                             className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 w-100 text-center'
                                         >
@@ -94,11 +93,11 @@ export default async function Page({params}: { params: { id: string } }) {
                                             {positionScope.name}
                                         </span>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-md-4 col-12 mt-md-0 mt-1">
                                         <span
                                             className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 w-100 text-center'
                                         >
-                                            <i className={`fi-briefcase ms-1 mt-n1 fs-lg text-black-50`}></i>
+                                            <i className={`fi-briefcase ms-1 mt-n1 fs-lg text-black-50 text-nowrap`}></i>
                                             {profession.name}
                                         </span>
                                 </div>
