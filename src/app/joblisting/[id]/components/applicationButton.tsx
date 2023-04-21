@@ -5,6 +5,7 @@ import {signIn, useSession} from "next-auth/react";
 import {JobApplicationStatus, Prisma} from "@prisma/client";
 import {fetcher} from "@/lib/api/fetcher";
 import Link from "next/link";
+import {JobApplication} from ".prisma/client";
 import JobApplicationFindFirstArgs = Prisma.JobApplicationFindFirstArgs;
 
 enum State {
@@ -31,13 +32,13 @@ async function hasPendingApplication(jobListingId: string, userId: string) {
         }
     }
     try {
-        const {data} = await fetcher({
+        const {data}: { data: { jobApplication: JobApplication | null } } = await fetcher({
             url   : `/api/jobapplication/findfirst?jobApplicationFindFirstArgs=${JSON.stringify(jobApplicationFindFirstArgs)}`,
             method: 'GET',
             json  : true,
         })
-        console.log(data)
-        return !!data
+        const {jobApplication} = data
+        return !!jobApplication
     } catch (e) {
         console.error(e)
         return undefined
