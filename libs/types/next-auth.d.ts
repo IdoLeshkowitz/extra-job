@@ -9,6 +9,7 @@ declare module "next-auth" {
         phone: string
         gender: string
         cv: any
+        id: string
     }
 
     interface Session {

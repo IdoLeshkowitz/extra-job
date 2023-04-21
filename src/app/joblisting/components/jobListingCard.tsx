@@ -41,7 +41,7 @@ const JobListingCard = async ({jobListingId}: { jobListingId: string }) => {
                 </div>
                 <>
                     <div
-                        className='d-flex card-footer align-items-center justify-content-center text-nowrap flex-wrap px-1 border-0 gap-2 py-1 mb-1'>
+                        className='d-flex d-lg-none d-xl-none d-xxl-flex card-footer align-items-center justify-content-center text-nowrap flex-wrap px-1 border-0 gap-2 py-1 mb-1'>
                         <span className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 fs-xs'>
                             <i className={`fi-map-pin ms-1 mt-n1 fs-lg text-black-50`}></i>
                             {area.name}
