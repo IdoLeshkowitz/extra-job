@@ -1,37 +1,122 @@
-import prisma from "@/lib/prisma";
-import JobListingCard from "@/app/joblisting/components/JobListingCard";
-import {notFound} from "next/navigation";
-import ApplyButton from "@/app/joblisting/components/ApplyButton";
+import ToastDismissible from "@/components/toasts/toastDismissible";
+import {findManyJobListings, getUniqueJobListing} from "@/services/jobListingService";
+import {Area, JobListing, PositionScope, Prisma, Profession} from "@prisma/client";
+import getHebrewDate from "@/lib/util/getHebrewDate";
+import Breadcrumbs from "@/app/joblisting/[id]/components/breadcrumbs";
+import ApplicationButton from "@/app/joblisting/[id]/components/applicationButton";
 
+export async function generateStaticParams() {
+    const {data} = await findManyJobListings({
+        select: {
+            id: true,
+        },
+    })
+    const jobListings = data?.jobListings ?? []
+    return jobListings.map(jobListing => ({
+        id: jobListing.id,
+    }))
+}
 
-export default async function JobListingPage({params: {id}}: { params: { id: string } }) {
-    const jobListing = await prisma.jobListing.findUnique({
-        where  : {id},
+export default async function Page({params}: { params: { id: string } }) {
+    const {id} = params
+    const {data, error} = await getUniqueJobListing({
+        where  : {
+            id
+        },
         include: {
             area         : true,
-            profession   : true,
             positionScope: true,
-        }
+            profession   : true,
+        },
     })
-    if (!jobListing) return notFound()
+    if (error) {
+        return <ToastDismissible text="error in getUniqueJobListing" title="error"/>
+    }
+    const jobListing = data?.jobListing as JobListing & (JobListing & {
+        area: Area,
+        positionScope: PositionScope,
+        profession: Profession
+    })
+    if (!jobListing) {
+        return <ToastDismissible text="jobListing not found" title="error"/>
+    }
+    const {area, positionScope, profession, name, jobRequirements, description, createdAt, serialNumber} = jobListing
     return (
-        <div className='container mt-2 border border-light rounded-3 col-md-11' style={{direction: 'rtl'}}>
-            <div className='row align-items-center'>
-                <div className="col-md-4">
-                    <div className='d-sm-flex align-items-center justify-content-between mb-4 pb-sm-2 py-2'>
-                        <h1 className='h2 mb-sm-0 text-light'>{jobListing?.name}</h1>
-                    </div>
-                    <h2 className='h4 text-light'>תיאור המשרה</h2>
-                    <div className='mb-4 pb-md-3'>
-                        <p className='mb-1'>{jobListing?.description}</p>
-                    </div>
+        <section className="container mt-5 mb-lg-5 mb-4 pt-5 pb-lg-5" style={{direction: 'rtl'}}>
+            <Breadcrumbs/>
+            <div className="row justify-content-evenly mt-2">
+                <div className="col-xl-7 pt-lg-2 mb-5 mb-lg-0">
+                    {/*Job Listing Name */}
+                    <h1 className='h2 mb-2'>{name}</h1>
+                    {/*Description*/}
+                    <p className='mb-2 pb-1 '>{description}</p>
                 </div>
-                <div className="col-md-8 p-2 justify-content-end d-flex" style={{direction: 'rtl'}}>
-                    {/* @ts-expect-error Async Server Component */}
-                    <JobListingCard jobListing={jobListing} className="col-md-6"/>
+                <div className="col-xl-5">
+                    <div className="row my-3 w-auto mx-0">
+                        <ApplicationButton jobListingId={id}/>
+                    </div>
+                    {/*Requirements*/}
+                    <div className="card border-0 bg-faded-light mb-4">
+                        <div className="card-body">
+                            <h5 className="mb-0 pb-3">דרישות המשרה</h5>
+                            <ul className="list-unstyled mt-n2 mb-0">
+                                {
+                                    jobRequirements.map((jobRequirement, index) => {
+                                        return (
+                                            <li className="mt-2" key={index}>
+                                                {jobRequirement}
+                                            </li>
+                                        )
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    {/*Area Profession PositionScope*/}
+                    <div className="card border-0 bg-faded-light mb-4">
+                        <div className="card-body">
+                            <h5 className="mb-0 pb-3">פרטי המשרה</h5>
+                            <div className="row mt-2">
+                                <div className="col-md-4 col-12">
+                                     <span
+                                         className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 w-100 text-center'
+                                     >
+                                        <i className={`fi-map-pin ms-1 mt-n1 fs-lg text-black-50`}></i>
+                                         {area.name}
+                                     </span>
+                                </div>
+                                <div className="col-md-4 col-12 mt-md-0 mt-1">
+                                        <span
+                                            className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 w-100 text-center'
+                                        >
+                                            <i className={`fi-pie-chart ms-1 mt-n1 fs-lg text-black-50`}></i>
+                                            {positionScope.name}
+                                        </span>
+                                </div>
+                                <div className="col-md-4 col-12 mt-md-0 mt-1">
+                                        <span
+                                            className='d-inline-block fs-sm text-black-50 ms-2 bg-faded-dark rounded-2 p-2 w-100 text-center'
+                                        >
+                                            <i className={`fi-briefcase ms-1 mt-n1 fs-lg text-black-50 text-nowrap`}></i>
+                                            {profession.name}
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='d-flex fs-sm justify-content-center'>
+                        <span className="border-start ps-3">
+                            פורסם ב:
+                            <b> {getHebrewDate(createdAt)}</b>
+                        </span>
+                        <span className="pe-3">
+                            מספר משרה:
+                            <b> {serialNumber}</b>
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     )
-
 }
+

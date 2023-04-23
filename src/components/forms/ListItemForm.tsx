@@ -10,7 +10,7 @@ interface ListItemFormProps {
 const ListItemForm: FC<ListItemFormProps> = ({children, onSubmit}) => {
     return (
         <Form
-            className="list-group-item bg-dark border-bottom border-light text-white d-flex flex-row-reverse justify-content-between h-25 align-items-center"
+            className="list-group-item-text bg-faded-light rounded p-2 border-light d-flex flex-row-reverse justify-content-between h-25 align-items-center mb-1"
             onSubmit={onSubmit}
         >
             {children}

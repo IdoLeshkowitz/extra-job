@@ -1,25 +1,24 @@
 import '../../styles/theme.scss'
-import '../../styles/theme.scss'
-import AuthProvider from './AuthProvider';
+import MySessionProvider from './mySessionProvider';
 import MainLayoutNavBar from "@/app/components/MainLayoutNavBar";
-import Footer from "@/components/footer/Footer";
 import {ReactNode} from 'react';
-import {SSRProvider} from "react-bootstrap";
+import MyQueryClientProvider from "@/app/myQueryClientProvider";
 
-//"linear-gradient(#e66465, #9198e5)"
+
 function RootLayout({children}: { children: ReactNode }) {
     return (
-            <html>
-                <body >
-                    <AuthProvider>
-                        <main className="page-wrapper" style={{background:"linear-gradient(#e66465, #9198e5)"}}>
+        <html>
+            <body>
+                <MySessionProvider>
+                    <MyQueryClientProvider>
+                        <main className="page-wrapper bg-gradient" style={{direction: 'rtl'}}>
                             <MainLayoutNavBar/>
                             {children}
                         </main>
-                        {/*<Footer/>*/}
-                    </AuthProvider>
-                </body>
-            </html>
+                    </MyQueryClientProvider>
+                </MySessionProvider>
+            </body>
+        </html>
     )
 }
 

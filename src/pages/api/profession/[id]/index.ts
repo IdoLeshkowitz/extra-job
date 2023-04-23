@@ -1,19 +1,26 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Prisma} from ".prisma/client";
 import {updateProfession} from "@/services/professionService";
-import ProfessionUpdateInput = Prisma.ProfessionUpdateInput;
+import {boolean, object, string} from "yup";
 
-
-export default async function index(req: NextApiRequest, res: NextApiResponse) {
+const professionUpdateArgsSchema = object({
+    where: object({id: string().required()}),
+    data : object({active: boolean().required()})
+})
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "PUT") {
-        const id = req.query.id as unknown as string
-        const professionUpdateInput: ProfessionUpdateInput = req.body
+        const {professionUpdateArgs} = req.body;
+        console.log(professionUpdateArgs)
+        //validate professionUpdateArgs
         try {
-            const updatedProfession = await updateProfession(id, professionUpdateInput)
-            res.json({data: updatedProfession})
-        } catch (e) {
-            console.error(e)
-            res.status(400).json({error: {message: 'unable to update profession'}})
+            await professionUpdateArgsSchema.validate(professionUpdateArgs)
+        } catch (e: any) {
+            return res.status(400).json({error: {message: e.message}})
         }
+        //update profession
+        const {data, error} = await updateProfession(professionUpdateArgs)
+        if (error) {
+            return res.status(500).json({error})
+        }
+        res.json(data)
     }
 }

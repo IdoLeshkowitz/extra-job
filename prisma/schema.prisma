@@ -61,7 +61,6 @@ model User {
   appliedFor          JobApplication[]
   emailVerified       Boolean?         @default(false)
   cv                  Cv[]
-  likedJobListings    JobListing[]     @relation(fields: [likedJobListingsIds], references: [id])
 }
 
 model JobApplication {
@@ -72,9 +71,8 @@ model JobApplication {
   status       JobApplicationStatus @default(PENDING)
 
   appliedBy  User       @relation(fields: [appliedById], references: [id])
-  joblisting JobListing @relation(fields: [jobListingId], references: [id])
+  jobListing JobListing @relation(fields: [jobListingId], references: [id])
 
-  @@unique([appliedById, jobListingId])
   @@fulltext([appliedById, jobListingId, createdAt(sort: Desc)])
 }
 
@@ -92,14 +90,13 @@ model JobListing {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   description     String
+  jobRequirements String[] @default([])
   serialNumber    String   @unique
   professionId    String   @db.ObjectId
   areaId          String   @db.ObjectId
   positionScopeId String   @db.ObjectId
   createdAt       DateTime @default(now()) @db.Date
-  likedByIds      String[] @default([]) @db.ObjectId
 
-  likedBy         User[]           @relation(fields: [likedByIds], references: [id])
   active          Boolean          @default(true)
   area            Area             @relation(fields: [areaId], references: [id])
   profession      Profession       @relation(fields: [professionId], references: [id])

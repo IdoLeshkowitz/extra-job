@@ -8,7 +8,7 @@ export default function HomePage() {
                 <div className='row align-items-end mt-2 mt-md-0 pt-md-4 pt-lg-5 pb-5 p-5 '>
                     {/*HEADLINE*/}
                     <div className="col-md-7 order-md-2 pe-5 pt-5 d-flex justify-content-center">
-                        <h1 className='display-4 text-secondary pb-2 mb-4 mb-lg-5' style={{maxWidth: '29.5rem'}}>
+                        <h1 className='display-4 text-white pb-2 mb-4 mb-lg-5' style={{maxWidth: '29.5rem',direction:'rtl'}}>
                             הקריירה שלך זאת העבודה<span className='text-primary'> שלנו</span>
                         </h1>
                     </div>
@@ -21,13 +21,12 @@ export default function HomePage() {
                     <div className='mt-5 mb-md-5 py-5'>
                         <div className='col-xl-6 col-lg-8 col-md-10 mx-auto mb-sm-5 mb-4  text-center'>
                             <h1 className='display-5 text-light d-flex flex-wrap align-items-center justify-content-center mt-sm-5 mt-4 my-3'>
-                                <span className='me-2 text-primary'>משרות</span>
                                 <span>חיפוש</span>
+                                <span className='me-2 text-primary'>משרות</span>
                             </h1>
                             <p className='fs-lg text-white'>חפש עבודה לפי איזור ומקצוע</p>
                         </div>
-                        <div className='mx-auto px-0 col-xl-8 col-lg-9 col-md-10'>
-
+                        <div className='mx-auto px-0 col-xl-8 col-lg-9 col-md-11'>
                             {/* Search form */}
                             <JobListingSearchBar />
                         </div>

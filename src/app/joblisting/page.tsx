@@ -1,102 +1,84 @@
-import prisma from "@/lib/prisma";
-import JobListingSearchBar from "@/app/components/JobListingSearchBar";
-import JobListingCard from "@/app/joblisting/components/JobListingCard";
+import {countJobListing, findManyJobListings} from "@/services/jobListingService";
+import ToastDismissible from "@/components/toasts/toastDismissible";
+import JobListingCard from "./components/jobListingCard";
 import CustomPagination from "@/components/pagination/customPagination";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {getServerSession, User} from "next-auth";
-import ApplyButton from "@/app/joblisting/components/ApplyButton";
-import {Fragment, Key} from "react";
+import JobListingSideBar from "@/app/joblisting/components/JobListingSideBar";
+import {cache} from "react";
+import {Prisma} from ".prisma/client";
+import JobListingFindManyArgs = Prisma.JobListingFindManyArgs;
+import JobListingCountArgs = Prisma.JobListingCountArgs;
 
-function getJobListings({positionScopeId, areaId, professionId, skip, take}: SearchParams) {
-    return prisma.jobListing.findMany({
-        where  : {
-            active         : true,
-            areaId         : areaId,
-            positionScopeId: positionScopeId,
-            professionId   : professionId
-        },
-        skip   : skip ? parseInt(skip) : undefined,
-        take   : take ? parseInt(take) : undefined,
-        include: {
-            area         : true,
-            profession   : true,
-            positionScope: true,
-        }
-    });
-}
-
-async function getUserJobApplications(user: User | undefined) {
-    if (!user) return []
-    return prisma.jobApplication.findMany({
-        where: {
-            appliedById : user.id,
-            jobListingId: {}
-        }
-    })
-}
-
-function countJobListings({positionScopeId, areaId, professionId}: SearchParams) {
-    return prisma.jobListing.count({
-        where: {
-            active         : true,
-            areaId         : areaId,
-            positionScopeId: positionScopeId,
-            professionId   : professionId
-        }
-    })
-}
-
-interface SearchParams {
-    positionScopeId?: string,
-    professionId?: string,
-    areaId?: string,
+interface JobListingsSearchParams {
     skip?: string,
-    take?: string
+    take?: string,
+    serialNumber?: string,
+    areaIds?: string,
+    positionScopeIds?: string,
+    professionIds?: string,
 }
 
-export default async function JobListingPage({searchParams}: { searchParams: SearchParams }) {
-    const {user} = await getServerSession(authOptions) ?? {}
-    const [skip, take]: string[] = [searchParams.skip ?? '0', searchParams.take ?? '10'].map((param) => param)
-    const [jobListings, count, jobApplications] = await Promise.all([getJobListings({...searchParams, skip, take}), countJobListings({...searchParams, skip, take}), getUserJobApplications(user)])
-    // console.log(user)
-    console.log('running')
+
+const cachedFindManyJobListings = cache(async (jobListingFindManyArgs: JobListingFindManyArgs) => {
+    return await findManyJobListings(jobListingFindManyArgs)
+})
+
+const cachedCountJobListings = cache(async (jobListingCountArgs: JobListingCountArgs) => {
+    return await countJobListing(jobListingCountArgs)
+})
+
+export default async function JobListingPage({searchParams}: { searchParams: JobListingsSearchParams }) {
+    const [skip, take] = [parseInt(searchParams.skip ?? '0'), parseInt(searchParams.take ?? '9')];
+    const [{data: jobListingData, error: jobListingsIdsError}, {data: countData, error: countError}] = await Promise.all([
+        cachedFindManyJobListings({
+            skip,
+            take,
+            where  : {
+                serialNumber : searchParams.serialNumber ? searchParams.serialNumber : undefined,
+                area         : {OR: searchParams.areaIds ? searchParams.areaIds.split(',').map(areaId => ({id: areaId})) : undefined},
+                positionScope: {OR: searchParams.positionScopeIds ? searchParams.positionScopeIds.split(',').map(positionScopeId => ({id: positionScopeId})) : undefined},
+                profession   : {OR: searchParams.professionIds ? searchParams.professionIds.split(',').map(professionId => ({id: professionId})) : undefined},
+            },
+            orderBy: {createdAt: 'desc'},
+            select : {id: true},
+        }),
+        countJobListing({
+            where: {
+                serialNumber : searchParams.serialNumber ? searchParams.serialNumber : undefined,
+                area         : {OR: searchParams.areaIds ? searchParams.areaIds.split(',').map(areaId => ({id: areaId})) : undefined},
+                positionScope: {OR: searchParams.positionScopeIds ? searchParams.positionScopeIds.split(',').map(positionScopeId => ({id: positionScopeId})) : undefined},
+                profession   : {OR: searchParams.professionIds ? searchParams.professionIds.split(',').map(professionId => ({id: professionId})) : undefined},
+            }
+        }),
+    ])
+    const jobListings = jobListingData?.jobListings ?? []
+    const count = countData?.count ?? 0
+    if (jobListingsIdsError || countError) {
+        if (jobListingsIdsError) {
+            return <ToastDismissible text="error in getJobListingIds" title="error"/>
+        }
+        if (countError) {
+            return <ToastDismissible text="error in countJobListings" title="error"/>
+        }
+        return <ToastDismissible text="unknown error" title="error"/>
+    }
     return (
-        <>
-            <div className="row justify-content-center pb-3">
-                <div className="col-10">
-                    <h1 className='display-4 text-light pb-2 mb-4 mb-lg-5 text-center'>
-                        המשרות<span className='text-primary'> שלנו</span>
-                    </h1>
-                    <JobListingSearchBar/>
+        <div className='my-lg-5 pt-5 p-0 container-fluid'>
+            <div className='row mt-n3'>
+                <JobListingSideBar/>
+                <div className='pb-5 pt-lg-4 me-lg-5 col-lg-8 col-xl-9 col'>
+                    <div className="row g-4 py-4 row-cols-md-1 row-cols-sm-1 row-cols-xl-3 row-cols-1">
+                        {
+                            jobListings.map((jobListing, indx) => {
+                                {/* @ts-expect-error server comonent */}
+                                return <JobListingCard jobListingId={jobListing.id} key={indx}/>
+                            })
+                        }
+                    </div>
+                    <div className="row mt-3">
+                        <CustomPagination count={count} take={take} skip={skip}/>
+                    </div>
                 </div>
             </div>
-            <div className="row align-items-stretch">
-                {jobListings.map((jobListing, index) => {
-                        const applied = !!jobApplications.find((jobApplication) => jobApplication.jobListingId === jobListing.id)
-                        return (
-                            <Fragment key={index}>
-                                {/* @ts-expect-error Async Server Component */}
-                                <JobListingCard
-                                    key={index}
-                                    jobListing={{...jobListing}}
-                                    className="col-md-4"
-                                >
-                                    <ApplyButton
-                                        key={`${index}_apply_button`}
-                                        jobListingId={jobListing.id}
-                                        applied={applied}
-                                        LoggedIn={!!user}
-                                        MissingCV={!user?.cv}
-                                    />
-                                </JobListingCard>
-                            </Fragment>
-                        )
-                    }
-                )}
-            </div>
-            <CustomPagination count={count} take={parseInt(take)} skip={parseInt(skip)}/>
-        </>
+        </div>
     )
 }
-
-export const dynamic = true

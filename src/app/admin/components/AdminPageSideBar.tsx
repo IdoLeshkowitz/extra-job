@@ -40,7 +40,7 @@ export default function AdminPageSideBar() {
     const accountPageTitle = 'title'
     return (
         <SSRProvider>
-            <Col md={5} lg={4} className='pe-xl-4 mb-5'>
+            <Col md={3} className='pe-xl-4 mb-5'>
                 <div className='card card-body card-light border-0 shadow-sm pb-1 me-lg-1'>
                     {/*ACCOUNT DETAILS */}
                     <AccountDetails/>
@@ -105,13 +105,13 @@ function AccountDetails() {
 
                         {/*USER ROLE*/}
                         <li>
-                            <i className='fi-user opacity-75 me-2'></i>
+                            <i className='fi-user opacity-75 ms-2'></i>
                             {user?.role}
                         </li>
 
                         {/*USER EMAIL*/}
                         <li>
-                            <i className='fi-mail opacity-75 me-2'></i>
+                            <i className='fi-mail opacity-75 ms-2'></i>
                             {user?.email}
                         </li>
                     </ul>

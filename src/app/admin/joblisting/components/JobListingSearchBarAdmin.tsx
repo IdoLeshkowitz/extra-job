@@ -1,71 +1,94 @@
 'use client'
 import DropdownSelect from "@/components/dropdown/dropdownSelect";
 import {Col, FormControl, FormGroup, InputGroup, Row, SSRProvider} from "react-bootstrap";
-import {Area, PositionScope, Profession} from "@prisma/client";
+import {Area, PositionScope, Prisma, Profession} from "@prisma/client";
 import {SyntheticEvent, useEffect, useRef, useState} from "react";
 import Button from "react-bootstrap/Button";
 import {usePathname, useRouter} from "next/navigation";
+import {fetcher} from "@/lib/api/fetcher";
+import AreaFindManyArgs = Prisma.AreaFindManyArgs;
 
 
-const getAreas = async (): Promise<{ data: { areas: Area[] } }> => {
-    const res = await fetch('/api/area?active=true')
-    if (!res.ok) {
-        return Promise.reject(await res.json())
+const getAreas = async () => {
+    const areaFindManyArgs: AreaFindManyArgs = {
+        where: {active: true},
     }
-    return await res.json()
+    try {
+        const {data} = await fetcher<{ areas: Area[] }>({
+            url   : `/api/area?areaFindManyArgs=${JSON.stringify(areaFindManyArgs)}`,
+            method: 'GET',
+            json  : true,
+        })
+        return data.areas
+    } catch (e) {
+        console.log(e)
+        return Promise.reject(e)
+    }
 }
 
-const getProfessions = async (): Promise<{ data: { professions: Profession[] } }> => {
-    const res = await fetch('/api/profession')
-    if (!res.ok) {
-        return Promise.reject(await res.json())
+const getProfessions = async () => {
+    const professionFindManyArgs: Prisma.ProfessionFindManyArgs = {
+        where: {active: true},
     }
-    return await res.json()
+    try {
+        const {data} = await fetcher<{ professions: Profession[] }>({
+            url   : `/api/profession?professionFindManyArgs=${JSON.stringify(professionFindManyArgs)}`,
+            method: 'GET',
+            json  : true,
+        })
+        return data.professions
+    } catch (e) {
+        console.log(e)
+        return Promise.reject(e)
+    }
 }
 
-const getPositionScopes = async (): Promise<{ data: { positionScopes: PositionScope[] } }> => {
-    const res = await fetch('/api/positionscope')
-    if (!res.ok) {
-        return Promise.reject(await res.json())
+const getPositionScopes = async () => {
+    const positionScopeFindManyArgs: Prisma.PositionScopeFindManyArgs = {
+        where: {active: true},
     }
-    return await res.json()
+    try {
+        const {data} = await fetcher<{ positionScopes: PositionScope[] }>({
+            url   : `/api/positionscope?positionScopeFindManyArgs=${JSON.stringify(positionScopeFindManyArgs)}`,
+            method: 'GET',
+            json  : true,
+        })
+        return data.positionScopes
+    } catch (e) {
+        console.log(e)
+        return Promise.reject(e)
+    }
 }
 
-function useSearchBar() {
-    const areaIdRef = useRef<string | null>(null)
-    const professionIdRef = useRef<string | null>(null)
-    const positionScopeIdRef = useRef<string | null>(null)
-    const statusRef = useRef<string | null>(null)
-    const serialNumberRef = useRef<HTMLInputElement | null>(null)
+const useSearchBar = () => {
+    const router = useRouter()
+    const pathname = usePathname()
+    const serialNumberRef = useRef<HTMLInputElement>(null)
+    const activeRef = useRef<string>(null)
+    const professionIdRef = useRef<string>(null)
+    const positionScopeIdRef = useRef<string>(null)
+    const areaIdRef = useRef<string>(null)
+    const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
     const [areas, setAreas] = useState<Area[]>([])
     const [professions, setProfessions] = useState<Profession[]>([])
-    const [positionScopes, setPositionScopes] = useState<PositionScope[]>([])
-    const url = usePathname()
-    const router = useRouter()
     useEffect(() => {
-        Promise.all([getAreas(), getProfessions(), getPositionScopes()])
-            .then(([{data: {areas}}, {data: {professions}}, {data: {positionScopes}}]) => {
-                setAreas(areas)
-                setProfessions(professions)
-                setPositionScopes(positionScopes)
-            })
-            .catch((err) => {
-                console.error(err)
-            })
+        getAreas().then(setAreas)
+        getProfessions().then(setProfessions)
+        getPositionScopes().then(setPositionScopes)
     }, [])
-
-    const handleSubmit = (e: SyntheticEvent<HTMLButtonElement>) => {
-        const areaId = areaIdRef.current
+    const handleSubmit = (e: SyntheticEvent) => {
+        e.preventDefault()
+        const serialNumber = serialNumberRef.current?.value
+        const active = activeRef.current
         const professionId = professionIdRef.current
         const positionScopeId = positionScopeIdRef.current
-        const serialNumber = serialNumberRef.current
-        const status = statusRef.current
+        const areaId = areaIdRef.current
         const query = new URLSearchParams()
-        if (serialNumber && serialNumber.value){
-            query.append('serialNumber', serialNumber.value)
+        if (serialNumber) {
+            query.append('serialNumber', serialNumber)
         }
-        if (areaId) {
-            query.append('areaId', areaId)
+        if (active) {
+            query.append('active', active)
         }
         if (professionId) {
             query.append('professionId', professionId)
@@ -73,42 +96,42 @@ function useSearchBar() {
         if (positionScopeId) {
             query.append('positionScopeId', positionScopeId)
         }
-        if (status) {
-            query.append('status', status)
+        if (areaId) {
+            query.append('areaId', areaId)
         }
-        router.push(`${url}?${query.toString()}`)
+        router.push(`${pathname}?${query.toString()}`)
     }
-
     return {
-        areas,
-        professions,
-        positionScopes,
-        areaIdRef,
+        serialNumberRef,
+        activeRef,
         professionIdRef,
         positionScopeIdRef,
-        statusRef,
-        serialNumberRef,
-        handleSubmit
+        positionScopes,
+        areaIdRef,
+        areas,
+        professions,
+        handleSubmit,
     }
 }
 
-export default function JobListingSearchBar() {
-    const {serialNumberRef, statusRef, professionIdRef, positionScopeIdRef, positionScopes, areaIdRef, areas, professions, handleSubmit} = useSearchBar()
+export default function JobListingSearchBarAdmin() {
+    const {serialNumberRef, activeRef, professionIdRef, positionScopeIdRef, positionScopes, areaIdRef, areas, professions, handleSubmit} = useSearchBar()
     return (
         <SSRProvider>
             <FormGroup className='form-group form-group-light d-block' onSubmit={handleSubmit}>
-                <Row className='g-0 ms-lg-n2 p-2 align-items-center'>
-                    <Col lg={2}>
+                <Row className='g-0 ms-lg-n2 p-2' style={{direction: 'rtl'}}>
+                    <Col lg={2} className='d-sm-flex align-items-center justify-content-between'>
                         <InputGroup className='border-end-lg border-light'>
-                            <InputGroup.Text id='search-icon' className='text-muted ps-2 ps-sm-3'>
-                                <i className='fi-search jus'></i>
-                            </InputGroup.Text>
                             <FormControl
                                 ref={serialNumberRef}
                                 placeholder='מספר משרה'
                                 aria-label='Search'
                                 aria-describedby='search-icon'
+                                className="pe-2"
                             />
+                            <InputGroup.Text id='search-icon' className='ps-sm-3'>
+                                <i className='fi-search jus'></i>
+                            </InputGroup.Text>
                         </InputGroup>
                     </Col>
                     <hr className='hr-light d-lg-none my-2'/>
@@ -120,7 +143,6 @@ export default function JobListingSearchBar() {
                             options={areas.map((area, index) => {
                                 return {text: area.name, id: area.id}
                             })}
-                            darkMenu
                             className='border-end-sm border-light'
                         />
                     </Col>
@@ -133,7 +155,6 @@ export default function JobListingSearchBar() {
                             options={professions.map((profession, index) => {
                                 return {text: profession.name, id: profession.id}
                             })}
-                            darkMenu
                             className='border-end-md border-light'
                         />
                     </Col>
@@ -146,18 +167,16 @@ export default function JobListingSearchBar() {
                             options={positionScopes.map((positionScope, index) => {
                                 return {text: positionScope.name, id: positionScope.id}
                             })}
-                            darkMenu
                             className='border-end-sm border-light'
                         />
                     </Col>
                     <hr className='hr-light d-sm-none my-2'/>
                     <Col sm={6} md={3} lg={2}>
                         <DropdownSelect
-                            chosenIdRef={statusRef}
+                            chosenIdRef={activeRef}
                             instructions="סטאטוס"
                             icon='fi-map-pin'
                             options={[{text: 'פעיל', id: 'true'}, {text: 'לא פעיל', id: 'false'}]}
-                            darkMenu
                         />
                     </Col>
                     <hr className='hr-light d-lg-none my-2'/>

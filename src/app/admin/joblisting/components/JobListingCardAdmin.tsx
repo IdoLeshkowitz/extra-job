@@ -1,92 +1,73 @@
-import Link from 'next/link'
-import ImageLoader from '@/components/Image/ImageLoader'
-import {FC} from "react";
+import {getUniqueJobListing} from "@/services/jobListingService";
 import {Area, JobListing, PositionScope, Profession} from "@prisma/client";
-import ToggleJobListingActive from "@/app/admin/joblisting/components/ToggleJobListingButton";
+import ToastDismissible from "@/components/toasts/toastDismissible";
 import DropDownButtons from "@/components/dropdown/dropdownButtons";
+import Link from "next/link";
+import ToggleJobListingButton from "@/app/admin/joblisting/components/ToggleJobListingButton";
 
 interface JobListingCardProps extends React.HTMLAttributes<HTMLDivElement> {
-    jobListing: JobListing & { area: Area, profession: Profession, positionScope: PositionScope }
+    jobListingId: string
     light?: boolean
     key?: number
 }
 
-const JobListingCardAdmin: FC<JobListingCardProps> = ({jobListing}) => {
+
+export default async function JobListingCardAdmin({jobListingId}: JobListingCardProps) {
+    const {data: jobListingData, error: jobListingError} = await getUniqueJobListing({
+        where  : {id: jobListingId},
+        include: {
+            area         : true,
+            positionScope: true,
+            profession   : true,
+        }
+    });
+    const jobListing = jobListingData?.jobListing as JobListing & (JobListing & { area: Area, positionScope: PositionScope, profession: Profession });
+    if (!jobListing) {
+        return <ToastDismissible text='error in getUniqueJobListing' title='שגיאה'/>;
+    }
+    const {area, positionScope, name, profession, serialNumber, id, active, description, createdAt} = jobListing;
     const light = true;
-    const {name, area, profession, positionScope, active, createdAt, id, serialNumber} = jobListing
     const img = {
         src: '/images/car-finder/icons/buyers.svg',
-        alt: name
+        alt: name,
     }
-
     return (
         <div
-            className="card card-light card-hover col-md-12 col-sm-12"
+            className="card card-hover bg-faded-dark col-12 mb-2 shadow-lg"
+            style={{direction: 'rtl'}}
         >
-            <div className='card-body'>
-                <div className='d-flex justify-content-between'>
-                    <div className="position-absolute start-0 top-0 pt-3 ps-3">
-                        {/*SERIAL NUMBER*/}
-                        <span className="d-table badge bg-info">{`#${serialNumber}`}</span>
-                    </div>
-                    <div className='d-flex align-items-start'>
-                        <div
-                            className='position-relative rounded-circle overflow-hidden flex-shrink-0 d-none d-sm-block align-self-end'
-                            style={{width: 100, height: 100}}
-                        >
-                            {/*ICON*/}
-                            {img && <ImageLoader
-                                style={{scale: .7}}
-                                src={img.src}
-                                layout='fill'
-                                quality={90}
-                                alt={img.alt}
-                                light={light ? 1 : 0}
-                            />}
+            <div className='card-body justify-content-between container d-flex row'>
+                {/*TITLE*/}
+                <h3 className='h6 card-title pb-1 w-auto col-3'>
+                    <Link href={`/joblisting/${id}`}
+                          className={`${light ? 'text-light opacity-80' : 'text-nav'} stretched-link text-decoration-none`}>
+                        {name}
+                    </Link>
+                </h3>
+                <div className="col-6">
+                    <div className="row align-items-center">
+                        <div className="col-4">
+                            <span className="d-table badge bg-info">{`#${serialNumber}`}</span>
                         </div>
-                        <div className='ps-sm-3'>
+                        <div className="col-4">
+                            <span
+                                className={`badge bg-faded-${active ? 'success' : 'danger'} rounded-pill w-auto fw-bold`}
+                            >
+                                {active ? 'פעיל' : 'לא פעיל'}
+                            </span>
+                        </div>
+                        <div className="col-4 justify-content-end d-flex">
+                            {/*DROPDOWN BUTTONS*/}
+                            <DropDownButtons light={false}>
+                                <ToggleJobListingButton active={active} jobListingId={id}/>
+                            </DropDownButtons>
+                        </div>
 
-                            {/*TITLE*/}
-                            <h3 className='h6 card-title pb-1 mb-2'>
-                                <Link href={`/joblisting/${id}`}
-                                      className={`${light ? 'text-light opacity-80' : 'text-nav'} stretched-link text-decoration-none`}>
-                                    {name}
-                                </Link>
-                                {/*ACTIVE INDICATOR*/}
-                                <span
-                                    className={`badge bg-faded-${active ? 'success' : 'danger'} rounded-pill fs-sm ms-2`}
-                                >
-                                    {active ? 'פעיל' : 'לא פעיל'}
-                                </span>
-                            </h3>
-                            <div className='fs-sm'>
-                                {/*AREA*/}
-                                <div className='text-nowrap mb-2'>
-                                    <i className={`fi-map-pin ${light ? 'text-light opacity-50' : 'text-muted'} me-1`}></i>
-                                    <span className={light ? 'text-light opacity-60' : ''}>{area.name}</span>
-                                </div>
-                                {/*PROFESSION*/}
-                                <div className='text-nowrap mb-2'>
-                                    <i className={`fi-map-pin ${light ? 'text-light opacity-50' : 'text-muted'} me-1`}></i>
-                                    <span className={light ? 'text-light opacity-60' : ''}>{profession.name}</span>
-                                </div>
-                                {/*POSITION SCOPE*/}
-                                <div className='text-nowrap mb-2'>
-                                    <i className={`fi-map-pin ${light ? 'text-light opacity-50' : 'text-muted'} me-1`}></i>
-                                    <span className={light ? 'text-light opacity-60' : ''}>{positionScope.name}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='d-flex flex-column align-items-end justify-content-between'>
-                        <DropDownButtons light={light}>
-                            <ToggleJobListingActive isActive={active} jobListingId={id}/>
-                        </DropDownButtons>
                     </div>
                 </div>
+
             </div>
         </div>
     )
 }
 
-export default JobListingCardAdmin
