@@ -1,13 +1,14 @@
 'use client'
-import {Button, Col, Form, Offcanvas, Placeholder, SSRProvider} from "react-bootstrap";
+import {Alert, Button, Col, Form, Offcanvas, Placeholder, SSRProvider} from "react-bootstrap";
 import SimpleBar from "simplebar-react";
 import {SyntheticEvent, useEffect, useMemo, useState} from "react";
 import {Prisma} from ".prisma/client";
 import {fetcher} from "@/lib/api/fetcher";
 import {Area, PositionScope, Profession} from "@prisma/client";
-import {notFound, usePathname, useRouter, useSearchParams} from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useQueries} from "@tanstack/react-query";
 import IconBox from "@/components/buttons/IconBox";
+import {commaSeparatedStringToArray} from "@/lib/util/commaSeperatedStringToArray";
 import AreaFindManyArgs = Prisma.AreaFindManyArgs;
 
 async function getProfessions() {
@@ -23,7 +24,7 @@ async function getProfessions() {
         return data.professions
     } catch (e) {
         console.log(e)
-        return notFound()
+        return []
     }
 }
 
@@ -40,7 +41,7 @@ async function getAreas() {
         return data.areas
     } catch (e) {
         console.log(e)
-        return notFound()
+        return []
     }
 }
 
@@ -57,16 +58,10 @@ async function getPositionScopes() {
         return data.positionScopes
     } catch (e) {
         console.log(e)
-        return notFound()
+        return []
     }
 }
 
-function commaSeparatedStringToArray(str: string) {
-    if (str === '') {
-        return []
-    }
-    return str.split(',')
-}
 
 function useSideBar() {
     const queries = useQueries(
@@ -133,11 +128,13 @@ function useSideBar() {
         setSelectedPositionScopeIds(positionScopeIds)
     }, [searchParams])
     useEffect(() => {
-        if (queries[0].isLoading || queries[1].isLoading || queries[2].isLoading) {
-            setStatus('loading')
-        } else if (queries[0].isError || queries[1].isError || queries[2].isError) {
+        if (queries.some((query => query.status === "error"))) {
             setStatus('error')
-        } else if (queries[0].isSuccess && queries[1].isSuccess && queries[2].isSuccess) {
+        }
+        if (queries.some((query => query.status === "loading"))) {
+            setStatus('loading')
+        }
+        if (queries.every((query => query.status === "success"))) {
             setStatus('success')
         }
     }, [queries])
@@ -176,7 +173,7 @@ const JobListingSideBar = () => {
         selectedProfessionIds,
         status
     } = useSideBar()
-    if (status === 'loading') {
+    if (status === 'loading' || status === "idle") {
         return (
             <SSRProvider>
                 <Col
@@ -192,7 +189,7 @@ const JobListingSideBar = () => {
                 </Col>
             </SSRProvider>
         )
-    } else if (status === "idle") {
+    } else if (status === 'error') {
         return (
             <SSRProvider>
                 <Col
@@ -202,9 +199,12 @@ const JobListingSideBar = () => {
                     className='me-2'
                     style={{minHeight: '100vh'}}
                 >
-                    <Placeholder as='p' animation='wave' className="h-100 rounded shadow-sm" bg="none">
-                        <Placeholder xs={12} className="h-100 rounded shadow-sm" bg="faded-dark"/>
-                    </Placeholder>
+                    <Alert variant='danger' className='rounded shadow-sm'>
+                        <Alert.Heading>אופס! משהו השתבש</Alert.Heading>
+                        <p>
+                            נסה לרענן את העמוד
+                        </p>
+                    </Alert>
                 </Col>
             </SSRProvider>
         )
