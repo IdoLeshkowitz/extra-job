@@ -13,7 +13,7 @@ interface LayerProps {
 interface CursorParallaxProps {
     children?: ReactNode;
     className?: string;
-
+    variant?: '1' | '2'
 }
 
 export const Layer = ({depth, children, className, ...props}: LayerProps) => (
@@ -27,7 +27,7 @@ export const Layer = ({depth, children, className, ...props}: LayerProps) => (
 )
 
 // Main wrapper
-const CursorParallax = ({children, className}: CursorParallaxProps) => {
+const CursorParallax = ({children, className, variant}: CursorParallaxProps) => {
     const el = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const CursorParallax = ({children, className}: CursorParallaxProps) => {
             })
         }
     }, [children])
-
+    variant = variant ? variant : '1'
     return (
         <div
             style={{maxWidth: '526px'}}
@@ -46,35 +46,35 @@ const CursorParallax = ({children, className}: CursorParallaxProps) => {
             className={`parallax${className ? ` ${className}` : ''}`}
         >
             <Layer depth={0.1}>
-                <Image priority src='/images/job-board/hero-banner-1/layer01.svg' width={526}
+                <Image priority src={`/images/job-board/hero-banner-${variant}/layer01.svg`} width={526}
                        height={353} alt='Layer'/>
             </Layer>
             <Layer depth={0.16}>
-                <Image priority src='/images/job-board/hero-banner-1/layer02.svg' width={526}
+                <Image priority src={`/images/job-board/hero-banner-${variant}/layer02.svg`} width={526}
                        height={353} alt='Layer'/>
             </Layer>
             <Layer depth={0.38}>
-                <Image priority src='/images/job-board/hero-banner-1/layer03.svg' width={526}
+                <Image priority src={`/images/job-board/hero-banner-${variant}/layer03.svg`} width={526}
                        height={353} alt='Layer'/>
             </Layer>
             <Layer depth={0.16}>
-                <Image priority src='/images/job-board/hero-banner-1/layer04.svg' width={526}
+                <Image priority src={`/images/job-board/hero-banner-${variant}/layer04.svg`} width={526}
                        height={353} alt='Layer'/>
             </Layer>
             <Layer depth={0.16}>
-                <Image priority src='/images/job-board/hero-banner-1/layer05.svg' width={526}
+                <Image priority src={`/images/job-board/hero-banner-${variant}/layer05.svg`} width={526}
                        height={353} alt='Layer'/>
             </Layer>
             <Layer depth={0.45}>
-                <Image priority src='/images/job-board/hero-banner-1/layer06.svg' width={526}
+                <Image priority src={`/images/job-board/hero-banner-${variant}/layer06.svg`} width={526}
                        height={353} alt='Layer'/>
             </Layer>
             <Layer depth={0.3}>
-                <Image priority src='/images/job-board/hero-banner-1/layer07.svg' width={526}
+                <Image priority src={`/images/job-board/hero-banner-${variant}/layer07.svg`} width={526}
                        height={353} alt='Layer'/>
             </Layer>
             <Layer depth={0.2}>
-                <Image priority src='/images/job-board/hero-banner-1/layer08.svg' width={526}
+                <Image priority src={`/images/job-board/hero-banner-${variant}/layer08.svg`} width={526}
                        height={353} alt='Layer'/>
             </Layer>
         </div>

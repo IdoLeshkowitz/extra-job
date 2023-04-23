@@ -30,6 +30,9 @@ export const authOptions: NextAuthOptions = {
             });
             session.user.cv = !!cvByUserId;
             return session
+        },
+        async redirect({url, baseUrl}) {
+            return '/'
         }
     }
 }

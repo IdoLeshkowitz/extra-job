@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import JobBoardPostResumeLayout from '../components/ResumeLayout'
+import JobBoardPostResumeLayout from '../components/resumeLayout'
   
 import { Document, Page, Text, View, StyleSheet, pdf, PDFDownloadLink, Font, PDFViewer } from '@react-pdf/renderer';
 import styles from './componenets/styles';
