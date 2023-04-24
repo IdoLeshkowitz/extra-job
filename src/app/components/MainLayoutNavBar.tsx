@@ -118,56 +118,57 @@ function DesktopAvatar({avatarUrl, data, status}: { avatarUrl: string, data: Ses
     if (status === "loading") {
         return <div className="spinner-border text-dark d-lg-block order-lg-3" role="status"/>
     }
-    return (
-        <>
-            {status === "unauthenticated" ?
-                /* SIGN IN LINK */
-                <button className='btn btn-link btn-light d-none d-lg-block order-lg-3 btn-sm'
-                        onClick={() => signIn()}>
-                    <i className='fi-user me-2'></i>
-                    הכנס
-                </button>
-                :
-                <Dropdown className='d-none d-lg-block order-lg-3 my-n2 me-3'>
-                    {/*PROFILE LINK*/}
-                    <Dropdown.Toggle
-                        as={Link}
-                        href={ME_URL}
-                        className='nav-link dropdown-toggle-flush d-flex py-1 px-1'
-                        style={{width: '40px'}}
-                    >
-                        {/*AVATAR IMAGE*/}
-                        <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={80} height={80}/>
-                    </Dropdown.Toggle>
+    if (status === "unauthenticated") {
+        return (
+            <button onClick={() => signIn()}
+                    className="d-none d-lg-block order-lg-3 btn btn-link btn-light btn-sm">
+                <i className='fi-user me-2'/>
+                הכנס
+            </button>
+        )
+    }
+    if (status === "authenticated") {
+        return (
+            <Dropdown className='d-none d-lg-block order-lg-3 my-n2 me-3'>
+                {/*PROFILE LINK*/}
+                <Dropdown.Toggle
+                    as={Link}
+                    href={ME_URL}
+                    className='nav-link dropdown-toggle-flush d-flex py-1 px-1'
+                    style={{width: '40px'}}
+                >
+                    {/*AVATAR IMAGE*/}
+                    <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={80} height={80}/>
+                </Dropdown.Toggle>
 
-                    {/*USER CARD*/}
-                    <Dropdown.Menu
-                        variant='dark'
-                        renderOnMount align='start'
+                {/*USER CARD*/}
+                <Dropdown.Menu
+                    variant='dark'
+                    renderOnMount align='start'
+                >
+                    <div
+                        className='d-flex align-items-center border-bottom border-light px-3 py-2 py-1 mb-2'
+                        style={{width: '16rem'}}
                     >
-                        <div
-                            className='d-flex align-items-center border-bottom border-light px-3 py-2 py-1 mb-2'
-                            style={{width: '16rem'}}
-                        >
-                            <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={80} height={80}/>
-                            <div className='pe-2'>
-                                <h6 className='fs-base mb-0 text-light'>
-                                    {user?.name}
-                                </h6>
-                                <div className='fs-xs py-2'>
-                                    {user?.email}
-                                </div>
+                        <Avatar avatarUrl={avatarUrl} alt={user?.name ?? ''} width={80} height={80}/>
+                        <div className='pe-2'>
+                            <h6 className='fs-base mb-0 text-light'>
+                                {user?.name}
+                            </h6>
+                            <div className='fs-xs py-2'>
+                                {user?.email}
                             </div>
                         </div>
-                        <Dropdown.Item as={Link} href='/api/auth/signout'>
-                            <i className='fi-logout ms-2' onClick={() => signOut()}></i>
-                            התנתק
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            }
-        </>
-    )
+                    </div>
+                    <Dropdown.Item onClick={() => signOut()}>
+                        <i className='fi-logout ms-2' onClick={() => signOut()}></i>
+                        התנתק
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+        )
+    }
+    return null
 }
 
 

@@ -11,7 +11,7 @@ function RootLayout({children}: { children: ReactNode }) {
             <body>
                 <MySessionProvider>
                     <MyQueryClientProvider>
-                        <main className="page-wrapper bg-gradient" style={{direction: 'rtl'}}>
+                        <main className="page-wrapper bg-gradient" style={{direction: 'rtl',minHeight:'100vh'}}>
                             <MainLayoutNavBar/>
                             {children}
                         </main>

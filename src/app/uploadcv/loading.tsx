@@ -1,13 +1,11 @@
 export default function Loading() {
     return (
-        <>
-            <div className='container pb-lg-4 mb-sm-2 h-100 justify-content-center align-items-center d-flex'>
-                <div className='card card-light card-body'>
-                    <p className="placeholder-glow">
-                        <span className="placeholder col-12"></span>
-                    </p>
-                </div>
+        <div
+            className='bg-faded-light card-body p-0 placeholder placeholder-wave rounded-3'
+            style={{minHeight: 'min(24rem,100vh)'}}
+        >
+            <div className='w-100 h-100 placeholder-wave bg-faded-light'>
             </div>
-        </>
+        </div>
     )
 }
