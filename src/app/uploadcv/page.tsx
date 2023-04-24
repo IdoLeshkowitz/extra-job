@@ -37,8 +37,8 @@ const UploadCvPage = async () => {
                                 </h2>
                             </div>
                             :
-                            <div className="row">
-                                <div className="col-12">
+                            <>
+                            </>
                     }
                 </div>
                 <div className='col-md-6 px-2 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5'>
