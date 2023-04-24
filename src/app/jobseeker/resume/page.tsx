@@ -5,15 +5,14 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import JobBoardPostResumeLayout from '../components/resumeLayout'
-
-import {Document, Font, Page, PDFDownloadLink, PDFViewer, Text, View} from '@react-pdf/renderer';
-import styles from './componenets/styles';
-import {ProfileContainer} from './componenets/ProfileContainer';
-import {EmploymentHistoryItem} from './componenets/EmpolymentHistoryItem';
 import {array, object, string} from "yup";
 import {useFormik} from "formik";
-import {InputGroup} from "react-bootstrap";
-
+import PillButton from "@/components/buttons/pillButtons";
+import {Button} from "react-bootstrap";
+import {Document, Font, Page, Text, View} from "@react-pdf/renderer";
+import {ProfileContainer} from './componenets/ProfileContainer';
+import {EmploymentHistoryItem} from './componenets/EmpolymentHistoryItem';
+import styles from './componenets/styles';
 // font register a font that supports Hebrew
 Font.register({
     family: 'Rubik',
@@ -111,15 +110,14 @@ const PostResumePDF = (props: any) => (
     </Document>
 );
 
-const validationSchema = async () => object({
+const validationSchema = object({
     firstName: string().required('שדה חובה').max(50, 'מקסימום 50 תווים'),
     lastName : string().required('שדה חובה').max(50, 'מקסימום 50 תווים'),
     email    : string().required('שדה חובה').email('כתובת מייל לא תקינה'),
     phone    : string().required('שדה חובה').matches(/^0\d([\d]{0,1})([-]{0,1})\d{7}$/, 'מספר טלפון לא תקין'),
     about    : string().required('שדה חובה').max(800, 'מקסימום 8000 תווים'),
     title    : string().required('שדה חובה').max(50, 'מקסימום 50 תווים'),
-
-    pastJob: array().of(object({
+    pastJob  : array().of(object({
         jobTitle   : string().required('שדה חובה').max(50, 'מקסימום 50 תווים'),
         company    : string().required('שדה חובה').max(50, 'מקסימום 50 תווים'),
         startMonth : string().required('שדה חובה'),
@@ -134,7 +132,7 @@ const Resume = () => {
     const [formData, setFormData] = useState<any>(null);
 
     const formik = useFormik({
-        initialValues   : {
+        initialValues: {
             firstName: '',
             lastName : '',
             email    : '',
@@ -143,9 +141,10 @@ const Resume = () => {
             title    : '',
             pastJob  : []
         },
-        validationSchema: validationSchema,
-        onSubmit        : (values) => {
+        validationSchema,
+        onSubmit     : (values) => {
             console.log(values)
+
         }
     })
 
@@ -262,6 +261,19 @@ const Resume = () => {
                         }
 
                         {/*PastJob*/}
+                        <PillButton
+                            onClick={() => {
+                                formik.setFieldValue('pastJob', [...formik.values.pastJob, {
+                                    jobTitle   : '',
+                                    companyName: '',
+                                    startDate  : '',
+                                    endDate    : '',
+                                    description: ''
+                                }])
+                            }}
+                            icon="fi-plus"
+                            text="הוסף עבודה קודמת"
+                        />
                         {
                             formik.values.pastJob.map((pastJob: any, index: number) => (
                                 <div
@@ -281,8 +293,9 @@ const Resume = () => {
                                                 name="jobTitle"
                                             />
                                             {
-                                                pastJob.touched.jobTitle && pastJob.errors.jobTitle ?
-                                                    <div className='text-danger'>{pastJob.errors.jobTitle}</div> : null
+                                                pastJob?.touched?.jobTitle && pastJob?.errors?.jobTitle ?
+                                                    <div
+                                                        className='text-danger'>{pastJob.errors.jobTitle}</div> : null
                                             }
 
                                             {/*Company Name*/}
@@ -296,52 +309,30 @@ const Resume = () => {
                                                 name="companyName"
                                             />
                                             {
-                                                pastJob.touched.companyName && pastJob.errors.companyName ?
+                                                pastJob?.touched?.companyName && pastJob?.errors?.companyName ?
                                                     <div
                                                         className='text-danger'>{pastJob.errors.companyName}</div> : null
                                             }
 
                                             {/*Date Range*/}
                                             <Form.Label>Date range</Form.Label>
-                                            {/*<InputGroup className='flex-nowrap'>*/}
-                                            {/*    <InputGroup.Text>*/}
-                                            {/*        <i className='fi-calendar'></i>*/}
-                                            {/*    </InputGroup.Text>*/}
-                                            {/*    <Form.Control*/}
-                                            {/*        as={DatePicker}*/}
-                                            {/*        selected={startDate}*/}
-                                            {/*        onChange={(date) => setStartDate4(date)}*/}
-                                            {/*        selectsStart*/}
-                                            {/*        startDate={startDate}*/}
-                                            {/*        endDate={endDate}*/}
-                                            {/*        placeholderText='To date'*/}
-                                            {/*        className='rounded-0'*/}
-                                            {/*    />*/}
-                                            {/*    <Form.Control*/}
-                                            {/*        as={DatePicker}*/}
-                                            {/*        selected={endDate}*/}
-                                            {/*        onChange={(date) => setEndDate(date)}*/}
-                                            {/*        selectsEnd*/}
-                                            {/*        startDate={startDate4}*/}
-                                            {/*        endDate={endDate}*/}
-                                            {/*        minDate={startDate4}*/}
-                                            {/*        placeholderText='To date'*/}
-                                            {/*        className='rounded-start-0'*/}
-                                            {/*    />*/}
-                                            {/*</InputGroup>*/}
-
                                         </Form.Group>
                                     </div>
                                 </div>
                             ))
                         }
-
-
+                        <Button
+                            size='lg'
+                            className='d-block ps-3 mb-3 mb-sm-2 bg-dark'
+                            style={{direction: 'ltr'}}
+                            type="submit">
+                            <i className='fi-plus-circle me-2'></i>
+                        </Button>
                     </Col>
                 </Row>
             </Form>
-            <div className="d-flex flex-column flex-sm-row bg-light rounded-3 p-4 px-md-5">
-                {/* <Button
+            {/*<div className="d-flex flex-column flex-sm-row bg-light rounded-3 p-4 px-md-5">*/}
+            {/* <Button
           size="lg"
           variant="primary rounded-pill ms-auto"
           className="mt-sm-0 mt-3"
@@ -349,28 +340,28 @@ const Resume = () => {
         >
           Save and generate PDF
         </Button> */}
-                {blob && (
-                    <div style={{flexGrow: '1'}}>
-                        <PDFViewer
-                            showToolbar={false}
-                            style={{
-                                width : '100%',
-                                height: '100vh',
-                                // fontFamily: 'Roboto',
-                            }}
-                        >
-                            <PostResumePDF value={formData}/>
-                        </PDFViewer>
-                        <PDFDownloadLink
-                            document={<PostResumePDF value={formData}/>}
-                            fileName='somename.pdf'
-                            className="btn btn-lg btn-outline-primary rounded-pill ms-3 mt-3 mt-sm-0"
-                        >
-                            {({loading}) => (loading ? 'Loading document...' : 'Download now!')}
-                        </PDFDownloadLink>
-                    </div>
-                )}
-            </div>
+            {/*    {blob && (*/}
+            {/*        <div style={{flexGrow: '1'}}>*/}
+            {/*            <PDFViewer*/}
+            {/*                showToolbar={false}*/}
+            {/*                style={{*/}
+            {/*                    width : '100%',*/}
+            {/*                    height: '100vh',*/}
+            {/*                    // fontFamily: 'Roboto',*/}
+            {/*                }}*/}
+            {/*            >*/}
+            {/*                <PostResumePDF value={formData}/>*/}
+            {/*            </PDFViewer>*/}
+            {/*            <PDFDownloadLink*/}
+            {/*                document={<PostResumePDF value={formData}/>}*/}
+            {/*                fileName='somename.pdf'*/}
+            {/*                className="btn btn-lg btn-outline-primary rounded-pill ms-3 mt-3 mt-sm-0"*/}
+            {/*            >*/}
+            {/*                {({loading}) => (loading ? 'Loading document...' : 'Download now!')}*/}
+            {/*            </PDFDownloadLink>*/}
+            {/*        </div>*/}
+            {/*    )}*/}
+            {/*</div>*/}
         </JobBoardPostResumeLayout>
     )
 }
